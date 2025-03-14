@@ -1,0 +1,272 @@
+/* 
+ * Correcciones adicionales para el tema oscuro
+ * Este archivo contiene correcciones específicas para los problemas de legibilidad
+ * en desplegables, acordeones y elementos con texto blanco sobre fondo blanco
+ */
+
+/* Correcciones para los desplegables (dropdowns) */
+[data-theme="dark"] .dropdown-menu {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .dropdown-item {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .dropdown-item:hover,
+[data-theme="dark"] .dropdown-item:focus {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .dropdown-divider {
+    border-color: var(--border-color) !important;
+}
+
+/* Correcciones mejoradas para acordeones */
+[data-theme="dark"] .accordion-button,
+[data-theme="dark"] .accordion-button.collapsed {
+    background-color: var(--accordion-header-bg) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.125) !important;
+}
+
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: var(--accordion-header-active-bg) !important;
+    color: #ffffff !important;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .accordion-button strong,
+[data-theme="dark"] .accordion-header strong,
+[data-theme="dark"] .accordion-button span,
+[data-theme="dark"] .accordion-header span {
+    color: #ffffff !important;
+}
+
+/* Correcciones para los títulos de secciones y contenedores */
+[data-theme="dark"] .card-header,
+[data-theme="dark"] .card-title,
+[data-theme="dark"] .card-header h1,
+[data-theme="dark"] .card-header h2,
+[data-theme="dark"] .card-header h3,
+[data-theme="dark"] .card-header h4,
+[data-theme="dark"] .card-header h5,
+[data-theme="dark"] .card-header h6 {
+    color: #ffffff !important;
+}
+
+/* Correcciones para textos en modo oscuro */
+[data-theme="dark"] .text-muted {
+    color: #adb5bd !important;
+}
+
+[data-theme="dark"] small.text-muted {
+    color: #cccccc !important;
+}
+
+/* Correcciones para los campos de sumario de hoy */
+[data-theme="dark"] .list-group-item {
+    background-color: var(--list-group-bg) !important;
+    color: var(--list-group-text) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .list-group-item-action:hover {
+    background-color: var(--list-group-hover) !important;
+}
+
+[data-theme="dark"] .list-group-item h5,
+[data-theme="dark"] .list-group-item p,
+[data-theme="dark"] .list-group-item div,
+[data-theme="dark"] .list-group-item span:not(.badge) {
+    color: #ffffff !important;
+}
+
+/* Correcciones para badges en modo oscuro */
+[data-theme="dark"] .badge.bg-secondary {
+    background-color: #6c757d !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .badge.bg-info {
+    background-color: #0dcaf0 !important;
+    color: #212529 !important;
+}
+
+/* Correcciones específicas para campos con fondo blanco */
+[data-theme="dark"] [class*="bg-white"],
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background-color: #ffffff"],
+[data-theme="dark"] [style*="background: white"],
+[data-theme="dark"] [style*="background: #fff"],
+[data-theme="dark"] [style*="background: #ffffff"] {
+    background-color: var(--card-bg) !important;
+}
+
+/* Corrección específica para elementos con fondo blanco y texto blanco */
+[data-theme="dark"] [class*="bg-white"][class*="text-white"],
+[data-theme="dark"] [style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] [style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] [style*="background-color: #ffffff"][style*="color: white"],
+[data-theme="dark"] [style*="background: white"][style*="color: white"],
+[data-theme="dark"] [style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] [style*="background: #ffffff"][style*="color: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Correcciones para el sumario de hoy */
+[data-theme="dark"] #acordeonDepartamentos .accordion-button {
+    background-color: var(--accordion-header-bg) !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] #acordeonDepartamentos .accordion-button:not(.collapsed) {
+    background-color: var(--accordion-header-active-bg) !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] #acordeonDepartamentos .accordion-button strong {
+    color: #ffffff !important;
+}
+
+/* Correcciones para enlaces en modo oscuro */
+[data-theme="dark"] a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item) {
+    color: #8ab4f8 !important;
+}
+
+[data-theme="dark"] a:hover:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item) {
+    color: #aecbfa !important;
+}
+
+/* Correcciones para enlaces con texto blanco */
+[data-theme="dark"] a.text-white,
+[data-theme="dark"] a[style*="color: white"],
+[data-theme="dark"] a[style*="color: #fff"],
+[data-theme="dark"] a[style*="color: #ffffff"] {
+    color: #ffffff !important;
+}
+
+/* Correcciones para enlaces con fondo blanco */
+[data-theme="dark"] a.bg-white,
+[data-theme="dark"] a[style*="background-color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"],
+[data-theme="dark"] a[style*="background-color: #ffffff"],
+[data-theme="dark"] a[style*="background: white"],
+[data-theme="dark"] a[style*="background: #fff"],
+[data-theme="dark"] a[style*="background: #ffffff"] {
+    background-color: var(--card-bg) !important;
+}
+
+/* Correcciones para enlaces con fondo blanco y texto blanco */
+[data-theme="dark"] a.bg-white.text-white,
+[data-theme="dark"] a[style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #ffffff"][style*="color: white"],
+[data-theme="dark"] a[style*="background: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background: #ffffff"][style*="color: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Correcciones para placeholders */
+[data-theme="dark"] ::placeholder {
+    color: #aaaaaa !important;
+    opacity: 1 !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder,
+[data-theme="dark"] select::placeholder {
+    color: #aaaaaa !important;
+}
+
+/* Correcciones específicas para tarjetas */
+[data-theme="dark"] .card {
+    background-color: var(--card-bg) !important;
+    color: #ffffff !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .card-body {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .card-text {
+    color: #ffffff !important;
+}
+
+/* Correcciones para títulos en MINISTERIO DE DEFENSA */
+[data-theme="dark"] .accordion-header button {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .accordion-header button strong {
+    color: #ffffff !important;
+}
+
+/* Asegurar que los textos en las tarjetas de BOE sean visibles */
+[data-theme="dark"] .list-group-item a,
+[data-theme="dark"] .list-group-item h5,
+[data-theme="dark"] .list-group-item p {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] small.text-muted {
+    color: #cccccc !important;
+}
+
+/* Correcciones específicas para los enlaces PDF en el badge */
+[data-theme="dark"] .badge.bg-info.text-dark {
+    background-color: #0dcaf0 !important;
+    color: #000000 !important;
+}
+
+[data-theme="dark"] .badge.bg-info.text-dark a,
+[data-theme="dark"] .badge.bg-info.text-dark a.text-dark {
+    color: #000000 !important;
+}
+
+/* Correcciones específicas para títulos de ministerios */
+[data-theme="dark"] .accordion-item {
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .accordion-header {
+    background-color: transparent !important;
+}
+
+/* Corrección para los identificadores de documentos */
+[data-theme="dark"] .list-group-item h5.mb-1 {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+/* Corrección para los títulos de documentos */
+[data-theme="dark"] .list-group-item p.mb-1 {
+    color: #ffffff !important;
+}
+
+/* Corrección para el texto en los placeholders de inputs */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    color: #ffffff !important;
+    background-color: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+}
+
+/* Corrección específica para los títulos de los ministerios */
+[data-theme="dark"] .accordion-button {
+    font-weight: 600 !important;
+}
+
+/* Corrección para los badges de conteo */
+[data-theme="dark"] .accordion-button .badge {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+}

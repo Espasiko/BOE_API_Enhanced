@@ -1,0 +1,360 @@
+{% extends "boe_analisis/base.html" %}
+
+{% block title %}Búsqueda Avanzada | BOE Alertas{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+    .badge-departamento {
+        background-color: #0d6efd;
+        color: white;
+    }
+    .badge-materia {
+        background-color: #6c757d;
+        color: white;
+    }
+    .search-highlight {
+        background-color: #fff3cd;
+        padding: 2px;
+        border-radius: 2px;
+    }
+    /* Estilo para el selector de fechas */
+    .flatpickr-input {
+        background-color: #fff;
+    }
+    /* Estilo para el switch de búsqueda semántica */
+    .form-switch .form-check-input {
+        width: 3em;
+        height: 1.5em;
+    }
+    .semantic-badge {
+        background-color: #6f42c1;
+        color: white;
+    }
+    .score-badge {
+        background-color: #20c997;
+        color: white;
+        font-size: 0.8rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2"><i class="fas fa-search me-2"></i>Búsqueda Avanzada</h1>
+        
+        <div class="btn-group">
+            <a href="{% url 'sumario_hoy' %}" class="btn btn-outline-primary">
+                <i class="fas fa-calendar-day me-1"></i>Sumario de hoy
+            </a>
+            <a href="{% url 'busqueda_avanzada' %}" class="btn btn-primary active">
+                <i class="fas fa-search me-1"></i>Búsqueda avanzada
+            </a>
+        </div>
+    </div>
+    
+    <!-- Formulario de búsqueda -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h5 class="card-title mb-0">Filtros de búsqueda</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" action="{% url 'busqueda_avanzada' %}" class="row g-3">
+                <!-- Búsqueda por texto -->
+                <div class="col-md-12">
+                    <label for="q" class="form-label">Texto a buscar</label>
+                    <input type="text" class="form-control" id="q" name="q" value="{{ query }}" 
+                           placeholder="Buscar en título, texto o identificador...">
+                </div>
+                
+                <!-- Búsqueda semántica switch -->
+                <div class="col-md-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="semantica" name="semantica" {% if busqueda_semantica %}checked{% endif %}>
+                        <label class="form-check-label" for="semantica">
+                            <span class="badge semantic-badge"><i class="fas fa-brain me-1"></i>Búsqueda Semántica</span>
+                        </label>
+                        <small class="form-text text-muted d-block mt-1">
+                            Activa esta opción para buscar documentos por similitud semántica en lugar de coincidencia exacta de palabras.
+                            La búsqueda semántica entiende el significado de tu consulta y encuentra documentos relacionados conceptualmente.
+                        </small>
+                    </div>
+                </div>
+                
+                <!-- Departamento -->
+                <div class="col-md-6">
+                    <label for="departamento" class="form-label">Departamento</label>
+                    <select class="form-select" id="departamento" name="departamento">
+                        <option value="">Todos los departamentos</option>
+                        {% for dept in todos_departamentos %}
+                        <option value="{{ dept }}" {% if departamento == dept %}selected{% endif %}>
+                            {{ dept|default:"Sin departamento" }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    {% if not todos_departamentos %}
+                    <div class="form-text text-warning">
+                        <i class="fas fa-exclamation-triangle"></i> No se encontraron departamentos en la base de datos.
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Materias -->
+                <div class="col-md-6">
+                    <label for="materias" class="form-label">Materias</label>
+                    <select class="form-select" id="materias" name="materias">
+                        <option value="">Todas las materias</option>
+                        {% for mat in todas_materias %}
+                        <option value="{{ mat }}" {% if materias == mat %}selected{% endif %}>
+                            {{ mat }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    {% if not todas_materias %}
+                    <div class="form-text text-warning">
+                        <i class="fas fa-exclamation-triangle"></i> No se encontraron materias en la base de datos.
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Rango de fechas con selector visual -->
+                <div class="col-md-6">
+                    <label for="fecha_desde" class="form-label">Fecha desde</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                        <input type="text" class="form-control datepicker" id="fecha_desde" name="fecha_desde" 
+                               value="{{ fecha_desde }}" placeholder="Selecciona fecha inicial">
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <label for="fecha_hasta" class="form-label">Fecha hasta</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                        <input type="text" class="form-control datepicker" id="fecha_hasta" name="fecha_hasta" 
+                               value="{{ fecha_hasta }}" placeholder="Selecciona fecha final">
+                    </div>
+                </div>
+                
+                <!-- Botones de acción -->
+                <div class="col-12 d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search me-1"></i>Buscar
+                    </button>
+                    <a href="{% url 'busqueda_avanzada' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i>Limpiar filtros
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Resultados de búsqueda -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Resultados de búsqueda</h5>
+            <div>
+                {% if busqueda_semantica and query %}
+                <span class="badge semantic-badge me-2"><i class="fas fa-brain me-1"></i>Búsqueda Semántica</span>
+                {% endif %}
+                <span class="badge bg-primary">{{ documentos.paginator.count }} documentos encontrados</span>
+            </div>
+        </div>
+        
+        {% if documentos %}
+        <div class="list-group list-group-flush">
+            {% for documento in documentos %}
+            <div class="list-group-item p-3">
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                    <h5 class="mb-1">
+                        <a href="{% url 'ver_documento' documento.identificador %}" class="text-decoration-none">
+                            {{ documento.titulo }}
+                        </a>
+                    </h5>
+                    <div>
+                        {% if busqueda_semantica and query and documento.score %}
+                        <span class="badge score-badge me-1" title="Puntuación de similitud semántica">
+                            <i class="fas fa-percentage me-1"></i>{{ documento.score|floatformat:2 }}
+                        </span>
+                        {% endif %}
+                        <small class="text-muted">{{ documento.fecha_publicacion|date:"d/m/Y" }}</small>
+                    </div>
+                </div>
+                
+                <div class="mb-2">
+                    <span class="badge badge-departamento">
+                        <i class="fas fa-building me-1"></i>{{ documento.departamento|default:"Sin departamento" }}
+                    </span>
+                    
+                    {% if documento.materias %}
+                    {% for materia in documento.materias.split|slice:":3" %}
+                    <span class="badge badge-materia">{{ materia }}</span>
+                    {% endfor %}
+                    {% if documento.materias.split|length > 3 %}
+                    <span class="badge badge-materia">+{{ documento.materias.split|length|add:"-3" }}</span>
+                    {% endif %}
+                    {% endif %}
+                </div>
+                
+                <p class="mb-1 text-muted small">
+                    {{ documento.identificador }} | 
+                    <a href="{{ documento.url_pdf }}" target="_blank" class="text-decoration-none">
+                        <i class="fas fa-file-pdf"></i> PDF
+                    </a>
+                    {% if documento.url_xml %}
+                    | <a href="{{ documento.url_xml }}" target="_blank" class="text-decoration-none">
+                        <i class="fas fa-file-code"></i> XML
+                    </a>
+                    {% endif %}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Paginación -->
+        {% if documentos.paginator.num_pages > 1 %}
+        <div class="card-footer bg-light">
+            <nav aria-label="Paginación de resultados">
+                <ul class="pagination justify-content-center mb-0">
+                    {% if documentos.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?q={{ query }}&departamento={{ departamento }}&materias={{ materias }}&fecha_desde={{ fecha_desde }}&fecha_hasta={{ fecha_hasta }}{% if busqueda_semantica %}&semantica=on{% endif %}&page=1" aria-label="Primera">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?q={{ query }}&departamento={{ departamento }}&materias={{ materias }}&fecha_desde={{ fecha_desde }}&fecha_hasta={{ fecha_hasta }}{% if busqueda_semantica %}&semantica=on{% endif %}&page={{ documentos.previous_page_number }}" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo;&laquo;</span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo;</span>
+                    </li>
+                    {% endif %}
+                    
+                    {% for i in documentos.paginator.page_range %}
+                        {% if documentos.number == i %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ i }}</span>
+                        </li>
+                        {% elif i > documentos.number|add:"-3" and i < documentos.number|add:"3" %}
+                        <li class="page-item">
+                            <a class="page-link" href="?q={{ query }}&departamento={{ departamento }}&materias={{ materias }}&fecha_desde={{ fecha_desde }}&fecha_hasta={{ fecha_hasta }}{% if busqueda_semantica %}&semantica=on{% endif %}&page={{ i }}">{{ i }}</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if documentos.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?q={{ query }}&departamento={{ departamento }}&materias={{ materias }}&fecha_desde={{ fecha_desde }}&fecha_hasta={{ fecha_hasta }}{% if busqueda_semantica %}&semantica=on{% endif %}&page={{ documentos.next_page_number }}" aria-label="Siguiente">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?q={{ query }}&departamento={{ departamento }}&materias={{ materias }}&fecha_desde={{ fecha_desde }}&fecha_hasta={{ fecha_hasta }}{% if busqueda_semantica %}&semantica=on{% endif %}&page={{ documentos.paginator.num_pages }}" aria-label="Última">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&raquo;</span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link">&raquo;&raquo;</span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+        
+        {% else %}
+        <div class="card-body text-center py-5">
+            <div class="text-muted mb-3">
+                <i class="fas fa-search fa-3x mb-3"></i>
+                <h4>No se encontraron documentos</h4>
+                <p>Prueba con otros términos de búsqueda o ajusta los filtros</p>
+            </div>
+            <a href="{% url 'busqueda_avanzada' %}" class="btn btn-outline-primary">
+                <i class="fas fa-times me-1"></i>Limpiar filtros
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar selector de fechas
+        flatpickr(".datepicker", {
+            dateFormat: "Y-m-d",
+            allowInput: true,
+            altInput: true,
+            altFormat: "d/m/Y",
+            locale: {
+                firstDayOfWeek: 1,
+                weekdays: {
+                    shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+                    longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+                },
+                months: {
+                    shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    longhand: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
+                }
+            }
+        });
+        
+        // Función para resaltar términos de búsqueda
+        function highlightSearchTerms() {
+            const searchQuery = "{{ query }}".trim();
+            if (!searchQuery) return;
+            
+            const terms = searchQuery.split(/\s+/).filter(term => term.length > 2);
+            if (terms.length === 0) return;
+            
+            const titulos = document.querySelectorAll('.list-group-item h5 a');
+            
+            titulos.forEach(titulo => {
+                let textoOriginal = titulo.textContent;
+                let textoModificado = textoOriginal;
+                
+                terms.forEach(term => {
+                    const regex = new RegExp(`(${term})`, 'gi');
+                    textoModificado = textoModificado.replace(regex, '<span class="search-highlight">$1</span>');
+                });
+                
+                if (textoModificado !== textoOriginal) {
+                    titulo.innerHTML = textoModificado;
+                }
+            });
+        }
+        
+        // Ejecutar resaltado de términos
+        highlightSearchTerms();
+        
+        // Mejorar la experiencia de usuario en los selectores
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('change', function() {
+                if (this.value) {
+                    this.classList.add('border-primary');
+                } else {
+                    this.classList.remove('border-primary');
+                }
+            });
+            
+            // Aplicar clase inicial si hay un valor seleccionado
+            if (select.value) {
+                select.classList.add('border-primary');
+            }
+        });
+    });
+</script>
+{% endblock %}

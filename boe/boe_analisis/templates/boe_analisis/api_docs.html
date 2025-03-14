@@ -1,0 +1,193 @@
+{% extends "boe_analisis/base.html" %}
+
+{% block title %}Documentación API Semántica BOE{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Documentación API Semántica BOE</h1>
+    
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="h4 mb-0">Introducción</h2>
+        </div>
+        <div class="card-body">
+            <p>La API Semántica del BOE permite realizar búsquedas por similitud conceptual en los documentos del Boletín Oficial del Estado. Esta API está especialmente diseñada para ser utilizada por IAs y aplicaciones que necesiten encontrar documentos relacionados con un concepto específico, más allá de la simple coincidencia de palabras clave.</p>
+            <p>La búsqueda semántica utiliza embeddings vectoriales para encontrar documentos similares a la consulta proporcionada, lo que permite obtener resultados más relevantes y precisos.</p>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="h4 mb-0">Endpoints</h2>
+        </div>
+        <div class="card-body">
+            <h3 class="h5">Búsqueda Semántica</h3>
+            <p><code>GET /api/semantica/</code> o <code>POST /api/semantica/</code></p>
+            
+            <h4 class="h6 mt-3">Parámetros</h4>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Parámetro</th>
+                        <th>Tipo</th>
+                        <th>Requerido</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>q</code></td>
+                        <td>String</td>
+                        <td>Sí</td>
+                        <td>Consulta de búsqueda (texto)</td>
+                    </tr>
+                    <tr>
+                        <td><code>departamento</code></td>
+                        <td>String</td>
+                        <td>No</td>
+                        <td>Filtrar por departamento</td>
+                    </tr>
+                    <tr>
+                        <td><code>fecha_desde</code></td>
+                        <td>String (YYYY-MM-DD)</td>
+                        <td>No</td>
+                        <td>Fecha inicial para filtrar documentos</td>
+                    </tr>
+                    <tr>
+                        <td><code>fecha_hasta</code></td>
+                        <td>String (YYYY-MM-DD)</td>
+                        <td>No</td>
+                        <td>Fecha final para filtrar documentos</td>
+                    </tr>
+                    <tr>
+                        <td><code>limite</code></td>
+                        <td>Integer</td>
+                        <td>No</td>
+                        <td>Número máximo de resultados (por defecto 10, máximo 100)</td>
+                    </tr>
+                    <tr>
+                        <td><code>umbral</code></td>
+                        <td>Float</td>
+                        <td>No</td>
+                        <td>Umbral de similitud (0-1, por defecto 0.3)</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4 class="h6 mt-3">Respuesta</h4>
+            <p>La respuesta es un objeto JSON con la siguiente estructura:</p>
+            <pre class="bg-light p-3"><code>{
+    "success": true,
+    "query": "protección de datos",
+    "total": 5,
+    "resultados": [
+        {
+            "identificador": "BOE-A-2023-12345",
+            "titulo": "Ley Orgánica de Protección de Datos Personales",
+            "fecha_publicacion": "2023-05-15",
+            "departamento": "Ministerio de Justicia",
+            "materias": "Protección de datos, Derechos digitales",
+            "url_pdf": "https://www.boe.es/boe/dias/2023/05/15/pdfs/BOE-A-2023-12345.pdf",
+            "url_xml": "https://www.boe.es/diario_boe/xml.php?id=BOE-A-2023-12345",
+            "score": 0.92
+        },
+        ...
+    ]
+}</code></pre>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="h4 mb-0">Ejemplos</h2>
+        </div>
+        <div class="card-body">
+            <h3 class="h5">Ejemplo GET</h3>
+            <p>Buscar documentos relacionados con "protección de datos" limitando a 5 resultados:</p>
+            <pre class="bg-light p-3"><code>GET /api/semantica/?q=protección%20de%20datos&limite=5</code></pre>
+            
+            <h3 class="h5 mt-3">Ejemplo POST</h3>
+            <p>Buscar documentos relacionados con "energías renovables" desde 2020 hasta 2022:</p>
+            <pre class="bg-light p-3"><code>POST /api/semantica/
+Content-Type: application/json
+
+{
+    "q": "energías renovables",
+    "fecha_desde": "2020-01-01",
+    "fecha_hasta": "2022-12-31",
+    "limite": 10,
+    "umbral": 0.5
+}</code></pre>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="h4 mb-0">Códigos de Error</h2>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>400</td>
+                        <td>Parámetros incorrectos o faltantes</td>
+                    </tr>
+                    <tr>
+                        <td>405</td>
+                        <td>Método no permitido</td>
+                    </tr>
+                    <tr>
+                        <td>500</td>
+                        <td>Error interno del servidor</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="h4 mb-0">Uso para IAs</h2>
+        </div>
+        <div class="card-body">
+            <p>Esta API está especialmente diseñada para ser utilizada por IAs y sistemas automatizados que necesiten acceder a información del BOE. Algunas recomendaciones:</p>
+            <ul>
+                <li>Utilice consultas específicas y contextuales para obtener mejores resultados.</li>
+                <li>Ajuste el umbral de similitud según la precisión deseada (valores más altos = resultados más precisos pero menos numerosos).</li>
+                <li>Combine con filtros de departamento y fecha para acotar los resultados cuando sea necesario.</li>
+                <li>Utilice el método POST para consultas complejas o largas.</li>
+            </ul>
+            
+            <h3 class="h5 mt-3">Ejemplo de código Python</h3>
+            <pre class="bg-light p-3"><code>import requests
+import json
+
+# Ejemplo de búsqueda semántica
+url = "https://ejemplo.com/api/semantica/"
+payload = {
+    "q": "normativa sobre teletrabajo",
+    "fecha_desde": "2020-01-01",
+    "limite": 5
+}
+
+response = requests.post(url, json=payload)
+data = response.json()
+
+if data["success"]:
+    print(f"Se encontraron {data['total']} documentos:")
+    for doc in data["resultados"]:
+        print(f"- {doc['titulo']} (Score: {doc['score']:.2f})")
+        print(f"  URL: {doc['url_pdf']}")
+else:
+    print(f"Error: {data['error']}")
+</code></pre>
+        </div>
+    </div>
+</div>
+{% endblock %}

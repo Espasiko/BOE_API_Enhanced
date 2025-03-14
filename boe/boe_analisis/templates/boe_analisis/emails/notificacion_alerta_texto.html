@@ -1,0 +1,26 @@
+BOE ALERTAS - Nuevo documento relevante
+
+Hola, {{ usuario.first_name|default:usuario.username }}
+
+Hemos encontrado un nuevo documento en el BOE que coincide con tu alerta "{{ alerta.nombre }}".
+
+DETALLES DEL DOCUMENTO:
+- Identificador: {{ notificacion.documento }}
+- Título: {{ notificacion.titulo_documento }}
+- Fecha de publicación: {{ notificacion.fecha_creacion|date:"d/m/Y" }}
+- Relevancia: {% if notificacion.relevancia >= 75 %}Alta ({{ notificacion.relevancia|floatformat:0 }}%){% elif notificacion.relevancia >= 50 %}Media ({{ notificacion.relevancia|floatformat:0 }}%){% else %}Baja ({{ notificacion.relevancia|floatformat:0 }}%){% endif %}
+
+Este documento ha sido seleccionado porque contiene palabras clave relacionadas con tu alerta:
+{{ alerta.palabras_clave }}
+
+Puedes ver el documento completo en el BOE en la siguiente dirección:
+{{ url_documento }}
+
+También puedes acceder a tu panel de alertas para gestionar tus notificaciones:
+{{ site_url }}{% url 'listar_notificaciones' %}
+
+---
+Este correo ha sido enviado porque tienes activadas las notificaciones por email en tu perfil de BOE Alertas.
+Si deseas dejar de recibir estos correos, puedes modificar tus preferencias en tu perfil: {{ site_url }}{% url 'editar_perfil' %}
+
+2025 BOE Alertas - Todos los derechos reservados

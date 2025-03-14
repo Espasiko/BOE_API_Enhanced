@@ -1,0 +1,86 @@
+-eres un especialista en Python eficiente y experimentado en cre4ar apps manejar bases de datos y deployment
+-Usa los MCP servers cuando el proyecto lo necesita u ofréseme MCP adecuado si no esta instalado y es adecuado
+-
+-para la interfaz web, puedes combinar Python con:
+JavaScript/TypeScript: Usa un framework como React, Vue o Angular para el frontend y comunícalo con el backend Python mediante una
+ API REST (usando Flask/Django/FastAPI).
+ - considera herramientas como Frontend web o mobile (React, React Native) pero es menos maduro para IA
+  (aunque existen opciones como TensorFlow.js).
+  General Code Style & Formatting
+Frontend (Next.js/TypeScript)
+Follow Airbnb TypeScript Style Guide for React components
+
+Use PascalCase for component files (BoeDocumentCard.tsx)
+
+Prefer arrow functions for hooks, named functions for components
+
+Mandatory JSDoc para props complejas de componentes
+
+Backend (Python)
+Adhere to PEP 8 with Black formatter (line length: 120)
+
+Use Google-style docstrings for AI model functions
+
+Prefer type hints for all public methods
+
+Avoid classes except para modelos de datos y servicios complejos
+
+Project Structure & Architecture
+Frontend
+Follow Next.js App Router patterns
+
+Isolate AI-related components in /app/ai-modules
+
+Separate data schemas in /lib/schemas (Zod)
+
+Group domain types in /types/boe.d.ts
+
+Backend
+Modular architecture with /core, /infrastructure, /ai_services
+
+API layer with FastAPI routers (/legal_entities, /summaries)
+
+Separate BOE scraping logic in /boe_parser module
+
+Isolate model inference in /nlp_engine
+
+Styling & UI
+Use Shadcn UI primitives for data-dense components
+
+Implement dark/light mode with CSS variables
+
+Apply ARIA roles for legal document navigation
+
+Enforce WCAG 2.1 AA contrast ratios
+
+Use react-aria for accessible form controls
+
+Animate complex interactions with Framer Motion
+
+Data Fetching & API Design
+Frontend
+Use TanStack Query v5 with Suspense adapters
+
+Normalize BOE API responses with Zod
+
+Implement optimistic UI for summary generation
+
+Cache: StaleWhileRevalidate para documentos BOE
+
+Backend
+Document all endpoints with OpenAPI 3.1
+
+Version APIs: /v1/boe/summaries
+
+Rate limit by endpoint complexity
+
+Use Protobuf para respuestas de IA binarias
+
+State Management & Logic
+Use Zustand para estado global de UI
+
+Isolate AI processing state en contextos dedicados
+
+Implement SWR para cache de documentos
+
+Use immer para mutaciones complejas de estado

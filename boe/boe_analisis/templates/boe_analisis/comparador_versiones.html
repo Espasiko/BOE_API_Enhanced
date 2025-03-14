@@ -1,0 +1,496 @@
+{% extends "boe_analisis/base.html" %}
+
+{% block title %}Comparador de Versiones | BOE Alertas{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 comparador-title"><i class="fas fa-code-compare me-2"></i>Comparador de Versiones</h1>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card shadow-sm mb-4 comparador-container">
+                <div class="card-header">
+                    <h5 class="card-title mb-0"><i class="fas fa-search me-2"></i>Buscar documento</h5>
+                </div>
+                <div class="card-body comparador-form">
+                    <p class="card-text">Busca un documento del BOE por su referencia (ej. BOE-A-2023-12345) o por texto descriptivo. El sistema encontrará las diferentes versiones disponibles para comparar.</p>
+                    
+                    <form id="searchForm" class="mb-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="referenciaInput" class="form-label">Referencia BOE</label>
+                                <input type="text" class="form-control" id="referenciaInput" placeholder="BOE-A-XXXX-XXXXX">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="textoInput" class="form-label">
+                                    <div class="form-check form-check-inline p-0 m-0">
+                                        <input class="form-check-input" type="radio" name="searchType" id="searchByText" value="text" checked>
+                                        <label class="form-check-label" for="searchByText">O buscar por texto</label>
+                                    </div>
+                                </label>
+                                <input type="text" class="form-control" id="textoInput" placeholder="Ej: Ley de Protección de Datos">
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                            <button type="submit" class="btn btn-primary btn-comparar">
+                                <i class="fas fa-search me-2"></i>Buscar
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div id="loadingIndicator" class="text-center" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="mt-2">Buscando documentos...</p>
+                    </div>
+                    
+                    <div id="errorMessage" class="alert alert-danger" role="alert" style="display: none;"></div>
+                    
+                    <div id="resultadosBusqueda" style="display: none;">
+                        <h5 class="mb-3">Resultados de la búsqueda:</h5>
+                        <div id="documentosList" class="list-group comparador-resultado"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="selectorVersiones" class="card shadow-sm mb-4 comparador-container" style="display: none;">
+                <div class="card-header">
+                    <h5 class="card-title mb-0"><i class="fas fa-code-branch me-2"></i>Seleccionar versiones</h5>
+                </div>
+                <div class="card-body comparador-form">
+                    <div id="documentoSeleccionado" class="mb-4">
+                        <h5 id="documentoTitulo" class="mb-2"></h5>
+                        <p id="documentoReferencia" class="text-muted"></p>
+                    </div>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="versionOriginal" class="form-label">Versión original</label>
+                            <select class="form-select comparador-select" id="versionOriginal"></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="versionComparar" class="form-label">Versión a comparar</label>
+                            <select class="form-select comparador-select" id="versionComparar"></select>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                        <button id="btnComparar" class="btn btn-primary btn-comparar">
+                            <i class="fas fa-code-compare me-2"></i>Comparar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="resultadoComparacion" class="card shadow-sm comparador-container" style="display: none;">
+                <div class="card-header">
+                    <h5 class="card-title mb-0"><i class="fas fa-list-check me-2"></i>Resultado de la comparación</h5>
+                </div>
+                <div class="card-body">
+                    <div id="comparacionInfo" class="mb-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="version-info">
+                                    <h6 class="mb-1">Versión original:</h6>
+                                    <p id="infoVersionOriginal" class="mb-1"></p>
+                                    <small id="fechaVersionOriginal" class="version-date"></small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="version-info">
+                                    <h6 class="mb-1">Versión comparada:</h6>
+                                    <p id="infoVersionComparar" class="mb-1"></p>
+                                    <small id="fechaVersionComparar" class="version-date"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="resumenCambios" class="mb-4 diff-container">
+                        <h5 class="mb-3">Resumen de cambios:</h5>
+                        <div id="resumenContenido"></div>
+                    </div>
+                    
+                    <div id="cambiosDetallados" class="mb-4 diff-container">
+                        <h5 class="mb-3">Cambios detallados:</h5>
+                        <div id="cambiosContenido"></div>
+                    </div>
+                    
+                    <div id="impactoLegal" class="mb-4 diff-container">
+                        <h5 class="mb-3">Impacto legal:</h5>
+                        <div id="impactoContenido"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Funciones auxiliares
+    function mostrarCargando() {
+        document.getElementById('loadingIndicator').style.display = 'block';
+        document.getElementById('errorMessage').style.display = 'none';
+    }
+    
+    function ocultarCargando() {
+        document.getElementById('loadingIndicator').style.display = 'none';
+    }
+    
+    function mostrarError(mensaje) {
+        document.getElementById('errorMessage').textContent = mensaje;
+        document.getElementById('errorMessage').style.display = 'block';
+        ocultarCargando();
+    }
+    
+    // Función para buscar documentos
+    function buscarDocumento(referencia, texto) {
+        mostrarCargando();
+        
+        // Ocultar resultados anteriores
+        document.getElementById('resultadosBusqueda').style.display = 'none';
+        document.getElementById('selectorVersiones').style.display = 'none';
+        document.getElementById('resultadoComparacion').style.display = 'none';
+        
+        // Preparar datos para la petición
+        const formData = new FormData();
+        if (referencia) {
+            formData.append('referencia', referencia);
+        } else if (texto) {
+            formData.append('texto', texto);
+        }
+        
+        // Realizar petición al servidor
+        fetch('/comparador/buscar/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            ocultarCargando();
+            if (data.error) {
+                mostrarError(data.error);
+            } else {
+                mostrarResultadosBusqueda(data.resultados);
+            }
+        })
+        .catch(error => {
+            ocultarCargando();
+            mostrarError('Error al buscar documentos: ' + error.message);
+        });
+    }
+    
+    // Función para mostrar los resultados de búsqueda
+    function mostrarResultadosBusqueda(resultados) {
+        const contenedor = document.getElementById('documentosList');
+        contenedor.innerHTML = '';
+        
+        if (resultados && resultados.length > 0) {
+            resultados.forEach(doc => {
+                const item = document.createElement('a');
+                item.href = '#';
+                item.className = 'list-group-item list-group-item-action';
+                item.innerHTML = `
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">${doc.referencia}</h5>
+                        <small>${doc.fecha || 'Fecha no disponible'}</small>
+                    </div>
+                    <p class="mb-1">${doc.titulo || 'Título no disponible'}</p>
+                `;
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    seleccionarDocumento(doc);
+                });
+                contenedor.appendChild(item);
+            });
+            
+            document.getElementById('resultadosBusqueda').style.display = 'block';
+        } else {
+            mostrarError('No se encontraron documentos con los criterios especificados.');
+        }
+    }
+    
+    // Función para seleccionar un documento
+    function seleccionarDocumento(documento) {
+        // Guardar referencia del documento seleccionado
+        document.getElementById('documentoTitulo').textContent = documento.titulo || 'Documento sin título';
+        document.getElementById('documentoReferencia').textContent = documento.referencia;
+        
+        // Cargar versiones disponibles
+        cargarVersiones(documento.referencia);
+        
+        // Mostrar selector de versiones
+        document.getElementById('selectorVersiones').style.display = 'block';
+        
+        // Ocultar resultados de búsqueda
+        document.getElementById('resultadosBusqueda').style.display = 'none';
+    }
+    
+    // Función para cargar las versiones disponibles
+    function cargarVersiones(referencia) {
+        mostrarCargando();
+        
+        // Preparar datos para la petición
+        const formData = new FormData();
+        formData.append('referencia', referencia);
+        
+        // Realizar petición al servidor
+        fetch('/comparador/versiones/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            ocultarCargando();
+            if (data.error) {
+                mostrarError(data.error);
+            } else {
+                // Guardar versiones en variable global
+                window.versionesDisponibles = data.versiones;
+                
+                // Actualizar selectores
+                actualizarSelectorVersiones();
+            }
+        })
+        .catch(error => {
+            ocultarCargando();
+            mostrarError('Error al cargar versiones: ' + error.message);
+        });
+    }
+    
+    // Función para actualizar los selectores de versiones
+    function actualizarSelectorVersiones() {
+        const selectorOriginal = document.getElementById('versionOriginal');
+        const selectorComparar = document.getElementById('versionComparar');
+        
+        // Limpiar selectores
+        selectorOriginal.innerHTML = '';
+        selectorComparar.innerHTML = '';
+        
+        if (window.versionesDisponibles && window.versionesDisponibles.length > 0) {
+            // Ordenar versiones por fecha (más antigua primero)
+            const versiones = [...window.versionesDisponibles].sort((a, b) => {
+                return new Date(a.fecha) - new Date(b.fecha);
+            });
+            
+            // Añadir opciones al selector original (versión más antigua por defecto)
+            versiones.forEach((version, index) => {
+                const option = document.createElement('option');
+                option.value = version.id;
+                option.textContent = `${version.nombre} (${version.fecha})`;
+                selectorOriginal.appendChild(option);
+            });
+            
+            // Añadir opciones al selector de comparación (versión más reciente por defecto)
+            [...versiones].reverse().forEach((version, index) => {
+                const option = document.createElement('option');
+                option.value = version.id;
+                option.textContent = `${version.nombre} (${version.fecha})`;
+                selectorComparar.appendChild(option);
+            });
+            
+            // Seleccionar primera opción en selector original y última en selector de comparación
+            if (versiones.length > 1) {
+                selectorOriginal.selectedIndex = 0;
+                selectorComparar.selectedIndex = 0;
+            }
+        } else {
+            mostrarError('No se encontraron versiones disponibles para este documento.');
+        }
+    }
+    
+    // Función para comparar versiones
+    function compararVersiones(referencia, versionOriginal, versionComparar) {
+        mostrarCargando();
+        
+        // Preparar datos para la petición
+        const formData = new FormData();
+        formData.append('referencia', referencia);
+        formData.append('version_original', versionOriginal);
+        formData.append('version_comparar', versionComparar);
+        
+        // Realizar petición al servidor
+        fetch('/comparador/comparar/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            ocultarCargando();
+            if (data.error) {
+                mostrarError(data.error);
+            } else {
+                mostrarResultadoComparacion(data);
+            }
+        })
+        .catch(error => {
+            ocultarCargando();
+            mostrarError('Error al comparar versiones: ' + error.message);
+        });
+    }
+    
+    // Función para mostrar el resultado de la comparación
+    function mostrarResultadoComparacion(data) {
+        // Mostrar contenedor de resultados
+        document.getElementById('resultadoComparacion').style.display = 'block';
+        
+        // Actualizar información de versiones
+        const versionOriginal = window.versionesDisponibles.find(v => v.id === data.version_original);
+        const versionComparar = window.versionesDisponibles.find(v => v.id === data.version_comparar);
+        
+        document.getElementById('infoVersionOriginal').textContent = versionOriginal ? versionOriginal.nombre : 'Versión desconocida';
+        document.getElementById('fechaVersionOriginal').textContent = versionOriginal ? versionOriginal.fecha : '';
+        
+        document.getElementById('infoVersionComparar').textContent = versionComparar ? versionComparar.nombre : 'Versión desconocida';
+        document.getElementById('fechaVersionComparar').textContent = versionComparar ? versionComparar.fecha : '';
+        
+        // Procesar y mostrar el contenido de la comparación
+        if (data.comparacion && typeof data.comparacion === 'object') {
+            // Resumen de cambios
+            if (data.comparacion.resumen) {
+                const resumenContainer = document.getElementById('resumenContenido');
+                resumenContainer.innerHTML = '';
+                
+                const resumenParrafo = document.createElement('p');
+                resumenParrafo.innerHTML = procesarTextoComparacion(data.comparacion.resumen);
+                resumenContainer.appendChild(resumenParrafo);
+                
+                document.getElementById('resumenCambios').style.display = 'block';
+            } else {
+                document.getElementById('resumenCambios').style.display = 'none';
+            }
+            
+            // Cambios detallados
+            if (data.comparacion.cambios_detallados) {
+                const cambiosContainer = document.getElementById('cambiosContenido');
+                cambiosContainer.innerHTML = '';
+                
+                // Si es un array, procesamos cada elemento
+                if (Array.isArray(data.comparacion.cambios_detallados)) {
+                    data.comparacion.cambios_detallados.forEach(cambio => {
+                        const cambioElement = document.createElement('div');
+                        cambioElement.className = 'mb-3';
+                        
+                        if (typeof cambio === 'string') {
+                            cambioElement.innerHTML = procesarTextoComparacion(cambio);
+                        } else if (cambio.titulo && cambio.contenido) {
+                            cambioElement.innerHTML = `
+                                <h6>${cambio.titulo}</h6>
+                                <p>${procesarTextoComparacion(cambio.contenido)}</p>
+                            `;
+                        }
+                        
+                        cambiosContainer.appendChild(cambioElement);
+                    });
+                } else if (typeof data.comparacion.cambios_detallados === 'string') {
+                    // Si es un string, lo procesamos directamente
+                    const cambioElement = document.createElement('div');
+                    cambioElement.innerHTML = procesarTextoComparacion(data.comparacion.cambios_detallados);
+                    cambiosContainer.appendChild(cambioElement);
+                }
+                
+                document.getElementById('cambiosDetallados').style.display = 'block';
+            } else {
+                document.getElementById('cambiosDetallados').style.display = 'none';
+            }
+            
+            // Impacto legal
+            if (data.comparacion.impacto_legal) {
+                const impactoContainer = document.getElementById('impactoContenido');
+                impactoContainer.innerHTML = '';
+                
+                const impactoParrafo = document.createElement('p');
+                impactoParrafo.innerHTML = procesarTextoComparacion(data.comparacion.impacto_legal);
+                impactoContainer.appendChild(impactoParrafo);
+                
+                document.getElementById('impactoLegal').style.display = 'block';
+            } else {
+                document.getElementById('impactoLegal').style.display = 'none';
+            }
+        } else if (typeof data.comparacion === 'string') {
+            // Si la comparación es un string, mostramos todo en cambios detallados
+            const cambiosContainer = document.getElementById('cambiosContenido');
+            cambiosContainer.innerHTML = procesarTextoComparacion(data.comparacion);
+            
+            document.getElementById('cambiosDetallados').style.display = 'block';
+            document.getElementById('resumenCambios').style.display = 'none';
+            document.getElementById('impactoLegal').style.display = 'none';
+        } else {
+            // Si no hay datos de comparación
+            mostrarError('No se pudo generar la comparación entre las versiones seleccionadas.');
+            document.getElementById('resultadoComparacion').style.display = 'none';
+        }
+    }
+    
+    // Función para procesar el texto de la comparación y destacar los cambios
+    function procesarTextoComparacion(texto) {
+        if (!texto) return '';
+        
+        // Reemplazar marcadores de texto añadido
+        texto = texto.replace(/\[\+([^\]]+)\+\]/g, '<span class="diff-added">$1</span>');
+        
+        // Reemplazar marcadores de texto eliminado
+        texto = texto.replace(/\[-([^\]]+)-\]/g, '<span class="diff-removed">$1</span>');
+        
+        // Reemplazar marcadores de texto destacado
+        texto = texto.replace(/\[\*([^\]]+)\*\]/g, '<span class="diff-highlight">$1</span>');
+        
+        // Convertir saltos de línea en <br>
+        texto = texto.replace(/\n/g, '<br>');
+        
+        return texto;
+    }
+    
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        // Formulario de búsqueda
+        const searchForm = document.getElementById('searchForm');
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const referencia = document.getElementById('referenciaInput').value.trim();
+            const texto = document.getElementById('textoInput').value.trim();
+            
+            if (referencia) {
+                buscarDocumento(referencia, null);
+            } else if (texto) {
+                buscarDocumento(null, texto);
+            } else {
+                mostrarError('Por favor, introduce una referencia BOE o un texto para buscar.');
+            }
+        });
+        
+        // Botón de comparar versiones
+        const btnComparar = document.getElementById('btnComparar');
+        btnComparar.addEventListener('click', function() {
+            const referencia = document.getElementById('documentoReferencia').textContent;
+            const versionOriginal = document.getElementById('versionOriginal').value;
+            const versionComparar = document.getElementById('versionComparar').value;
+            
+            if (versionOriginal === versionComparar) {
+                mostrarError('Por favor, selecciona dos versiones diferentes para comparar.');
+                return;
+            }
+            
+            compararVersiones(referencia, versionOriginal, versionComparar);
+        });
+    });
+</script>
+{% endblock %}

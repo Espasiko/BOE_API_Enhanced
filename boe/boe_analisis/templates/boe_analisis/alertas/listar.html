@@ -1,0 +1,131 @@
+{% extends "boe_analisis/base.html" %}
+
+{% block title %}Mis Alertas | BOE Alertas{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2"><i class="fas fa-bell me-2"></i>Mis Alertas</h1>
+        <a href="{% url 'crear_alerta' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i>Nueva Alerta
+        </a>
+    </div>
+    
+    {% if alertas %}
+        <div class="row">
+            {% for alerta in alertas %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow {% if not alerta.activa %}border-danger{% endif %}">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">{{ alerta.nombre }}</h5>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input toggle-alerta" type="checkbox" id="toggle-{{ alerta.id }}" 
+                                       {% if alerta.activa %}checked{% endif %} data-alerta-id="{{ alerta.id }}">
+                                <label class="form-check-label" for="toggle-{{ alerta.id }}">
+                                    {% if alerta.activa %}
+                                        <span class="badge bg-success">Activa</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inactiva</span>
+                                    {% endif %}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Palabras clave</h6>
+                            <div class="mb-3">
+                                {% for palabra in alerta.palabras_clave.split %}
+                                    <span class="badge bg-secondary me-1 mb-1">{{ palabra }}</span>
+                                {% endfor %}
+                            </div>
+                            
+                            {% if alerta.departamentos %}
+                                <h6 class="card-subtitle mb-2 text-muted">Departamentos</h6>
+                                <div class="mb-3">
+                                    {% for departamento in alerta.departamentos.split %}
+                                        <span class="badge bg-info me-1 mb-1">{{ departamento }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            
+                            <h6 class="card-subtitle mb-2 text-muted">Configuración</h6>
+                            <ul class="list-group list-group-flush mb-3">
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span>Frecuencia</span>
+                                    {% if alerta.frecuencia == 1 %}
+                                        <span class="badge bg-success">Inmediata</span>
+                                    {% elif alerta.frecuencia == 7 %}
+                                        <span class="badge bg-info">Semanal</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Mensual</span>
+                                    {% endif %}
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span>Umbral de relevancia</span>
+                                    <span class="badge bg-primary">{{ alerta.umbral_relevancia|floatformat:2 }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                                    <span>Fecha de creación</span>
+                                    <span class="text-muted">{{ alerta.fecha_creacion|date:"d/m/Y" }}</span>
+                                </li>
+                            </ul>
+                            
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <span class="badge bg-light text-dark">
+                                        <i class="fas fa-bell me-1"></i>{{ alerta.total_notificaciones }} notificaciones
+                                    </span>
+                                    {% if alerta.notificaciones_pendientes > 0 %}
+                                        <span class="badge bg-danger ms-1">
+                                            <i class="fas fa-envelope me-1"></i>{{ alerta.notificaciones_pendientes }} pendientes
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <a href="{% url 'listar_notificaciones' %}?alerta={{ alerta.id }}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-envelope me-1"></i>Ver Notificaciones
+                            </a>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'editar_alerta' alerta.id %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'eliminar_alerta' alerta.id %}" class="btn btn-outline-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card shadow">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-bell-slash fa-4x text-muted mb-3"></i>
+                <h4>No tienes alertas configuradas</h4>
+                <p class="text-muted mb-4">Crea tu primera alerta para recibir notificaciones sobre documentos del BOE que te interesen.</p>
+                <a href="{% url 'crear_alerta' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-1"></i>Crear mi primera alerta
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Toggle para activar/desactivar alertas
+        $('.toggle-alerta').change(function() {
+            const alertaId = $(this).data('alerta-id');
+            const isActive = $(this).prop('checked');
+            
+            // Aquí iría el código para actualizar el estado de la alerta mediante AJAX
+            // Por ahora, simplemente recargamos la página
+            window.location.href = "{% url 'listar_alertas' %}";
+        });
+    });
+</script>
+{% endblock %}

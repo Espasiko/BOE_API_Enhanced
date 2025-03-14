@@ -1,0 +1,136 @@
+/* 
+ * Tema oscuro - Componentes de IA y comparador
+ * Este archivo contiene estilos para los componentes relacionados con la IA y el comparador de versiones
+ */
+
+/* Estilos para la interfaz de IA */
+[data-theme="dark"] .ai-interface,
+[data-theme="dark"] .ai-chat {
+    background-color: var(--chat-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .ai-message {
+    background-color: var(--ai-message-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .user-message {
+    background-color: var(--user-message-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .ai-interface button,
+[data-theme="dark"] .ai-interface .btn,
+[data-theme="dark"] .ai-chat button,
+[data-theme="dark"] .ai-chat .btn {
+    background-color: #2a2a2a !important;
+    color: var(--text-color) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .ai-interface button:hover,
+[data-theme="dark"] .ai-interface .btn:hover,
+[data-theme="dark"] .ai-chat button:hover,
+[data-theme="dark"] .ai-chat .btn:hover {
+    background-color: #3a3a3a !important;
+}
+
+[data-theme="dark"] .model-button {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .model-button.selected {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .modelo-ia-item {
+    background-color: transparent !important;
+}
+
+/* Estilos para el comparador de versiones */
+[data-theme="dark"] .comparador-container {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .version-selector {
+    background-color: var(--input-bg) !important;
+    color: var(--input-text) !important;
+    border-color: var(--input-border) !important;
+}
+
+[data-theme="dark"] .diff-container {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .diff-added {
+    background-color: rgba(40, 167, 69, 0.2) !important;
+    color: #98c379 !important;
+}
+
+[data-theme="dark"] .diff-removed {
+    background-color: rgba(220, 53, 69, 0.2) !important;
+    color: #e06c75 !important;
+}
+
+[data-theme="dark"] .diff-unchanged {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .version-info {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .version-date {
+    color: #adb5bd !important;
+}
+
+/* Estilos para resultados de búsqueda */
+[data-theme="dark"] .search-result {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .search-result-title {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .search-result-snippet {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .search-result-meta {
+    color: #adb5bd !important;
+}
+
+[data-theme="dark"] .relevance-score {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Estilos para la carga y procesamiento */
+[data-theme="dark"] .loading-spinner {
+    border-top-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .processing-indicator {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .progress-bar {
+    background-color: var(--primary-color) !important;
+}

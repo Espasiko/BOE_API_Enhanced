@@ -1,0 +1,294 @@
+{% extends "boe_analisis/base.html" %}
+
+{% block title %}Dashboard | BOE Alertas{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h2 mb-4"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h1>
+    
+    <!-- Resumen de estadísticas -->
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card border-left-primary shadow h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Alertas Activas</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_alertas }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-bell fa-2x text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <a href="{% url 'listar_alertas' %}" class="text-decoration-none">
+                        <span class="small text-primary">Ver todas las alertas</span>
+                        <i class="fas fa-chevron-right ms-1 small text-primary"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card border-left-success shadow h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Total Notificaciones</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_notificaciones }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-envelope fa-2x text-success"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <a href="{% url 'listar_notificaciones' %}" class="text-decoration-none">
+                        <span class="small text-success">Ver todas las notificaciones</span>
+                        <i class="fas fa-chevron-right ms-1 small text-success"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card border-left-warning shadow h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Notificaciones Pendientes</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ notificaciones_no_leidas }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-envelope-open-text fa-2x text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <a href="{% url 'listar_notificaciones' %}?estado=pendiente" class="text-decoration-none">
+                        <span class="small text-warning">Ver notificaciones pendientes</span>
+                        <i class="fas fa-chevron-right ms-1 small text-warning"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card border-left-info shadow h-100">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Asistente IA</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">Consulta Inteligente</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-robot fa-2x text-info"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-light">
+                    <a href="{% url 'asistente_ia' %}" class="text-decoration-none">
+                        <span class="small text-info">Hacer consultas al asistente</span>
+                        <i class="fas fa-chevron-right ms-1 small text-info"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Notificaciones recientes -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-bell me-2"></i>Notificaciones Recientes
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% if notificaciones_pendientes %}
+                        <div class="list-group">
+                            {% for notificacion in notificaciones_pendientes %}
+                                <a href="{% url 'ver_notificacion' notificacion.id %}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1 text-truncate" style="max-width: 300px;">{{ notificacion.titulo_documento }}</h6>
+                                        <small class="text-muted">{{ notificacion.fecha_notificacion|date:"d/m/Y H:i" }}</small>
+                                    </div>
+                                    <p class="mb-1 small text-truncate">Alerta: {{ notificacion.alerta.nombre }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">{{ notificacion.documento }}</small>
+                                        <span class="badge bg-primary rounded-pill">{{ notificacion.relevancia|floatformat:2 }}</span>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                            <p class="mb-0">No tienes notificaciones pendientes</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-light">
+                    <a href="{% url 'listar_notificaciones' %}" class="text-decoration-none">
+                        <span class="small text-primary">Ver todas las notificaciones</span>
+                        <i class="fas fa-chevron-right ms-1 small"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentos recientes -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-file-alt me-2"></i>Documentos Recientes del BOE
+                    </h6>
+                    <div>
+                        <a href="{% url 'sumario_hoy' %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-calendar-day me-1"></i>Sumario de hoy
+                        </a>
+                        <a href="{% url 'busqueda_avanzada' %}" class="btn btn-sm btn-primary">
+                            <i class="fas fa-search me-1"></i>Búsqueda avanzada
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if documentos_recientes %}
+                        <div class="list-group">
+                            {% for documento in documentos_recientes %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1 text-truncate" style="max-width: 300px;">{{ documento.titulo }}</h6>
+                                        <small class="text-muted">{{ documento.fecha_publicacion|date:"d/m/Y" }}</small>
+                                    </div>
+                                    <p class="mb-1 small text-truncate">{{ documento.identificador }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <a href="{% url 'ver_documento' documento.identificador %}" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-file-alt me-1"></i>Ver documento
+                                            </a>
+                                            {% if documento.url_pdf %}
+                                                <a href="{{ documento.url_pdf }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-file-pdf me-1"></i>Ver PDF
+                                                </a>
+                                            {% else %}
+                                                <span class="text-muted small">PDF no disponible</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-exclamation-circle fa-3x text-warning mb-3"></i>
+                            <p class="mb-0">No hay documentos recientes</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-light">
+                    <a href="{% url 'sumario_hoy' %}" class="text-decoration-none">
+                        <span class="small text-primary">Ver todos los documentos del BOE</span>
+                        <i class="fas fa-chevron-right ms-1 small"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mis Alertas -->
+    <div class="row">
+        <div class="col-12 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-bell me-2"></i>Mis Alertas
+                    </h6>
+                    <a href="{% url 'crear_alerta' %}" class="btn btn-sm btn-primary">
+                        <i class="fas fa-plus me-1"></i>Nueva Alerta
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if alertas %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Palabras clave</th>
+                                        <th>Frecuencia</th>
+                                        <th>Estado</th>
+                                        <th>Notificaciones</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for alerta in alertas %}
+                                        <tr>
+                                            <td>{{ alerta.nombre }}</td>
+                                            <td>
+                                                {% for palabra in alerta.palabras_clave.split|slice:":3" %}
+                                                    <span class="badge bg-secondary">{{ palabra }}</span>
+                                                {% endfor %}
+                                                {% if alerta.palabras_clave.split|length > 3 %}
+                                                    <span class="badge bg-light text-dark">+{{ alerta.palabras_clave.split|length|add:"-3" }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if alerta.frecuencia == 1 %}
+                                                    <span class="badge bg-success">Inmediata</span>
+                                                {% elif alerta.frecuencia == 7 %}
+                                                    <span class="badge bg-info">Semanal</span>
+                                                {% else %}
+                                                    <span class="badge bg-warning">Mensual</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if alerta.activa %}
+                                                    <span class="badge bg-success">Activa</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">Inactiva</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'listar_notificaciones' %}?alerta={{ alerta.id }}" class="text-decoration-none">
+                                                    <span class="badge bg-primary rounded-pill">{{ alerta.notificaciones.count }}</span>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <div class="btn-group btn-group-sm">
+                                                    <a href="{% url 'editar_alerta' alerta.id %}" class="btn btn-outline-primary">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <a href="{% url 'eliminar_alerta' alerta.id %}" class="btn btn-outline-danger">
+                                                        <i class="fas fa-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-bell-slash fa-3x text-muted mb-3"></i>
+                            <p class="mb-3">No tienes alertas configuradas</p>
+                            <a href="{% url 'crear_alerta' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-1"></i>Crear mi primera alerta
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

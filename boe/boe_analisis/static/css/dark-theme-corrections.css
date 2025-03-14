@@ -1,0 +1,419 @@
+/* Correcciones para mejorar la legibilidad en el tema oscuro */
+
+/* Correcciones para campos de entrada */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background-color: #333 !important;
+    color: #eee !important;
+    border-color: #555 !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+    color: #aaa !important;
+}
+
+[data-theme="dark"] .form-control {
+    background-color: #333 !important;
+    color: #eee !important;
+    border-color: #555 !important;
+}
+
+[data-theme="dark"] .form-control:focus {
+    background-color: #444 !important;
+    color: #fff !important;
+    border-color: #777 !important;
+}
+
+/* Correcciones para acordeones */
+[data-theme="dark"] .accordion-button {
+    background-color: #444 !important;
+    color: #eee !important;
+}
+
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: #555 !important;
+    color: #fff !important;
+}
+
+[data-theme="dark"] .accordion-button::after {
+    filter: invert(1);
+}
+
+[data-theme="dark"] .accordion-body {
+    background-color: #333 !important;
+    color: #eee !important;
+}
+
+/* Correcciones para el sidebar */
+[data-theme="dark"] .sidebar .nav-link.active {
+    background-color: #1a73e8 !important;
+    color: #fff !important;
+}
+
+[data-theme="dark"] .sidebar .nav-link {
+    color: #eee !important;
+}
+
+/* Asegurar que solo un elemento del sidebar esté activo */
+[data-theme="dark"] .sidebar .nav-link:not(.active) {
+    background-color: transparent !important;
+}
+
+/* Correcciones para botones y enlaces */
+[data-theme="dark"] .btn-primary {
+    background-color: #1a73e8 !important;
+    color: #fff !important;
+    border-color: #1a73e8 !important;
+}
+
+[data-theme="dark"] .btn-secondary {
+    background-color: #6c757d !important;
+    color: #fff !important;
+    border-color: #6c757d !important;
+}
+
+[data-theme="dark"] .btn-success {
+    background-color: #198754 !important;
+    color: #fff !important;
+    border-color: #198754 !important;
+}
+
+[data-theme="dark"] .btn-danger {
+    background-color: #dc3545 !important;
+    color: #fff !important;
+    border-color: #dc3545 !important;
+}
+
+[data-theme="dark"] .btn-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+    border-color: #ffc107 !important;
+}
+
+[data-theme="dark"] .btn-info {
+    background-color: #0dcaf0 !important;
+    color: #212529 !important;
+    border-color: #0dcaf0 !important;
+}
+
+[data-theme="dark"] .btn-light {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+    border-color: #f8f9fa !important;
+}
+
+[data-theme="dark"] .btn-dark {
+    background-color: #212529 !important;
+    color: #fff !important;
+    border-color: #212529 !important;
+}
+
+[data-theme="dark"] .btn-outline-primary {
+    color: #1a73e8 !important;
+    border-color: #1a73e8 !important;
+}
+
+[data-theme="dark"] .btn-outline-primary:hover {
+    background-color: #1a73e8 !important;
+    color: #fff !important;
+}
+
+[data-theme="dark"] a {
+    color: #1a73e8 !important;
+}
+
+[data-theme="dark"] a:hover {
+    color: #155ab6 !important;
+}
+
+/* Correcciones para el dashboard y sumario */
+[data-theme="dark"] .card {
+    background-color: #333 !important;
+    color: #eee !important;
+    border-color: #444 !important;
+}
+
+[data-theme="dark"] .card-header {
+    background-color: #444 !important;
+    color: #fff !important;
+    border-color: #555 !important;
+}
+
+[data-theme="dark"] .card-footer {
+    background-color: #444 !important;
+    color: #eee !important;
+    border-color: #555 !important;
+}
+
+[data-theme="dark"] .badge {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .badge.bg-primary {
+    background-color: #1a73e8 !important;
+}
+
+[data-theme="dark"] .badge.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+[data-theme="dark"] .badge.bg-success {
+    background-color: #198754 !important;
+}
+
+[data-theme="dark"] .badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+[data-theme="dark"] .badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+[data-theme="dark"] .badge.bg-info {
+    background-color: #0dcaf0 !important;
+    color: #212529 !important;
+}
+
+[data-theme="dark"] .badge.bg-light {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+}
+
+[data-theme="dark"] .badge.bg-dark {
+    background-color: #212529 !important;
+}
+
+/* Correcciones para tablas */
+[data-theme="dark"] .table {
+    color: #eee !important;
+}
+
+[data-theme="dark"] .table th,
+[data-theme="dark"] .table td {
+    border-color: #444 !important;
+}
+
+[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.075) !important;
+}
+
+/* Correcciones para los textos en los campos de formulario */
+[data-theme="dark"] label {
+    color: #eee !important;
+}
+
+/* Correcciones para los elementos con texto negro en el dashboard */
+[data-theme="dark"] .text-dark {
+    color: #eee !important;
+}
+
+[data-theme="dark"] .text-muted {
+    color: #adb5bd !important;
+}
+
+/* Correcciones para los elementos con fondo blanco en el sumario */
+[data-theme="dark"] .list-group-item {
+    background-color: #333 !important;
+    color: #eee !important;
+    border-color: #444 !important;
+}
+
+/* Correcciones específicas para los botones Ver PDF y Ver documento */
+[data-theme="dark"] a[href$=".pdf"],
+[data-theme="dark"] a[href*="ver_documento"] {
+    color: #1a73e8 !important;
+}
+
+[data-theme="dark"] a.btn[href$=".pdf"],
+[data-theme="dark"] a.btn[href*="ver_documento"] {
+    color: #fff !important;
+}
+
+/* Correcciones para elementos con estilos inline */
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background-color: #ffffff"],
+[data-theme="dark"] [style*="background: white"],
+[data-theme="dark"] [style*="background: #fff"],
+[data-theme="dark"] [style*="background: #ffffff"] {
+    background-color: #333 !important;
+}
+
+[data-theme="dark"] [style*="color: black"],
+[data-theme="dark"] [style*="color: #000"],
+[data-theme="dark"] [style*="color: #000000"] {
+    color: #eee !important;
+}
+
+/* Correcciones para los botones en el sumario */
+[data-theme="dark"] .btn-ver-documento,
+[data-theme="dark"] a.btn-ver-documento,
+[data-theme="dark"] button.btn-ver-documento {
+    background-color: #1a73e8 !important;
+    color: #fff !important;
+    border-color: #1a73e8 !important;
+}
+
+[data-theme="dark"] .btn-ver-pdf,
+[data-theme="dark"] a.btn-ver-pdf,
+[data-theme="dark"] button.btn-ver-pdf {
+    background-color: transparent !important;
+    color: #1a73e8 !important;
+    border-color: #1a73e8 !important;
+}
+
+[data-theme="dark"] .btn-ver-pdf:hover,
+[data-theme="dark"] a.btn-ver-pdf:hover,
+[data-theme="dark"] button.btn-ver-pdf:hover {
+    background-color: #1a73e8 !important;
+    color: #fff !important;
+}
+
+/* Correcciones para los textos en los acordeones */
+[data-theme="dark"] .accordion-button strong,
+[data-theme="dark"] .accordion-button span {
+    color: inherit !important;
+}
+
+/* Correcciones para los campos de búsqueda en el sumario */
+[data-theme="dark"] .busqueda-avanzada input,
+[data-theme="dark"] .busqueda-avanzada select {
+    background-color: #333 !important;
+    color: #eee !important;
+    border-color: #555 !important;
+}
+
+/* Correcciones específicas para los acordeones en el sumario */
+[data-theme="dark"] .accordion-button.collapsed {
+    background-color: #444 !important;
+    color: #eee !important;
+}
+
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: #555 !important;
+    color: #fff !important;
+}
+
+/* Correcciones para los elementos de la tabla en el dashboard */
+[data-theme="dark"] td.nombre,
+[data-theme="dark"] td.palabras-clave,
+[data-theme="dark"] td.frecuencia,
+[data-theme="dark"] td.estado,
+[data-theme="dark"] td.notificaciones,
+[data-theme="dark"] td.acciones {
+    color: #eee !important;
+}
+
+/* Correcciones para los botones de acción en el dashboard */
+[data-theme="dark"] .btn-sm {
+    color: inherit !important;
+}
+
+[data-theme="dark"] .btn-outline-primary.btn-sm {
+    color: #1a73e8 !important;
+}
+
+[data-theme="dark"] .btn-outline-danger.btn-sm {
+    color: #dc3545 !important;
+}
+
+/* Correcciones específicas para los elementos del sumario del BOE */
+[data-theme="dark"] .accordion-item {
+    background-color: #333 !important;
+    border-color: #444 !important;
+}
+
+/* Correcciones para el footer */
+[data-theme="dark"] footer.bg-light {
+    background-color: #333 !important;
+    color: #eee !important;
+}
+
+[data-theme="dark"] footer .text-center {
+    color: #eee !important;
+}
+
+/* Correcciones para modales */
+[data-theme="dark"] .modal-content {
+    background-color: #333 !important;
+    color: #eee !important;
+    border-color: #444 !important;
+}
+
+[data-theme="dark"] .modal-header {
+    background-color: #444 !important;
+    color: #fff !important;
+    border-color: #555 !important;
+}
+
+[data-theme="dark"] .modal-footer {
+    background-color: #444 !important;
+    border-color: #555 !important;
+}
+
+/* Correcciones para alertas */
+[data-theme="dark"] .alert {
+    color: #eee !important;
+}
+
+[data-theme="dark"] .alert-primary {
+    background-color: rgba(26, 115, 232, 0.2) !important;
+    border-color: rgba(26, 115, 232, 0.4) !important;
+}
+
+[data-theme="dark"] .alert-secondary {
+    background-color: rgba(108, 117, 125, 0.2) !important;
+    border-color: rgba(108, 117, 125, 0.4) !important;
+}
+
+[data-theme="dark"] .alert-success {
+    background-color: rgba(25, 135, 84, 0.2) !important;
+    border-color: rgba(25, 135, 84, 0.4) !important;
+}
+
+[data-theme="dark"] .alert-danger {
+    background-color: rgba(220, 53, 69, 0.2) !important;
+    border-color: rgba(220, 53, 69, 0.4) !important;
+}
+
+[data-theme="dark"] .alert-warning {
+    background-color: rgba(255, 193, 7, 0.2) !important;
+    border-color: rgba(255, 193, 7, 0.4) !important;
+    color: #eee !important;
+}
+
+[data-theme="dark"] .alert-info {
+    background-color: rgba(13, 202, 240, 0.2) !important;
+    border-color: rgba(13, 202, 240, 0.4) !important;
+    color: #eee !important;
+}
+
+[data-theme="dark"] .alert-light {
+    background-color: rgba(248, 249, 250, 0.2) !important;
+    border-color: rgba(248, 249, 250, 0.4) !important;
+    color: #eee !important;
+}
+
+[data-theme="dark"] .alert-dark {
+    background-color: rgba(33, 37, 41, 0.2) !important;
+    border-color: rgba(33, 37, 41, 0.4) !important;
+}
+
+/* Correcciones para el texto en los botones "Ver documento" */
+[data-theme="dark"] a.btn-ver-documento,
+[data-theme="dark"] button.btn-ver-documento,
+[data-theme="dark"] .btn-ver-documento {
+    color: #fff !important;
+}
+
+/* Correcciones para los enlaces dentro de las tablas */
+[data-theme="dark"] .table a:not(.btn) {
+    color: #1a73e8 !important;
+}

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOE Alertas - Resumen de notificaciones</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #1a73e8;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-top: none;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            text-align: center;
+            color: #666;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #1a73e8;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+        .relevancia {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .alta {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .media {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .baja {
+            background-color: #f8f9fa;
+            color: #6c757d;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .seccion {
+            margin-top: 30px;
+            border-left: 4px solid #1a73e8;
+            padding-left: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>BOE Alertas</h1>
+        <p>Resumen de notificaciones para tu alerta "{{ alerta.nombre }}"</p>
+    </div>
+    
+    <div class="content">
+        <h2>Hola, {{ usuario.first_name|default:usuario.username }}</h2>
+        
+        <p>Hemos encontrado <strong>{{ total_notificaciones }}</strong> documentos en el BOE que coinciden con tu alerta <strong>"{{ alerta.nombre }}"</strong>.</p>
+        
+        <div style="text-align: center; margin: 20px 0;">
+            <a href="{{ site_url }}{% url 'listar_notificaciones' %}?alerta={{ alerta.id }}" class="btn">Ver todas mis notificaciones</a>
+        </div>
+        
+        {% if alta_relevancia %}
+        <div class="seccion">
+            <h3><span class="relevancia alta">Alta relevancia</span> ({{ alta_relevancia.count }} documentos)</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Documento</th>
+                        <th>Título</th>
+                        <th>Relevancia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for notificacion in alta_relevancia|slice:":5" %}
+                    <tr>
+                        <td><a href="{{ notificacion.url_documento }}" target="_blank">{{ notificacion.documento }}</a></td>
+                        <td>{{ notificacion.titulo_documento|truncatechars:50 }}</td>
+                        <td>{{ notificacion.relevancia|floatformat:0 }}%</td>
+                    </tr>
+                    {% endfor %}
+                    {% if alta_relevancia.count > 5 %}
+                    <tr>
+                        <td colspan="3" style="text-align: center;">
+                            <a href="{{ site_url }}{% url 'listar_notificaciones' %}?alerta={{ alerta.id }}&relevancia=alta">Ver {{ alta_relevancia.count|add:"-5" }} documentos más...</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        {% if media_relevancia %}
+        <div class="seccion">
+            <h3><span class="relevancia media">Media relevancia</span> ({{ media_relevancia.count }} documentos)</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Documento</th>
+                        <th>Título</th>
+                        <th>Relevancia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for notificacion in media_relevancia|slice:":5" %}
+                    <tr>
+                        <td><a href="{{ notificacion.url_documento }}" target="_blank">{{ notificacion.documento }}</a></td>
+                        <td>{{ notificacion.titulo_documento|truncatechars:50 }}</td>
+                        <td>{{ notificacion.relevancia|floatformat:0 }}%</td>
+                    </tr>
+                    {% endfor %}
+                    {% if media_relevancia.count > 5 %}
+                    <tr>
+                        <td colspan="3" style="text-align: center;">
+                            <a href="{{ site_url }}{% url 'listar_notificaciones' %}?alerta={{ alerta.id }}&relevancia=media">Ver {{ media_relevancia.count|add:"-5" }} documentos más...</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        {% if baja_relevancia %}
+        <div class="seccion">
+            <h3><span class="relevancia baja">Baja relevancia</span> ({{ baja_relevancia.count }} documentos)</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Documento</th>
+                        <th>Título</th>
+                        <th>Relevancia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for notificacion in baja_relevancia|slice:":3" %}
+                    <tr>
+                        <td><a href="{{ notificacion.url_documento }}" target="_blank">{{ notificacion.documento }}</a></td>
+                        <td>{{ notificacion.titulo_documento|truncatechars:50 }}</td>
+                        <td>{{ notificacion.relevancia|floatformat:0 }}%</td>
+                    </tr>
+                    {% endfor %}
+                    {% if baja_relevancia.count > 3 %}
+                    <tr>
+                        <td colspan="3" style="text-align: center;">
+                            <a href="{{ site_url }}{% url 'listar_notificaciones' %}?alerta={{ alerta.id }}&relevancia=baja">Ver {{ baja_relevancia.count|add:"-3" }} documentos más...</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        
+        <p>Recuerda que puedes ajustar la configuración de tu alerta para recibir notificaciones más precisas:</p>
+        <div style="text-align: center;">
+            <a href="{{ site_url }}{% url 'editar_alerta' alerta.id %}" class="btn" style="background-color: #6c757d;">Ajustar configuración de alerta</a>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Este correo ha sido enviado porque tienes activadas las notificaciones por email en tu perfil de BOE Alertas.</p>
+        <p>Frecuencia actual: 
+            {% if alerta.frecuencia == 1 %}
+                Inmediata
+            {% elif alerta.frecuencia == 7 %}
+                Semanal
+            {% else %}
+                Mensual
+            {% endif %}
+        </p>
+        <p>Si deseas cambiar la frecuencia o dejar de recibir estos correos, puedes <a href="{{ site_url }}{% url 'editar_perfil' %}">modificar tus preferencias</a> en tu perfil.</p>
+        <p>&copy; 2025 BOE Alertas - Todos los derechos reservados</p>
+    </div>
+</body>
+</html>

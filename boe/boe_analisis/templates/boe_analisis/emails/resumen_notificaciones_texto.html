@@ -1,0 +1,53 @@
+BOE ALERTAS - Resumen de notificaciones para tu alerta "{{ alerta.nombre }}"
+
+Hola, {{ usuario.first_name|default:usuario.username }}
+
+Hemos encontrado {{ total_notificaciones }} documentos en el BOE que coinciden con tu alerta "{{ alerta.nombre }}".
+
+Puedes ver todas tus notificaciones en: {{ site_url }}{% url 'listar_notificaciones' %}?alerta={{ alerta.id }}
+
+{% if alta_relevancia %}
+DOCUMENTOS DE ALTA RELEVANCIA ({{ alta_relevancia.count }}):
+{% for notificacion in alta_relevancia|slice:":5" %}
+- {{ notificacion.documento }}: {{ notificacion.titulo_documento|truncatechars:70 }} ({{ notificacion.relevancia|floatformat:0 }}%)
+  {{ notificacion.url_documento }}
+{% endfor %}
+{% if alta_relevancia.count > 5 %}
+... y {{ alta_relevancia.count|add:"-5" }} documentos más de alta relevancia.
+{% endif %}
+{% endif %}
+
+{% if media_relevancia %}
+DOCUMENTOS DE MEDIA RELEVANCIA ({{ media_relevancia.count }}):
+{% for notificacion in media_relevancia|slice:":5" %}
+- {{ notificacion.documento }}: {{ notificacion.titulo_documento|truncatechars:70 }} ({{ notificacion.relevancia|floatformat:0 }}%)
+  {{ notificacion.url_documento }}
+{% endfor %}
+{% if media_relevancia.count > 5 %}
+... y {{ media_relevancia.count|add:"-5" }} documentos más de media relevancia.
+{% endif %}
+{% endif %}
+
+{% if baja_relevancia %}
+DOCUMENTOS DE BAJA RELEVANCIA ({{ baja_relevancia.count }}):
+{% for notificacion in baja_relevancia|slice:":3" %}
+- {{ notificacion.documento }}: {{ notificacion.titulo_documento|truncatechars:70 }} ({{ notificacion.relevancia|floatformat:0 }}%)
+  {{ notificacion.url_documento }}
+{% endfor %}
+{% if baja_relevancia.count > 3 %}
+... y {{ baja_relevancia.count|add:"-3" }} documentos más de baja relevancia.
+{% endif %}
+{% endif %}
+
+Recuerda que puedes ajustar la configuración de tu alerta para recibir notificaciones más precisas:
+{{ site_url }}{% url 'editar_alerta' alerta.id %}
+
+---
+Este correo ha sido enviado porque tienes activadas las notificaciones por email en tu perfil de BOE Alertas.
+
+Frecuencia actual: {% if alerta.frecuencia == 1 %}Inmediata{% elif alerta.frecuencia == 7 %}Semanal{% else %}Mensual{% endif %}
+
+Si deseas cambiar la frecuencia o dejar de recibir estos correos, puedes modificar tus preferencias en tu perfil:
+{{ site_url }}{% url 'editar_perfil' %}
+
+2025 BOE Alertas - Todos los derechos reservados

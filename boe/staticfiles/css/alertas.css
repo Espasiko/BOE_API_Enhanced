@@ -1,0 +1,667 @@
+/**
+ * Estilos personalizados para el sistema de alertas del BOE
+ */
+
+/* Estilos para las tarjetas de alertas */
+.card-alerta {
+    transition: all 0.3s ease;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-alerta:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.card-alerta.inactiva {
+    opacity: 0.7;
+}
+
+.card-alerta.inactiva:hover {
+    opacity: 1;
+}
+
+/* Badges personalizados */
+.badge-palabra {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.25rem;
+    background-color: #6c757d;
+    margin-right: 0.25rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Estilos para el toggle de activación */
+.form-switch .form-check-input {
+    width: 2.5em;
+    height: 1.25em;
+}
+
+.form-switch .form-check-input:checked {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+/* Estilos para la barra de progreso de relevancia */
+.progress-relevancia {
+    height: 0.5rem;
+    background-color: #e9ecef;
+    border-radius: 0.25rem;
+}
+
+.progress-relevancia .progress-bar {
+    background-color: #0d6efd;
+}
+
+/* Estilos para la página de perfil */
+.avatar-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+}
+
+.avatar-container .avatar-edit {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 36px;
+    height: 36px;
+    background-color: #0d6efd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.avatar-container .avatar-edit:hover {
+    background-color: #0b5ed7;
+}
+
+/* Estilos para las estadísticas */
+.stat-card {
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.stat-card .stat-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 1rem auto;
+}
+
+.stat-card.primary .stat-icon {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+}
+
+.stat-card.success .stat-icon {
+    background-color: rgba(25, 135, 84, 0.1);
+    color: #198754;
+}
+
+.stat-card.warning .stat-icon {
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+}
+
+.stat-card.danger .stat-icon {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+/* Estilos para notificaciones */
+.notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    font-size: 0.7rem;
+    padding: 0.25em 0.6em;
+}
+
+.notification-icon {
+    position: relative;
+}
+
+/* Animación para notificaciones nuevas */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.notification-new {
+    animation: pulse 1.5s infinite;
+}
+
+/* Estilos para la tabla de notificaciones */
+.table-notificaciones tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table-notificaciones tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.table-notificaciones .relevancia-badge {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-weight: bold;
+}
+
+.relevancia-alta {
+    background-color: rgba(25, 135, 84, 0.2);
+    color: #198754;
+}
+
+.relevancia-media {
+    background-color: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+}
+
+.relevancia-baja {
+    background-color: rgba(108, 117, 125, 0.2);
+    color: #6c757d;
+}
+
+/* Estilos para los formularios */
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    opacity: 0.65;
+    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
+}
+
+.form-control:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Estilos para el selector de tags */
+.bootstrap-tagsinput {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    appearance: none;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.bootstrap-tagsinput .tag {
+    margin-right: 2px;
+    color: white;
+}
+
+.bootstrap-tagsinput input {
+    border: none;
+    box-shadow: none;
+    outline: none;
+    background-color: transparent;
+    padding: 0 6px;
+    margin: 0;
+    width: auto;
+    max-width: inherit;
+}
+
+/* Estilos para las notificaciones toast */
+.toast-container {
+    z-index: 1090;
+}
+
+.toast {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+/* Estilos para los botones de acción */
+.btn-action {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.btn-action:hover {
+    transform: translateY(-2px);
+}
+
+/* Estilos para la nube de palabras */
+#palabrasClaveCloud text:hover {
+    cursor: pointer;
+    filter: brightness(120%);
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 768px) {
+    .card-alerta {
+        margin-bottom: 1rem;
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    .btn-action {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .avatar-container {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+:root {
+    --primary-color: #2196F3;       /* Azul principal */
+    --secondary-color: #607D8B;     /* Gris azulado */
+    --accent-color: #00BCD4;        /* Turquesa/Cyan */
+    --success-color: #4CAF50;       /* Verde */
+    --warning-color: #FFC107;       /* Amarillo */
+    --danger-color: #F44336;        /* Rojo */
+    --light-color: #ECEFF1;         /* Gris muy claro */
+    --dark-color: #263238;          /* Gris muy oscuro */
+    --text-color: #37474F;          /* Gris oscuro para texto */
+    --text-light: #78909C;          /* Gris claro para texto secundario */
+    --border-radius: 8px;           /* Radio de borde para elementos */
+    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra estándar */
+}
+
+/* Estilos generales */
+body {
+    color: var(--text-color);
+    background-color: #F5F7FA;
+}
+
+.card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: 1px solid var(--light-color);
+    font-weight: 600;
+    padding: 15px 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* Botones personalizados */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #1976D2;
+    border-color: #1976D2;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-accent {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    color: white;
+}
+
+.btn-accent:hover {
+    background-color: #00ACC1;
+    border-color: #00ACC1;
+    color: white;
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Badges y etiquetas */
+.badge-primary {
+    background-color: var(--primary-color);
+}
+
+.badge-secondary {
+    background-color: var(--secondary-color);
+}
+
+.badge-accent {
+    background-color: var(--accent-color);
+}
+
+.badge-success {
+    background-color: var(--success-color);
+}
+
+.badge-warning {
+    background-color: var(--warning-color);
+}
+
+.badge-danger {
+    background-color: var(--danger-color);
+}
+
+/* Estilos para alertas */
+.alerta-card {
+    border-left: 4px solid var(--primary-color);
+}
+
+.alerta-card.activa {
+    border-left-color: var(--success-color);
+}
+
+.alerta-card.inactiva {
+    border-left-color: var(--text-light);
+    opacity: 0.7;
+}
+
+.alerta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.alerta-acciones {
+    display: flex;
+    gap: 10px;
+}
+
+.alerta-estado {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.alerta-estado.activa {
+    background-color: var(--success-color);
+}
+
+.alerta-estado.inactiva {
+    background-color: var(--text-light);
+}
+
+.alerta-meta {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.alerta-keywords {
+    margin-top: 15px;
+}
+
+.alerta-keyword {
+    display: inline-block;
+    background-color: var(--light-color);
+    color: var(--text-color);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+/* Estilos para notificaciones */
+.notificacion-card {
+    border-left: 4px solid var(--warning-color);
+    transition: all 0.3s;
+}
+
+.notificacion-card.leida {
+    border-left-color: var(--success-color);
+    background-color: #FAFAFA;
+}
+
+.notificacion-card.archivada {
+    border-left-color: var(--text-light);
+    opacity: 0.7;
+}
+
+.notificacion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notificacion-acciones {
+    display: flex;
+    gap: 10px;
+}
+
+.notificacion-meta {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+.notificacion-relevancia {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.relevancia-alta {
+    background-color: rgba(76, 175, 80, 0.2);
+    color: var(--success-color);
+}
+
+.relevancia-media {
+    background-color: rgba(255, 193, 7, 0.2);
+    color: #FFA000;
+}
+
+.relevancia-baja {
+    background-color: rgba(120, 144, 156, 0.2);
+    color: var(--text-light);
+}
+
+/* Estilos para formularios */
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(33, 150, 243, 0.25);
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.form-text {
+    color: var(--text-light);
+}
+
+/* Select2 personalizado */
+.select2-container--default .select2-selection--multiple {
+    border-color: #ced4da;
+    border-radius: var(--border-radius);
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(33, 150, 243, 0.25);
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--primary-color);
+}
+
+/* Bootstrap Tags Input personalizado */
+.bootstrap-tagsinput {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--text-color);
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: var(--border-radius);
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.bootstrap-tagsinput:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(33, 150, 243, 0.25);
+}
+
+.bootstrap-tagsinput .tag {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 3px 7px;
+    border-radius: 3px;
+    margin-right: 5px;
+}
+
+/* Estadísticas */
+.stat-card {
+    text-align: center;
+    padding: 20px;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    color: var(--text-light);
+    font-size: 1rem;
+}
+
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin-bottom: 30px;
+}
+
+/* Tooltips personalizados */
+.custom-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-tooltip .tooltip-text {
+    visibility: hidden;
+    width: 200px;
+    background-color: var(--dark-color);
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.custom-tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Animaciones */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .alerta-header, .notificacion-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .alerta-acciones, .notificacion-acciones {
+        margin-top: 10px;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+}

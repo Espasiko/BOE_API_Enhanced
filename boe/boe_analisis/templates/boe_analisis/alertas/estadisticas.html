@@ -1,0 +1,348 @@
+{% extends "boe_analisis/base.html" %}
+
+{% block title %}Estadísticas | BOE Alertas{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h2 mb-4"><i class="fas fa-chart-bar me-2"></i>Estadísticas de Alertas</h1>
+    
+    <div class="row">
+        <!-- Tarjetas de resumen -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Alertas Activas</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ estadisticas.alertas_activas }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-bell fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Notificaciones Totales</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ estadisticas.notificaciones_totales }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-envelope fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Notificaciones Pendientes</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ estadisticas.notificaciones_pendientes }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Relevancia Media</div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ estadisticas.relevancia_media|floatformat:0 }}%</div>
+                                </div>
+                                <div class="col">
+                                    <div class="progress progress-sm mr-2">
+                                        <div class="progress-bar bg-info" role="progressbar"
+                                            style="width: {{ estadisticas.relevancia_media|floatformat:0 }}%"
+                                            aria-valuenow="{{ estadisticas.relevancia_media|floatformat:0 }}" aria-valuemin="0"
+                                            aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-percentage fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Gráfico de alertas por categoría -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Alertas por Categoría</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4 pb-2">
+                        <canvas id="alertasPorCategoria"></canvas>
+                    </div>
+                    <div class="mt-4 text-center small">
+                        {% for categoria in estadisticas.categorias %}
+                        <span class="mr-2">
+                            <i class="fas fa-circle" style="color: {{ categoria.color }}"></i> {{ categoria.nombre }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráfico de notificaciones por tiempo -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Notificaciones por Tiempo</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="notificacionesPorTiempo"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Tabla de alertas más activas -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Alertas Más Activas</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Notificaciones</th>
+                                    <th>Relevancia Media</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for alerta in estadisticas.alertas_mas_activas %}
+                                <tr>
+                                    <td>{{ alerta.nombre }}</td>
+                                    <td>{{ alerta.notificaciones }}</td>
+                                    <td>
+                                        <div class="progress" style="height: 20px;">
+                                            <div class="progress-bar bg-success" role="progressbar" 
+                                                 style="width: {{ alerta.relevancia_media|floatformat:0 }}%;" 
+                                                 aria-valuenow="{{ alerta.relevancia_media|floatformat:0 }}" 
+                                                 aria-valuemin="0" aria-valuemax="100">
+                                                {{ alerta.relevancia_media|floatformat:0 }}%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Palabras clave más frecuentes -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Palabras Clave Más Frecuentes</h6>
+                </div>
+                <div class="card-body">
+                    <div id="palabrasClaveCloud" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-cloud@1.2.5/build/d3.layout.cloud.min.js"></script>
+
+<script>
+    // Datos para los gráficos
+    const categoriasDatos = {
+        labels: [{% for categoria in estadisticas.categorias %}'{{ categoria.nombre }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+        datasets: [{
+            data: [{% for categoria in estadisticas.categorias %}{{ categoria.count }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+            backgroundColor: [{% for categoria in estadisticas.categorias %}'{{ categoria.color }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+        }]
+    };
+
+    const notificacionesTiempoDatos = {
+        labels: [{% for fecha in estadisticas.fechas %}'{{ fecha.fecha }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+        datasets: [{
+            label: 'Notificaciones',
+            lineTension: 0.3,
+            backgroundColor: "rgba(78, 115, 223, 0.05)",
+            borderColor: "rgba(78, 115, 223, 1)",
+            pointRadius: 3,
+            pointBackgroundColor: "rgba(78, 115, 223, 1)",
+            pointBorderColor: "rgba(78, 115, 223, 1)",
+            pointHoverRadius: 3,
+            pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+            pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+            pointHitRadius: 10,
+            pointBorderWidth: 2,
+            data: [{% for fecha in estadisticas.fechas %}{{ fecha.count }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+        }]
+    };
+
+    // Configuración de los gráficos
+    window.addEventListener('load', function() {
+        // Gráfico de alertas por categoría
+        var ctx = document.getElementById("alertasPorCategoria");
+        var myPieChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: categoriasDatos,
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    caretPadding: 10,
+                },
+                legend: {
+                    display: false
+                },
+                cutoutPercentage: 80,
+            },
+        });
+
+        // Gráfico de notificaciones por tiempo
+        var ctx2 = document.getElementById("notificacionesPorTiempo");
+        var myLineChart = new Chart(ctx2, {
+            type: 'line',
+            data: notificacionesTiempoDatos,
+            options: {
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 25,
+                        top: 25,
+                        bottom: 0
+                    }
+                },
+                scales: {
+                    xAxes: [{
+                        time: {
+                            unit: 'date'
+                        },
+                        gridLines: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            maxTicksLimit: 7
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            maxTicksLimit: 5,
+                            padding: 10,
+                            beginAtZero: true
+                        },
+                        gridLines: {
+                            color: "rgb(234, 236, 244)",
+                            zeroLineColor: "rgb(234, 236, 244)",
+                            drawBorder: false,
+                            borderDash: [2],
+                            zeroLineBorderDash: [2]
+                        }
+                    }],
+                },
+                legend: {
+                    display: false
+                },
+                tooltips: {
+                    backgroundColor: "rgb(255,255,255)",
+                    bodyFontColor: "#858796",
+                    titleMarginBottom: 10,
+                    titleFontColor: '#6e707e',
+                    titleFontSize: 14,
+                    borderColor: '#dddfeb',
+                    borderWidth: 1,
+                    xPadding: 15,
+                    yPadding: 15,
+                    displayColors: false,
+                    intersect: false,
+                    mode: 'index',
+                    caretPadding: 10,
+                }
+            }
+        });
+
+        // Nube de palabras clave
+        const palabrasClave = [
+            {% for palabra in estadisticas.palabras_clave %}
+            {text: '{{ palabra.texto }}', size: {{ palabra.tamano }}},
+            {% endfor %}
+        ];
+
+        const width = document.getElementById('palabrasClaveCloud').offsetWidth;
+        const height = 300;
+
+        const layout = d3.layout.cloud()
+            .size([width, height])
+            .words(palabrasClave)
+            .padding(5)
+            .rotate(() => ~~(Math.random() * 2) * 90)
+            .font("Impact")
+            .fontSize(d => d.size)
+            .on("end", draw);
+
+        layout.start();
+
+        function draw(words) {
+            d3.select("#palabrasClaveCloud").append("svg")
+                .attr("width", layout.size()[0])
+                .attr("height", layout.size()[1])
+                .append("g")
+                .attr("transform", `translate(${layout.size()[0] / 2},${layout.size()[1] / 2})`)
+                .selectAll("text")
+                .data(words)
+                .enter().append("text")
+                .style("font-size", d => `${d.size}px`)
+                .style("font-family", "Impact")
+                .style("fill", () => d3.schemeCategory10[Math.floor(Math.random() * 10)])
+                .attr("text-anchor", "middle")
+                .attr("transform", d => `translate(${d.x},${d.y})rotate(${d.rotate})`)
+                .text(d => d.text);
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,196 @@
+/* 
+ * Tema oscuro - Componentes específicos
+ * Este archivo contiene estilos para componentes específicos en modo oscuro
+ */
+
+/* Estilos para acordeones */
+[data-theme="dark"] .accordion-item {
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .accordion-header {
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .accordion-button,
+[data-theme="dark"] .accordion-button.collapsed {
+    background-color: var(--accordion-header-bg) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.125) !important;
+    box-shadow: none !important;
+    padding: 15px;
+    font-weight: 600 !important;
+}
+
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: var(--accordion-header-active-bg) !important;
+    color: #ffffff !important;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .accordion-button::after {
+    filter: invert(1) brightness(1.5);
+    opacity: 0.8;
+}
+
+[data-theme="dark"] .accordion-button:hover {
+    background-color: #333333 !important;
+}
+
+[data-theme="dark"] .accordion-body {
+    background-color: var(--accordion-body-bg) !important;
+    color: var(--text-color) !important;
+    padding: 15px;
+}
+
+[data-theme="dark"] .accordion-button strong,
+[data-theme="dark"] .accordion-header strong,
+[data-theme="dark"] .accordion-button span,
+[data-theme="dark"] .accordion-header span {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .accordion-button .badge {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+/* Estilos para tarjetas */
+[data-theme="dark"] .card {
+    background-color: var(--card-bg) !important;
+    color: #ffffff !important;
+    border-color: var(--border-color) !important;
+    box-shadow: var(--card-shadow);
+}
+
+[data-theme="dark"] .card-header {
+    background-color: #2a2a2a;
+    color: #ffffff !important;
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .card-footer {
+    background-color: #2a2a2a;
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .card-title,
+[data-theme="dark"] .card-header h1,
+[data-theme="dark"] .card-header h2,
+[data-theme="dark"] .card-header h3,
+[data-theme="dark"] .card-header h4,
+[data-theme="dark"] .card-header h5,
+[data-theme="dark"] .card-header h6 {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .card-body {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .card-text {
+    color: #ffffff !important;
+}
+
+/* Estilos para listas y grupos */
+[data-theme="dark"] .list-group-item {
+    background-color: var(--list-group-bg) !important;
+    color: var(--list-group-text) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .list-group-item-action:hover {
+    background-color: var(--list-group-hover) !important;
+}
+
+[data-theme="dark"] .list-group-item h5,
+[data-theme="dark"] .list-group-item p,
+[data-theme="dark"] .list-group-item div,
+[data-theme="dark"] .list-group-item span:not(.badge) {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .list-group-item a,
+[data-theme="dark"] .list-group-item h5,
+[data-theme="dark"] .list-group-item p {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .list-group-item h5.mb-1 {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+[data-theme="dark"] .list-group-item p.mb-1 {
+    color: #ffffff !important;
+}
+
+/* Estilos para desplegables */
+[data-theme="dark"] .dropdown-menu {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .dropdown-item {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .dropdown-item:hover,
+[data-theme="dark"] .dropdown-item:focus {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .dropdown-divider {
+    border-color: var(--border-color) !important;
+}
+
+/* Estilos para badges */
+[data-theme="dark"] .badge.bg-primary {
+    background-color: var(--btn-primary-bg) !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .badge.bg-secondary {
+    background-color: #6c757d !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .badge.bg-info {
+    background-color: #0dcaf0 !important;
+    color: #212529 !important;
+}
+
+[data-theme="dark"] .badge.bg-info.text-dark {
+    background-color: #0dcaf0 !important;
+    color: #000000 !important;
+}
+
+[data-theme="dark"] .badge.bg-info.text-dark a,
+[data-theme="dark"] .badge.bg-info.text-dark a.text-dark {
+    color: #000000 !important;
+}
+
+/* Estilos para textos */
+[data-theme="dark"] .text-muted {
+    color: #adb5bd !important;
+}
+
+[data-theme="dark"] small.text-muted {
+    color: #cccccc !important;
+}
+
+/* Estilos para el sumario de hoy */
+[data-theme="dark"] #acordeonDepartamentos .accordion-button {
+    background-color: var(--accordion-header-bg) !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] #acordeonDepartamentos .accordion-button:not(.collapsed) {
+    background-color: var(--accordion-header-active-bg) !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] #acordeonDepartamentos .accordion-button strong {
+    color: #ffffff !important;
+}

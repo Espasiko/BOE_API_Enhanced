@@ -1,0 +1,212 @@
+/* 
+ * Estilos para el Comparador de Versiones
+ * Compatible con modo claro y oscuro
+ */
+
+/* Estilos para el modo claro (por defecto) */
+.comparador-container {
+    background-color: #ffffff;
+    color: #212529;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.version-selector {
+    background-color: #f8f9fa;
+    color: #212529;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.75rem;
+}
+
+.diff-container {
+    background-color: #ffffff;
+    color: #212529;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+.diff-added {
+    background-color: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.diff-removed {
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+}
+
+.diff-unchanged {
+    color: #212529;
+}
+
+.version-info {
+    background-color: #f8f9fa;
+    color: #212529;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.version-date {
+    color: #6c757d;
+}
+
+/* Estilos para el modo oscuro */
+[data-theme="dark"] .comparador-container {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .version-selector {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border-color: var(--input-border);
+}
+
+[data-theme="dark"] .diff-container {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .diff-added {
+    background-color: rgba(40, 167, 69, 0.2);
+    color: #98c379;
+}
+
+[data-theme="dark"] .diff-removed {
+    background-color: rgba(220, 53, 69, 0.2);
+    color: #e06c75;
+}
+
+[data-theme="dark"] .diff-unchanged {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .version-info {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .version-date {
+    color: #adb5bd;
+}
+
+/* Estilos específicos para la página del comparador */
+.comparador-title {
+    color: #212529;
+    margin-bottom: 1.5rem;
+}
+
+[data-theme="dark"] .comparador-title {
+    color: #ffffff;
+}
+
+/* Correcciones específicas para los selectores en el comparador */
+.comparador-select {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+[data-theme="dark"] .comparador-select {
+    color: #ffffff;
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+}
+
+/* Correcciones para los resultados de búsqueda en el comparador */
+.comparador-resultado {
+    background-color: #ffffff;
+    color: #212529;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+[data-theme="dark"] .comparador-resultado {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+.comparador-resultado h5,
+.comparador-resultado p {
+    color: #212529;
+}
+
+[data-theme="dark"] .comparador-resultado h5,
+[data-theme="dark"] .comparador-resultado p {
+    color: #ffffff;
+}
+
+/* Correcciones específicas para los botones del comparador */
+.btn-comparar {
+    color: #fff;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-comparar:hover {
+    color: #fff;
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+/* Garantizar que los textos en los resultados sean visibles en ambos modos */
+#resultadosBusqueda {
+    color: #212529;
+}
+
+[data-theme="dark"] #resultadosBusqueda {
+    color: #ffffff;
+}
+
+#resultadosBusqueda .list-group-item {
+    background-color: #ffffff;
+    color: #212529;
+}
+
+[data-theme="dark"] #resultadosBusqueda .list-group-item {
+    background-color: var(--list-group-bg);
+    color: var(--list-group-text);
+}
+
+/* Correcciones para los inputs en el comparador */
+.comparador-form input,
+.comparador-form textarea {
+    color: #212529;
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+}
+
+[data-theme="dark"] .comparador-form input,
+[data-theme="dark"] .comparador-form textarea {
+    color: #ffffff;
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+}
+
+/* Correcciones para los placeholders */
+.comparador-form ::placeholder {
+    color: #6c757d;
+    opacity: 1;
+}
+
+[data-theme="dark"] .comparador-form ::placeholder {
+    color: #aaaaaa;
+    opacity: 1;
+}

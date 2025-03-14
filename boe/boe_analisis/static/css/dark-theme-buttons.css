@@ -1,0 +1,176 @@
+/* 
+ * Tema oscuro - Botones y elementos de navegación
+ * Este archivo contiene estilos para botones y elementos de navegación en modo oscuro
+ */
+
+/* Estilos para botones */
+[data-theme="dark"] .btn-primary {
+    background-color: var(--btn-primary-bg) !important;
+    color: var(--btn-text) !important;
+    border-color: var(--btn-primary-border) !important;
+}
+
+[data-theme="dark"] .btn-primary:hover {
+    background-color: #155ab6 !important;
+    border-color: #155ab6 !important;
+}
+
+[data-theme="dark"] .btn-secondary {
+    background-color: #6c757d !important;
+    color: #fff !important;
+    border-color: #6c757d !important;
+}
+
+[data-theme="dark"] .btn-success {
+    background-color: #198754 !important;
+    color: #fff !important;
+    border-color: #198754 !important;
+}
+
+[data-theme="dark"] .btn-danger {
+    background-color: #dc3545 !important;
+    color: #fff !important;
+    border-color: #dc3545 !important;
+}
+
+[data-theme="dark"] .btn-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+    border-color: #ffc107 !important;
+}
+
+[data-theme="dark"] .btn-info {
+    background-color: #0dcaf0 !important;
+    color: #212529 !important;
+    border-color: #0dcaf0 !important;
+}
+
+[data-theme="dark"] .btn-light {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+    border-color: #f8f9fa !important;
+}
+
+[data-theme="dark"] .btn-dark {
+    background-color: #212529 !important;
+    color: #fff !important;
+    border-color: #212529 !important;
+}
+
+[data-theme="dark"] .btn-outline-primary {
+    color: var(--btn-primary-bg) !important;
+    border-color: var(--btn-primary-bg) !important;
+}
+
+[data-theme="dark"] .btn-outline-primary:hover {
+    background-color: var(--btn-primary-bg) !important;
+    color: var(--btn-text) !important;
+}
+
+/* Correcciones para botones con fondo blanco */
+[data-theme="dark"] .btn.bg-white,
+[data-theme="dark"] button.bg-white,
+[data-theme="dark"] a.bg-white,
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Corrección específica para botones con fondo blanco y texto blanco */
+[data-theme="dark"] button[style*="background: white"][style*="color: white"],
+[data-theme="dark"] button[style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] button[style*="background: #ffffff"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #ffffff"][style*="color: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Estilos para la navegación */
+[data-theme="dark"] .navbar {
+    background-color: var(--navbar-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .navbar-brand, 
+[data-theme="dark"] .navbar .nav-link {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .navbar-toggler-icon {
+    filter: invert(1) brightness(1.5);
+}
+
+/* Estilos para la barra lateral */
+[data-theme="dark"] .sidebar {
+    background-color: var(--sidebar-bg);
+    border-color: var(--border-color);
+    color: var(--sidebar-link-color);
+}
+
+[data-theme="dark"] .sidebar .nav-link {
+    color: var(--sidebar-link-color) !important;
+    border-radius: 4px;
+    margin: 2px 0;
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .sidebar .nav-link.active {
+    background-color: var(--sidebar-link-active-bg) !important;
+    color: var(--sidebar-link-active-color) !important;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .sidebar .nav-link:hover:not(.active) {
+    background-color: var(--sidebar-link-hover-bg) !important;
+}
+
+[data-theme="dark"] .sidebar .nav-link i {
+    color: inherit !important;
+}
+
+/* Correcciones para enlaces */
+[data-theme="dark"] a:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item) {
+    color: #8ab4f8 !important;
+}
+
+[data-theme="dark"] a:hover:not(.btn):not(.nav-link):not(.badge):not(.dropdown-item) {
+    color: #aecbfa !important;
+}
+
+/* Correcciones para enlaces con texto blanco */
+[data-theme="dark"] a.text-white,
+[data-theme="dark"] a[style*="color: white"],
+[data-theme="dark"] a[style*="color: #fff"],
+[data-theme="dark"] a[style*="color: #ffffff"] {
+    color: #ffffff !important;
+}
+
+/* Correcciones para enlaces con fondo blanco */
+[data-theme="dark"] a.bg-white,
+[data-theme="dark"] a[style*="background-color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"],
+[data-theme="dark"] a[style*="background-color: #ffffff"],
+[data-theme="dark"] a[style*="background: white"],
+[data-theme="dark"] a[style*="background: #fff"],
+[data-theme="dark"] a[style*="background: #ffffff"] {
+    background-color: var(--card-bg) !important;
+}
+
+/* Correcciones para enlaces con fondo blanco y texto blanco */
+[data-theme="dark"] a.bg-white.text-white,
+[data-theme="dark"] a[style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #ffffff"][style*="color: white"],
+[data-theme="dark"] a[style*="background: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background: #ffffff"][style*="color: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}

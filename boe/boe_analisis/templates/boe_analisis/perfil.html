@@ -1,0 +1,190 @@
+{% extends "boe_analisis/base.html" %}
+
+{% block title %}Mi Perfil | BOE Alertas{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h2 mb-4"><i class="fas fa-user-cog me-2"></i>Mi Perfil</h1>
+    
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-user me-2"></i>Información Personal
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <img src="https://ui-avatars.com/api/?name={{ user.first_name }}+{{ user.last_name }}&background=1a73e8&color=fff&size=128" 
+                             class="rounded-circle img-thumbnail" alt="Avatar" style="width: 120px; height: 120px;">
+                        <h5 class="mt-3">{{ user.first_name }} {{ user.last_name }}</h5>
+                        <p class="text-muted">{{ user.username }}</p>
+                    </div>
+                    
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="perfil-campo"><i class="fas fa-envelope me-2"></i>Correo electrónico</span>
+                            <span class="perfil-valor">{{ user.email }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="perfil-campo"><i class="fas fa-phone me-2"></i>Teléfono</span>
+                            <span class="perfil-valor">{{ user.perfil.telefono|default:"No especificado" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="perfil-campo"><i class="fas fa-building me-2"></i>Organización</span>
+                            <span class="perfil-valor">{{ user.perfil.organizacion|default:"No especificada" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="perfil-campo"><i class="fas fa-briefcase me-2"></i>Cargo</span>
+                            <span class="perfil-valor">{{ user.perfil.cargo|default:"No especificado" }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="perfil-campo"><i class="fas fa-industry me-2"></i>Sector</span>
+                            <span class="perfil-valor">{{ user.perfil.sector|default:"No especificado" }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-edit me-2"></i>Editar Perfil
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="id_telefono" class="form-label">Teléfono</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                    <input type="text" name="telefono" id="id_telefono" class="form-control" value="{{ form.telefono.value|default:'' }}">
+                                </div>
+                                {% if form.telefono.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.telefono.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="id_organizacion" class="form-label">Organización</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                    <input type="text" name="organizacion" id="id_organizacion" class="form-control" value="{{ form.organizacion.value|default:'' }}">
+                                </div>
+                                {% if form.organizacion.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.organizacion.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="id_cargo" class="form-label">Cargo</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                    <input type="text" name="cargo" id="id_cargo" class="form-control" value="{{ form.cargo.value|default:'' }}">
+                                </div>
+                                {% if form.cargo.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.cargo.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="id_sector" class="form-label">Sector</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-industry"></i></span>
+                                    <input type="text" name="sector" id="id_sector" class="form-control" value="{{ form.sector.value|default:'' }}">
+                                </div>
+                                {% if form.sector.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.sector.errors %}
+                                    {{ error }}
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="recibir_alertas_email" id="id_recibir_alertas_email" 
+                                       {% if form.recibir_alertas_email.value %}checked{% endif %}>
+                                <label class="form-check-label" for="id_recibir_alertas_email">
+                                    Recibir alertas por correo electrónico
+                                </label>
+                            </div>
+                            {% if form.recibir_alertas_email.errors %}
+                            <div class="text-danger">
+                                {% for error in form.recibir_alertas_email.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card shadow mt-4">
+                <div class="card-header bg-light">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-chart-pie me-2"></i>Resumen de Actividad
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-3">
+                            <div class="h1 mb-0 font-weight-bold text-primary">{{ user.alertas.count }}</div>
+                            <div class="small text-muted">Alertas Configuradas</div>
+                        </div>
+                        
+                        <div class="col-md-4 text-center mb-3">
+                            <div class="h1 mb-0 font-weight-bold text-success">
+                                {{ user.notificaciones_count }}
+                            </div>
+                            <div class="small text-muted">Notificaciones Recibidas</div>
+                        </div>
+                        
+                        <div class="col-md-4 text-center mb-3">
+                            <div class="h1 mb-0 font-weight-bold text-warning">
+                                {{ user.notificaciones_pendientes_count }}
+                            </div>
+                            <div class="small text-muted">Notificaciones Pendientes</div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <a href="{% url 'estadisticas' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-chart-bar me-1"></i>Ver Estadísticas Detalladas
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

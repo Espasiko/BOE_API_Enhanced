@@ -1,0 +1,2146 @@
+/* Tema oscuro para BOE Alertas */
+:root {
+    /* Variables del tema claro (default) */
+    --primary-color: #1a73e8;
+    --secondary-color: #f8f9fa;
+    --accent-color: #ea4335;
+    --text-color: #202124;
+    --light-text: #5f6368;
+    --bg-color: #f5f5f5;
+    --card-bg: #ffffff;
+    --sidebar-bg: #ffffff;
+    --navbar-bg: #1a73e8;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --hover-bg: rgba(26, 115, 232, 0.1);
+    --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --accordion-header-bg: #f8f9fa;
+    --accordion-body-bg: #ffffff;
+    --list-group-bg: #ffffff;
+    --list-group-text: #333333;
+    --list-group-hover: #f8f9fa;
+}
+
+/* Tema oscuro */
+[data-theme="dark"] {
+    --primary-color: #4285f4;
+    --secondary-color: #2d2d2d;
+    --accent-color: #ff5252;
+    --text-color: #e0e0e0;
+    --light-text: #b0b0b0;
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --sidebar-bg: #1e1e1e;
+    --navbar-bg: #1e1e1e;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --hover-bg: rgba(66, 133, 244, 0.2);
+    --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    --input-bg: #2d2d2d;
+    --placeholder-color: #a0a0a0;
+    --light-bg: #252525; /* Fondo gris suave para áreas blancas */
+    --chat-bg: #252525; /* Fondo para el chat */
+    --user-message-bg: #2a3f5f; /* Fondo para mensajes del usuario */
+    --ai-message-bg: #2a2a2a; /* Fondo para mensajes del asistente */
+    --accordion-header-bg: #2d2d2d;
+    --accordion-body-bg: #1e1e1e;
+    --list-group-bg: #2a2a2a;
+    --list-group-text: #e0e0e0;
+    --list-group-hover: #333333;
+}
+
+/* Aplicar variables a los elementos */
+[data-theme="dark"] body {
+    color: var(--text-color);
+    background-color: var(--bg-color);
+}
+
+[data-theme="dark"] .navbar {
+    background-color: var(--navbar-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Mejorar visibilidad de la barra lateral */
+[data-theme="dark"] .sidebar {
+    background-color: var(--sidebar-bg);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .sidebar .nav-link {
+    color: #d0d0d0 !important; /* Más claro para mejor visibilidad */
+}
+
+[data-theme="dark"] .sidebar .nav-link:hover {
+    background-color: var(--hover-bg);
+    color: white !important;
+}
+
+[data-theme="dark"] .sidebar .nav-link.active {
+    background-color: var(--primary-color);
+    color: white !important;
+}
+
+/* Contenido principal y tarjetas */
+[data-theme="dark"] .main-content {
+    background-color: var(--card-bg);
+    box-shadow: var(--card-shadow);
+}
+
+[data-theme="dark"] .card {
+    background-color: var(--card-bg);
+    box-shadow: var(--card-shadow);
+}
+
+[data-theme="dark"] .card-header {
+    background-color: #252525 !important;
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .card-footer {
+    background-color: #252525 !important;
+    border-top-color: var(--border-color);
+}
+
+[data-theme="dark"] .card-subtitle.text-muted {
+    color: #b0b0b0 !important;
+}
+
+/* Mejorar áreas blancas con un gris suave */
+[data-theme="dark"] .bg-light,
+[data-theme="dark"] .bg-white {
+    background-color: var(--light-bg) !important;
+    color: var(--text-color);
+}
+
+/* Mejorar contenedores internos */
+[data-theme="dark"] .list-group-item {
+    background-color: #252525;
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+/* Mejorar específicamente los contenedores flexibles mencionados */
+[data-theme="dark"] .d-flex.w-100.justify-content-between.align-items-center {
+    background-color: #252525;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+[data-theme="dark"] .d-flex.w-100.justify-content-between.align-items-center h5 {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .text-muted {
+    color: #b0b0b0 !important; /* Más claro para mejor visibilidad */
+}
+
+/* Mejorar visibilidad de fechas */
+[data-theme="dark"] small.text-muted {
+    color: #d0d0d0 !important;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .badge.bg-primary {
+    background-color: var(--primary-color) !important;
+    color: white;
+}
+
+[data-theme="dark"] .badge.bg-secondary {
+    background-color: #555555 !important;
+    color: white;
+}
+
+[data-theme="dark"] .badge {
+    color: white;
+    font-weight: 500;
+    padding: 5px 8px;
+    margin-right: 5px;
+}
+
+/* Mejorar contraste en contenedores flexibles */
+[data-theme="dark"] .d-flex {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] h5, 
+[data-theme="dark"] h4, 
+[data-theme="dark"] h3, 
+[data-theme="dark"] h2, 
+[data-theme="dark"] h1 {
+    color: #ffffff;
+}
+
+[data-theme="dark"] p {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] p.mb-1 {
+    color: #d0d0d0;
+}
+
+/* Tablas */
+[data-theme="dark"] .table {
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: rgba(66, 133, 244, 0.1);
+    color: white;
+}
+
+[data-theme="dark"] .table-light,
+[data-theme="dark"] .table thead th,
+[data-theme="dark"] thead.table-light {
+    background-color: #2d2d2d !important;
+    color: #e0e0e0 !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .table tbody tr {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .table td {
+    color: var(--text-color);
+    border-color: var(--border-color);
+    padding: 12px 8px;
+}
+
+[data-theme="dark"] .table .badge {
+    font-size: 85%;
+    padding: 5px 8px;
+}
+
+[data-theme="dark"] .table .badge.bg-primary.rounded-pill {
+    background-color: var(--primary-color) !important;
+    color: white;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .table .btn-group .btn {
+    border-color: var(--border-color);
+}
+
+/* Mejorar gráficos estadísticos */
+[data-theme="dark"] .chart-title {
+    color: white;
+    margin-bottom: 15px;
+}
+
+[data-theme="dark"] .chart-container {
+    background-color: #252525;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Mejorar títulos de secciones */
+[data-theme="dark"] .section-title {
+    color: white;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Mejorar alertas por categoría y notificaciones por tiempo */
+[data-theme="dark"] .stats-card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .stats-card .card-header {
+    background-color: #252525;
+    color: white;
+    border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .stats-card .card-body {
+    padding: 20px;
+}
+
+[data-theme="dark"] .stats-card .stats-value {
+    color: white;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .stats-card .stats-label {
+    color: #b0b0b0;
+    font-size: 14px;
+}
+
+/* Mejorar badges */
+[data-theme="dark"] .badge.bg-light.text-dark {
+    background-color: #3d3d3d !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .badge.bg-secondary {
+    background-color: #555555 !important;
+}
+
+[data-theme="dark"] .badge.bg-info {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+/* Mejorar ejemplos de preguntas */
+[data-theme="dark"] .example-query {
+    background-color: #2d2d2d !important;
+    color: #e0e0e0 !important;
+    border: 1px solid var(--border-color);
+    padding: 8px 15px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .example-query:hover {
+    background-color: var(--hover-bg) !important;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Mejorar sección de limitaciones */
+[data-theme="dark"] ul li {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .text-warning {
+    color: #ffcc00 !important;
+}
+
+[data-theme="dark"] .asistente-limitaciones {
+    color: #d0d0d0;
+}
+
+[data-theme="dark"] .limitacion-item {
+    color: #d0d0d0 !important;
+    background-color: var(--light-bg);
+    border-bottom-color: var(--border-color) !important;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+[data-theme="dark"] .limitacion-item:hover {
+    background-color: var(--hover-bg);
+}
+
+/* Mejorar paginación */
+[data-theme="dark"] .pagination .page-item .page-link {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .pagination .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+[data-theme="dark"] .pagination .page-item .page-link:hover {
+    background-color: var(--hover-bg);
+    color: white;
+}
+
+/* Mejorar gráficos y estadísticas */
+[data-theme="dark"] .chart-container {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 15px;
+}
+
+[data-theme="dark"] .chart-title {
+    color: white;
+}
+
+/* Mejorar botones en tablas y tarjetas */
+[data-theme="dark"] .btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+[data-theme="dark"] .btn-outline-danger {
+    color: #ff5252;
+    border-color: #ff5252;
+}
+
+[data-theme="dark"] .btn-outline-danger:hover {
+    background-color: #ff5252;
+    color: white;
+}
+
+[data-theme="dark"] .btn-outline-secondary {
+    color: #b0b0b0;
+    border-color: #555555;
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+    background-color: #555555;
+    color: white;
+}
+
+/* Mejorar elementos de lista en tarjetas */
+[data-theme="dark"] .list-group-item {
+    background-color: #252525;
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .list-group-item.px-0 {
+    background-color: transparent;
+    border-color: var(--border-color);
+}
+
+/* Mejorar formularios y campos de entrada */
+[data-theme="dark"] .modal-content {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+/* Mejorar desplegables */
+[data-theme="dark"] .dropdown-menu {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .dropdown-item {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .dropdown-item:hover {
+    background-color: var(--hover-bg);
+    color: white;
+}
+
+/* Mejorar campos de formulario */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea,
+[data-theme="dark"] .form-control {
+    background-color: var(--input-bg) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+[data-theme="dark"] .form-control:focus {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(66, 133, 244, 0.25);
+}
+
+/* Mejorar placeholders */
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder,
+[data-theme="dark"] .form-control::placeholder {
+    color: var(--placeholder-color) !important;
+    opacity: 1;
+}
+
+/* Mejorar checkboxes y radios */
+[data-theme="dark"] .form-check-input {
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Mejorar áreas de notificaciones y documentos recientes */
+[data-theme="dark"] .chat-container {
+    background-color: var(--chat-bg) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .message.user-message {
+    background-color: var(--user-message-bg) !important;
+    color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .message.ai-message {
+    background-color: var(--ai-message-bg) !important;
+    color: #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .message p {
+    color: inherit;
+}
+
+[data-theme="dark"] .typing-indicator {
+    background-color: var(--ai-message-bg) !important;
+}
+
+[data-theme="dark"] .typing-indicator span {
+    background-color: var(--primary-color);
+}
+
+[data-theme="dark"] .source-item {
+    background-color: var(--light-bg) !important;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .example-query {
+    background-color: var(--light-bg) !important;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .example-query:hover {
+    background-color: var(--hover-bg) !important;
+    color: white;
+}
+
+/* Mejorar el campo de consulta al asistente */
+[data-theme="dark"] #queryInput {
+    background-color: var(--input-bg) !important;
+    color: white !important;
+    border: 1px solid var(--border-color) !important;
+    padding: 12px;
+}
+
+[data-theme="dark"] #queryInput:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(66, 133, 244, 0.25);
+}
+
+[data-theme="dark"] #queryInput::placeholder {
+    color: var(--placeholder-color) !important;
+}
+
+/* Mejorar los selectores de modelo */
+[data-theme="dark"] .modelo-ia-selector {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .modelo-ia-selector .card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .modelo-ia-selector .card-body {
+    background-color: var(--card-bg);
+}
+
+[data-theme="dark"] .form-check-label {
+    color: var(--text-color);
+}
+
+/* Mejorar capacidades y limitaciones */
+[data-theme="dark"] .capacidad-item,
+[data-theme="dark"] .limitacion-item {
+    color: #ffffff !important;
+    background-color: #2d2d2d;
+    border-bottom-color: var(--border-color) !important;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+[data-theme="dark"] .capacidad-item:hover,
+[data-theme="dark"] .limitacion-item:hover {
+    background-color: var(--hover-bg);
+}
+
+/* Mejorar nombres de IAs en desplegable */
+[data-theme="dark"] .form-check-label {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .modelo-ia-selector .card-title {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .modelo-ia-selector .form-check {
+    background-color: #2d2d2d;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .modelo-ia-selector .form-check:hover {
+    background-color: var(--hover-bg);
+}
+
+/* Mejorar títulos de documentos en resultados de búsqueda */
+[data-theme="dark"] .search-result-title,
+[data-theme="dark"] .search-result-title a,
+[data-theme="dark"] .document-title,
+[data-theme="dark"] .document-title a {
+    color: #ffffff !important;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .search-result-title a:hover,
+[data-theme="dark"] .document-title a:hover {
+    color: var(--primary-color) !important;
+    text-decoration: underline;
+}
+
+/* Mejorar contenedor de sumario de BOE */
+[data-theme="dark"] .boe-summary,
+[data-theme="dark"] .boe-summary-container,
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background-color: #ffffff"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Mejorar campos de perfil */
+[data-theme="dark"] .list-group-item span:first-child {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .list-group-item span.text-muted {
+    color: #b0b0b0 !important;
+}
+
+/* Mejorar contenedor de mis alertas */
+[data-theme="dark"] .mis-alertas-container,
+[data-theme="dark"] .alertas-container,
+[data-theme="dark"] .container-fluid {
+    background-color: var(--bg-color) !important;
+}
+
+[data-theme="dark"] .alert-white,
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+/* Mejorar campos de formulario en perfil */
+[data-theme="dark"] label {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: var(--input-bg) !important;
+    color: white !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .form-control::placeholder {
+    color: #a0a0a0 !important;
+}
+
+/* Mejorar títulos de secciones */
+[data-theme="dark"] h1, 
+[data-theme="dark"] h2, 
+[data-theme="dark"] h3, 
+[data-theme="dark"] h4, 
+[data-theme="dark"] h5, 
+[data-theme="dark"] h6,
+[data-theme="dark"] .h1, 
+[data-theme="dark"] .h2, 
+[data-theme="dark"] .h3, 
+[data-theme="dark"] .h4, 
+[data-theme="dark"] .h5, 
+[data-theme="dark"] .h6 {
+    color: #ffffff !important;
+}
+
+/* Mejorar enlaces */
+[data-theme="dark"] a {
+    color: var(--primary-color);
+}
+
+[data-theme="dark"] a:hover {
+    color: #5c9cff;
+}
+
+/* Mejorar contenedores blancos */
+[data-theme="dark"] .container-white,
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] div[style*="background-color: white"],
+[data-theme="dark"] div[style*="background: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Mejorar tarjetas */
+[data-theme="dark"] .card.shadow,
+[data-theme="dark"] .card.h-100.shadow {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+/* Mejorar switch de toggle */
+[data-theme="dark"] .form-switch .form-check-input {
+    background-color: #555;
+    border-color: #444;
+}
+
+[data-theme="dark"] .form-switch .form-check-input:checked {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Mejorar ejemplos de preguntas en el asistente */
+[data-theme="dark"] .examples-container .example-query {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .examples-container .example-query:hover {
+    background-color: var(--hover-bg);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Botones */
+[data-theme="dark"] .btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .btn-secondary {
+    background-color: #555555;
+    border-color: #555555;
+}
+
+[data-theme="dark"] .btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+[data-theme="dark"] .btn-outline-secondary {
+    color: #b0b0b0;
+    border-color: #555555;
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+    background-color: #555555;
+    color: white;
+    border-color: #555555;
+}
+
+/* Estilos para el botón de cambio de tema */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.theme-switch {
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 24px;
+}
+
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+.slider-icon {
+    margin-left: 10px;
+    color: var(--text-color);
+}
+
+/* Mejorar áreas blancas como notificaciones recientes */
+[data-theme="dark"] .f8f9fa,
+[data-theme="dark"] .bg-light,
+[data-theme="dark"] [style*="background-color: #f8f9fa"] {
+    background-color: var(--light-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Mejorar los campos de perfil */
+[data-theme="dark"] input[type="text"],
+[data-theme="dark"] input[type="email"],
+[data-theme="dark"] input[type="tel"],
+[data-theme="dark"] input[type="password"] {
+    background-color: var(--input-bg) !important;
+    color: white !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+[data-theme="dark"] input[type="text"]:focus,
+[data-theme="dark"] input[type="email"]:focus,
+[data-theme="dark"] input[type="tel"]:focus,
+[data-theme="dark"] input[type="password"]:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(66, 133, 244, 0.25);
+}
+
+/* Mejorar campos de texto oscuro sobre fondo oscuro */
+[data-theme="dark"] .card-text.text-muted {
+    color: #d0d0d0 !important;
+}
+
+/* Mejorar los elementos de capacidades del asistente */
+[data-theme="dark"] .asistente-capacidades {
+    color: #ffffff !important;
+}
+
+/* Solución alternativa para los textos específicos */
+[data-theme="dark"] .asistente-capacidades .card-text {
+    color: #ffffff !important;
+}
+
+/* Mejorar elementos de limitaciones */
+[data-theme="dark"] .asistente-limitaciones {
+    color: #ffffff !important;
+}
+
+/* Mejorar resultados de búsqueda */
+[data-theme="dark"] .search-result-title a,
+[data-theme="dark"] .list-group-item h5 a {
+    color: #ffffff !important;
+    text-decoration: none;
+}
+
+[data-theme="dark"] .search-result-title a:hover,
+[data-theme="dark"] .list-group-item h5 a:hover {
+    color: var(--primary-color) !important;
+    text-decoration: underline;
+}
+
+[data-theme="dark"] .list-group-item {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .list-group-item:hover {
+    background-color: var(--hover-bg);
+}
+
+[data-theme="dark"] .search-highlight {
+    background-color: rgba(255, 243, 205, 0.3) !important;
+    color: #ffcc00 !important;
+    padding: 2px;
+    border-radius: 2px;
+}
+
+/* Mejorar badges en resultados de búsqueda */
+[data-theme="dark"] .badge-departamento {
+    background-color: #0d6efd !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .badge-materia {
+    background-color: #495057 !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .semantic-badge {
+    background-color: #6f42c1 !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .score-badge {
+    background-color: #20c997 !important;
+    color: white !important;
+}
+
+/* Mejorar contenedor de sumario de BOE */
+[data-theme="dark"] .boe-summary-container,
+[data-theme="dark"] .boe-content-container,
+[data-theme="dark"] div[style*="background-color: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Mejorar campos de perfil */
+[data-theme="dark"] .perfil-campo {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .perfil-valor {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .form-label {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select {
+    background-color: #2d2d2d !important;
+    color: #ffffff !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 0.25rem rgba(66, 133, 244, 0.25) !important;
+}
+
+[data-theme="dark"] .form-control::placeholder {
+    color: #a0a0a0 !important;
+}
+
+/* Mejorar contenedor de mis alertas */
+[data-theme="dark"] .mis-alertas-container,
+[data-theme="dark"] .alertas-container {
+    background-color: var(--bg-color) !important;
+}
+
+[data-theme="dark"] .alert-white,
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] .container-white,
+[data-theme="dark"] div[style*="background-color: white"],
+[data-theme="dark"] div[style*="background: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Mejorar selector de fechas */
+[data-theme="dark"] .flatpickr-input {
+    background-color: #2d2d2d !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .input-group-text {
+    background-color: #3d3d3d !important;
+    color: #e0e0e0 !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Mejorar alertas */
+[data-theme="dark"] .alert-white,
+[data-theme="dark"] .bg-white,
+[data-theme="dark"] .container-white,
+[data-theme="dark"] div[style*="background-color: white"],
+[data-theme="dark"] div[style*="background: white"],
+[data-theme="dark"] div[style*="background-color:#ffffff"],
+[data-theme="dark"] div[style*="background:#ffffff"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Mejorar contenedor de alertas */
+[data-theme="dark"] .mis-alertas-container,
+[data-theme="dark"] .alertas-container,
+[data-theme="dark"] .container-fluid {
+    background-color: var(--bg-color) !important;
+}
+
+/* Mejorar badge en alertas */
+[data-theme="dark"] .badge.bg-light.text-dark {
+    background-color: #3d3d3d !important;
+    color: #e0e0e0 !important;
+}
+
+/* Mejorar texto muted en alertas */
+[data-theme="dark"] .list-group-item .text-muted {
+    color: #b0b0b0 !important;
+}
+
+/* Mejorar card-subtitle */
+[data-theme="dark"] .card-subtitle.text-muted,
+[data-theme="dark"] h6.card-subtitle.mb-2.text-muted {
+    color: #e0e0e0 !important;
+}
+
+/* Mejorar list-group dentro de cards */
+[data-theme="dark"] .card .list-group-item {
+    background-color: transparent !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Mejorar notificaciones */
+[data-theme="dark"] .notificacion-container {
+    background-color: var(--card-bg) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Mejorar sumario de BOE */
+[data-theme="dark"] .boe-summary,
+[data-theme="dark"] .boe-content,
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background-color: #ffffff"],
+[data-theme="dark"] [style*="background: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Mejorar selector de modelos de IA */
+[data-theme="dark"] .modelo-ia-item {
+    background-color: #2d2d2d !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .modelo-ia-item:hover {
+    background-color: var(--hover-bg) !important;
+}
+
+[data-theme="dark"] .modelo-destacado {
+    color: var(--primary-color) !important;
+    font-weight: bold;
+}
+
+/* Mejorar cualquier elemento con fondo blanco */
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background-color: #ffffff"],
+[data-theme="dark"] [style*="background: white"],
+[data-theme="dark"] [style*="background: #fff"],
+[data-theme="dark"] [style*="background: #ffffff"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Mejorar botones */
+[data-theme="dark"] .btn-primary {
+    background-color: #1a73e8 !important;
+    border-color: #1a73e8 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-secondary {
+    background-color: #5f6368 !important;
+    border-color: #5f6368 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-success {
+    background-color: #34a853 !important;
+    border-color: #34a853 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-danger {
+    background-color: #ea4335 !important;
+    border-color: #ea4335 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-warning {
+    background-color: #fbbc05 !important;
+    border-color: #fbbc05 !important;
+    color: #212529 !important;
+}
+
+[data-theme="dark"] .btn-info {
+    background-color: #4285f4 !important;
+    border-color: #4285f4 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-light {
+    background-color: #3d3d3d !important;
+    border-color: #3d3d3d !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .btn-dark {
+    background-color: #212529 !important;
+    border-color: #212529 !important;
+    color: #ffffff !important;
+}
+
+/* Mejorar botones outline */
+[data-theme="dark"] .btn-outline-primary {
+    color: #1a73e8 !important;
+    border-color: #1a73e8 !important;
+}
+
+[data-theme="dark"] .btn-outline-primary:hover {
+    background-color: #1a73e8 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-outline-secondary {
+    color: #e0e0e0 !important;
+    border-color: #5f6368 !important;
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+    background-color: #5f6368 !important;
+    color: #ffffff !important;
+    border-color: #5f6368 !important;
+}
+
+/* Mejorar notificaciones pendientes */
+[data-theme="dark"] .badge.bg-warning,
+[data-theme="dark"] .badge.bg-warning.text-dark {
+    background-color: #fbbc05 !important;
+    color: #212529 !important;
+    font-weight: bold !important;
+}
+
+[data-theme="dark"] .badge.bg-danger {
+    background-color: #ea4335 !important;
+    color: #ffffff !important;
+}
+
+/* Mejorar tablas de alertas */
+[data-theme="dark"] .table-alertas,
+[data-theme="dark"] .table-notificaciones {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .table-alertas th,
+[data-theme="dark"] .table-notificaciones th {
+    background-color: #2d2d2d !important;
+    color: #ffffff !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .table-alertas td,
+[data-theme="dark"] .table-notificaciones td {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .table-alertas tr:hover td,
+[data-theme="dark"] .table-notificaciones tr:hover td {
+    background-color: var(--hover-bg) !important;
+}
+
+/* Mejorar títulos de notificaciones */
+[data-theme="dark"] .notificacion-title,
+[data-theme="dark"] .notificacion-title a {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+}
+
+[data-theme="dark"] .notificacion-title a:hover {
+    color: var(--primary-color) !important;
+    text-decoration: underline !important;
+}
+
+/* Mejorar cualquier tabla */
+[data-theme="dark"] table,
+[data-theme="dark"] .table {
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] table th,
+[data-theme="dark"] .table th {
+    background-color: #2d2d2d !important;
+    color: #ffffff !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] table td,
+[data-theme="dark"] .table td {
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] table tr:hover td,
+[data-theme="dark"] .table tr:hover,
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: var(--hover-bg) !important;
+}
+
+/* Mejorar botones de acción */
+[data-theme="dark"] .btn-action,
+[data-theme="dark"] .btn-ver,
+[data-theme="dark"] .btn-editar,
+[data-theme="dark"] .btn-eliminar,
+[data-theme="dark"] .btn-pdf {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-ver {
+    background-color: #4285f4 !important;
+    border-color: #4285f4 !important;
+}
+
+[data-theme="dark"] .btn-editar {
+    background-color: #fbbc05 !important;
+    border-color: #fbbc05 !important;
+    color: #212529 !important;
+}
+
+[data-theme="dark"] .btn-eliminar {
+    background-color: #ea4335 !important;
+    border-color: #ea4335 !important;
+}
+
+[data-theme="dark"] .btn-pdf {
+    background-color: #34a853 !important;
+    border-color: #34a853 !important;
+}
+
+/* Mejorar tarjetas de alertas */
+[data-theme="dark"] .card-title {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .card-subtitle {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .card .text-muted {
+    color: #b0b0b0 !important;
+}
+
+[data-theme="dark"] .card .list-group-item {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .card .list-group-item span:first-child {
+    color: #ffffff !important;
+}
+
+/* Mejorar paginación */
+[data-theme="dark"] .pagination .page-link {
+    background-color: #2d2d2d !important;
+    border-color: var(--border-color) !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .pagination .page-item.active .page-link {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .pagination .page-item.disabled .page-link {
+    background-color: #1a1a1a !important;
+    border-color: var(--border-color) !important;
+    color: #6c757d !important;
+}
+
+/* Mejorar botones específicos */
+[data-theme="dark"] .btn-ver-pdf,
+[data-theme="dark"] .btn-nueva-alerta,
+[data-theme="dark"] .btn-ver-notificaciones {
+    color: #ffffff !important;
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Mejorar botones outline en cards */
+[data-theme="dark"] .card-footer .btn-outline-primary,
+[data-theme="dark"] .card-footer .btn-outline-secondary,
+[data-theme="dark"] .card-footer .btn-outline-danger {
+    color: #ffffff !important;
+    border-color: currentColor !important;
+}
+
+[data-theme="dark"] .card-footer .btn-outline-primary:hover,
+[data-theme="dark"] .card-footer .btn-outline-secondary:hover,
+[data-theme="dark"] .card-footer .btn-outline-danger:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Mejorar badge light text-dark */
+[data-theme="dark"] .badge.bg-light.text-dark {
+    background-color: #3d3d3d !important;
+    color: #ffffff !important;
+}
+
+/* Mejorar notificaciones pendientes */
+[data-theme="dark"] .badge.bg-warning.text-dark {
+    background-color: #fbbc05 !important;
+    color: #212529 !important;
+    font-weight: bold !important;
+}
+
+/* Mejorar tablas */
+[data-theme="dark"] table {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] table th {
+    color: #ffffff !important;
+    background-color: #2d2d2d !important;
+}
+
+[data-theme="dark"] table td {
+    color: #e0e0e0 !important;
+}
+
+/* Mejorar alertas */
+[data-theme="dark"] .alert-info {
+    background-color: rgba(66, 133, 244, 0.15) !important;
+    border-color: rgba(66, 133, 244, 0.3) !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .alert-success {
+    background-color: rgba(52, 168, 83, 0.15) !important;
+    border-color: rgba(52, 168, 83, 0.3) !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .alert-warning {
+    background-color: rgba(251, 188, 5, 0.15) !important;
+    border-color: rgba(251, 188, 5, 0.3) !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .alert-danger {
+    background-color: rgba(234, 67, 53, 0.15) !important;
+    border-color: rgba(234, 67, 53, 0.3) !important;
+    color: #e0e0e0 !important;
+}
+
+/* Corregir hover en botones */
+[data-theme="dark"] .btn {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-outline-primary {
+    color: #ffffff !important;
+    border-color: #1a73e8 !important;
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .btn-outline-primary:hover {
+    background-color: #1a73e8 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-outline-secondary {
+    color: #ffffff !important;
+    border-color: #5f6368 !important;
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+    background-color: #5f6368 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-outline-danger {
+    color: #ffffff !important;
+    border-color: #ea4335 !important;
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .btn-outline-danger:hover {
+    background-color: #ea4335 !important;
+    color: #ffffff !important;
+}
+
+/* Corregir fondo blanco en Mis Alertas */
+[data-theme="dark"] .container-fluid,
+[data-theme="dark"] .mis-alertas-container {
+    background-color: var(--bg-color) !important;
+}
+
+/* Corregir hover en tablas */
+[data-theme="dark"] .table tr {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] .table tr:hover {
+    background-color: var(--hover-bg) !important;
+}
+
+[data-theme="dark"] .table td,
+[data-theme="dark"] .table th {
+    color: #ffffff !important;
+}
+
+/* Corregir títulos de documentos notificados */
+[data-theme="dark"] .notificacion-title,
+[data-theme="dark"] .notificacion-title a,
+[data-theme="dark"] h5.mb-1 {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+}
+
+[data-theme="dark"] .list-group-item-action {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .list-group-item-action:hover {
+    background-color: var(--hover-bg) !important;
+}
+
+/* Corregir hover en botones de acción */
+[data-theme="dark"] .btn-action,
+[data-theme="dark"] .btn-ver,
+[data-theme="dark"] .btn-editar,
+[data-theme="dark"] .btn-eliminar,
+[data-theme="dark"] .btn-pdf {
+    color: #ffffff !important;
+}
+
+/* Corregir notificaciones */
+[data-theme="dark"] .list-group-item-warning {
+    background-color: rgba(251, 188, 5, 0.2) !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .list-group-item-warning:hover {
+    background-color: rgba(251, 188, 5, 0.3) !important;
+}
+
+/* Corregir cualquier fondo blanco */
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background-color: #ffffff"],
+[data-theme="dark"] [style*="background: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Corregir títulos de documentos */
+[data-theme="dark"] .documento-titulo {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+/* Mejorar hover en botones y elementos interactivos */
+[data-theme="dark"] .btn {
+    color: #ffffff !important;
+    background-color: #2d2d2d !important;
+    border-color: #3d3d3d !important;
+}
+
+[data-theme="dark"] .btn-primary {
+    background-color: #1a73e8 !important;
+    border-color: #1a73e8 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-secondary {
+    background-color: #5f6368 !important;
+    border-color: #5f6368 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-success {
+    background-color: #34a853 !important;
+    border-color: #34a853 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-danger {
+    background-color: #ea4335 !important;
+    border-color: #ea4335 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-warning {
+    background-color: #fbbc05 !important;
+    border-color: #fbbc05 !important;
+    color: #212529 !important;
+}
+
+/* Corregir botones outline */
+[data-theme="dark"] .btn-outline-primary {
+    color: #ffffff !important;
+    border-color: #1a73e8 !important;
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .btn-outline-primary:hover {
+    background-color: #1a73e8 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-outline-secondary {
+    color: #ffffff !important;
+    border-color: #5f6368 !important;
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+    background-color: #5f6368 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-outline-danger {
+    color: #ffffff !important;
+    border-color: #ea4335 !important;
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .btn-outline-danger:hover {
+    background-color: #ea4335 !important;
+    color: #ffffff !important;
+}
+
+/* Corregir hover en tablas */
+[data-theme="dark"] table,
+[data-theme="dark"] .table {
+    color: #e0e0e0 !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] table tr,
+[data-theme="dark"] .table tr {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] table tr:hover,
+[data-theme="dark"] .table tr:hover,
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: #3d3d3d !important;
+}
+
+[data-theme="dark"] table th,
+[data-theme="dark"] .table th {
+    background-color: #2d2d2d !important;
+    color: #ffffff !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] table td,
+[data-theme="dark"] .table td {
+    color: #e0e0e0 !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Corregir hover en list-group */
+[data-theme="dark"] .list-group-item-action {
+    background-color: var(--card-bg) !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .list-group-item-action:hover {
+    background-color: #3d3d3d !important;
+    color: #ffffff !important;
+}
+
+/* Corregir notificaciones */
+[data-theme="dark"] .list-group-item-warning {
+    background-color: rgba(251, 188, 5, 0.2) !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .list-group-item-warning:hover {
+    background-color: rgba(251, 188, 5, 0.3) !important;
+    color: #ffffff !important;
+}
+
+/* Corregir botón Ver PDF */
+[data-theme="dark"] .btn-ver-pdf {
+    background-color: #1a73e8 !important;
+    border-color: #1a73e8 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-ver-pdf:hover {
+    background-color: #1558b7 !important;
+    border-color: #1558b7 !important;
+}
+
+/* Corregir cualquier fondo blanco */
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background-color: #ffffff"],
+[data-theme="dark"] [style*="background: white"],
+[data-theme="dark"] [style*="background: #fff"],
+[data-theme="dark"] [style*="background: #ffffff"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Estilos para los acordeones en modo oscuro */
+[data-theme="dark"] .accordion-item {
+    border-color: var(--border-color);
+    background-color: var(--card-bg);
+}
+
+[data-theme="dark"] .accordion-button {
+    background-color: var(--accordion-header-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .accordion-body {
+    background-color: var(--accordion-body-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+/* Estilos para los contenedores de texto en modo oscuro */
+[data-theme="dark"] .p-2.border.rounded {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Estilos para el texto original y nuevo en modo oscuro */
+[data-theme="dark"] .texto-original {
+    background-color: rgba(255, 193, 7, 0.15) !important;
+    border-color: rgba(255, 193, 7, 0.3) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .texto-nuevo {
+    background-color: rgba(25, 135, 84, 0.15) !important;
+    border-color: rgba(25, 135, 84, 0.3) !important;
+    color: var(--text-color) !important;
+}
+
+/* Estilos para la lista de resultados en modo oscuro */
+[data-theme="dark"] .list-group-item {
+    background-color: var(--list-group-bg) !important;
+    color: var(--list-group-text) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .list-group-item:hover {
+    background-color: var(--list-group-hover) !important;
+}
+
+/* Estilos para los títulos en los resultados en modo oscuro */
+[data-theme="dark"] .list-group-item h5 {
+    color: var(--text-color) !important;
+}
+
+/* Estilos para los textos secundarios en modo oscuro */
+[data-theme="dark"] .text-muted {
+    color: var(--light-text) !important;
+}
+
+/* Estilos para resaltar cambios en modo oscuro */
+[data-theme="dark"] .cambio-eliminado {
+    background-color: rgba(220, 53, 69, 0.3) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .cambio-agregado {
+    background-color: rgba(25, 135, 84, 0.3) !important;
+    color: var(--text-color) !important;
+}
+
+/* Estilos para los contenedores de resumen BOE en modo oscuro */
+[data-theme="dark"] .boe-summary,
+[data-theme="dark"] .boe-content {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Estilos para la tabla de comparación en modo oscuro */
+[data-theme="dark"] .comparison-table th {
+    background-color: var(--accordion-header-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .comparison-table td {
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Estilos para los mensajes de error y carga en modo oscuro */
+[data-theme="dark"] .alert-info {
+    background-color: rgba(13, 202, 240, 0.15) !important;
+    border-color: rgba(13, 202, 240, 0.3) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .alert-danger {
+    background-color: rgba(220, 53, 69, 0.15) !important;
+    border-color: rgba(220, 53, 69, 0.3) !important;
+    color: var(--text-color) !important;
+}
+
+/* Asegurar que cualquier contenedor con fondo blanco sea legible en modo oscuro */
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background-color: #ffffff"],
+[data-theme="dark"] [style*="background: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Estilos para la comparación de versiones en modo oscuro */
+[data-theme="dark"] .comparison-summary {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Correcciones para las tablas en modo oscuro */
+[data-theme="dark"] .table {
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: var(--hover-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .table-light,
+[data-theme="dark"] .table thead th,
+[data-theme="dark"] thead.table-light {
+    background-color: var(--secondary-color) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] thead.table-light {
+    background-color: var(--secondary-color) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .table > :not(caption) > * > * {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Correcciones para los fondos en modo oscuro */
+[data-theme="dark"] .bg-light {
+    background-color: var(--secondary-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .card-footer.bg-light {
+    background-color: var(--secondary-color) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .card-header.bg-light {
+    background-color: var(--secondary-color) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Correcciones para los documentos del sumario */
+[data-theme="dark"] .sumario-seccion {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .sumario-documento {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Correcciones para los documentos expandidos */
+[data-theme="dark"] .accordion-item {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .accordion-button {
+    background-color: var(--secondary-color) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .accordion-body {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Correcciones para los badges */
+[data-theme="dark"] .badge.bg-secondary {
+    background-color: #6c757d !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .badge.bg-success {
+    background-color: #198754 !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .badge.bg-primary {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Correcciones para los botones outline */
+[data-theme="dark"] .btn-outline-primary {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .btn-outline-primary:hover {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .btn-outline-danger {
+    color: #dc3545 !important;
+    border-color: #dc3545 !important;
+}
+
+[data-theme="dark"] .btn-outline-danger:hover {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+/* Correcciones para los documentos BOE */
+[data-theme="dark"] [id^="BOE-"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Correcciones para el texto en los documentos */
+[data-theme="dark"] .anuncio-texto,
+[data-theme="dark"] .documento-texto {
+    color: var(--text-color) !important;
+}
+
+/* Correcciones para el sumario del BOE */
+[data-theme="dark"] .list-group-item-action {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .list-group-item-action:hover {
+    background-color: var(--hover-bg) !important;
+}
+
+[data-theme="dark"] .list-group-flush .list-group-item {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .list-group-item-action h5,
+[data-theme="dark"] .list-group-item-action p {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .list-group-item-action .text-muted {
+    color: var(--light-text) !important;
+}
+
+/* Correcciones para los badges en el sumario */
+[data-theme="dark"] .badge.bg-info.text-dark {
+    background-color: #0dcaf0 !important;
+    color: #212529 !important;
+}
+
+[data-theme="dark"] .badge.bg-info.text-dark a {
+    color: #212529 !important;
+}
+
+/* Correcciones para los documentos del BOE */
+[data-theme="dark"] [id^="BOE-"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] [id^="BOE-"] * {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] [id^="BOE-"] a {
+    color: var(--primary-color) !important;
+}
+
+/* Correcciones para los elementos con fondo blanco */
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background-color: #ffffff"],
+[data-theme="dark"] [style*="background: white"],
+[data-theme="dark"] [style*="background: #fff"],
+[data-theme="dark"] [style*="background: #ffffff"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Correcciones para los documentos en el sumario */
+[data-theme="dark"] .sumario-seccion {
+    background-color: var(--light-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .sumario-documento {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Corrección para los botones Ver documento y Ver PDF */
+[data-theme="dark"] .btn-primary {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .btn-outline-primary {
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .btn-outline-primary:hover {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Corrección para el texto en los acordeones */
+[data-theme="dark"] .accordion-button strong,
+[data-theme="dark"] .accordion-button span {
+    color: inherit !important;
+}
+
+/* Correcciones para campos de entrada en modo oscuro */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background-color: #2b2b2b !important;
+    color: #e0e0e0 !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+    color: #aaaaaa !important;
+}
+
+[data-theme="dark"] .form-control {
+    background-color: #2b2b2b !important;
+    color: #e0e0e0 !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .form-control:focus {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+}
+
+/* Correcciones para títulos y encabezados */
+[data-theme="dark"] h1, 
+[data-theme="dark"] h2, 
+[data-theme="dark"] h3, 
+[data-theme="dark"] h4, 
+[data-theme="dark"] h5, 
+[data-theme="dark"] h6,
+[data-theme="dark"] .h1, 
+[data-theme="dark"] .h2, 
+[data-theme="dark"] .h3, 
+[data-theme="dark"] .h4, 
+[data-theme="dark"] .h5, 
+[data-theme="dark"] .h6 {
+    color: #ffffff !important;
+}
+
+/* Corrección para los textos en los campos de formulario */
+[data-theme="dark"] label {
+    color: #e0e0e0 !important;
+}
+
+/* Corrección para los textos en los botones */
+[data-theme="dark"] .btn-outline-primary,
+[data-theme="dark"] .btn-outline-secondary,
+[data-theme="dark"] .btn-outline-danger,
+[data-theme="dark"] .btn-outline-success,
+[data-theme="dark"] .btn-outline-warning,
+[data-theme="dark"] .btn-outline-info {
+    color: inherit !important;
+}
+
+[data-theme="dark"] .btn-primary,
+[data-theme="dark"] .btn-secondary,
+[data-theme="dark"] .btn-danger,
+[data-theme="dark"] .btn-success,
+[data-theme="dark"] .btn-warning,
+[data-theme="dark"] .btn-info {
+    color: #ffffff !important;
+}
+
+/* Corrección para los textos en los acordeones */
+[data-theme="dark"] .accordion-item {
+    color: #e0e0e0 !important;
+}
+
+/* Corrección para los textos en las tarjetas */
+[data-theme="dark"] .card {
+    color: #e0e0e0 !important;
+}
+
+/* Corrección para los textos en las alertas */
+[data-theme="dark"] .alert {
+    color: #e0e0e0 !important;
+}
+
+/* Correcciones para los campos en las tablas */
+[data-theme="dark"] .table input,
+[data-theme="dark"] .table textarea,
+[data-theme="dark"] .table select {
+    background-color: #2b2b2b !important;
+    color: #e0e0e0 !important;
+}
+
+/* Correcciones para los campos de búsqueda */
+[data-theme="dark"] .form-control-search {
+    background-color: #2b2b2b !important;
+    color: #e0e0e0 !important;
+}
+
+/* Correcciones específicas para los campos en el dashboard */
+[data-theme="dark"] .card input,
+[data-theme="dark"] .card textarea,
+[data-theme="dark"] .card select {
+    background-color: #2b2b2b !important;
+    color: #e0e0e0 !important;
+}
+
+/* Corrección para los elementos con fondo blanco y texto negro */
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background-color: #ffffff"],
+[data-theme="dark"] [style*="background: white"],
+[data-theme="dark"] [style*="background: #fff"],
+[data-theme="dark"] [style*="background: #ffffff"] {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] [style*="background-color: white"] *,
+[data-theme="dark"] [style*="background-color: #fff"] *,
+[data-theme="dark"] [style*="background-color: #ffffff"] *,
+[data-theme="dark"] [style*="background: white"] *,
+[data-theme="dark"] [style*="background: #fff"] *,
+[data-theme="dark"] [style*="background: #ffffff"] * {
+    color: var(--text-color) !important;
+}
+
+/* Corrección para los elementos con texto negro explícito */
+[data-theme="dark"] [style*="color: black"],
+[data-theme="dark"] [style*="color: #000"],
+[data-theme="dark"] [style*="color: #000000"] {
+    color: var(--text-color) !important;
+}
+
+/* Correcciones específicas para los botones en el sumario y documentos */
+[data-theme="dark"] .btn-ver-documento,
+[data-theme="dark"] a.btn-ver-documento,
+[data-theme="dark"] button.btn-ver-documento {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .btn-ver-pdf,
+[data-theme="dark"] a.btn-ver-pdf,
+[data-theme="dark"] button.btn-ver-pdf {
+    background-color: transparent !important;
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .btn-ver-pdf:hover,
+[data-theme="dark"] a.btn-ver-pdf:hover,
+[data-theme="dark"] button.btn-ver-pdf:hover {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Correcciones específicas para los elementos del sumario del BOE */
+[data-theme="dark"] .accordion-button.collapsed {
+    background-color: var(--secondary-color) !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Correcciones para los elementos de la tabla en el dashboard */
+[data-theme="dark"] td.nombre,
+[data-theme="dark"] td.palabras-clave,
+[data-theme="dark"] td.frecuencia,
+[data-theme="dark"] td.estado,
+[data-theme="dark"] td.notificaciones,
+[data-theme="dark"] td.acciones {
+    color: #e0e0e0 !important;
+}
+
+/* Correcciones para los badges en el sumario */
+[data-theme="dark"] .badge {
+    color: white !important;
+}
+
+[data-theme="dark"] .badge.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .badge.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+[data-theme="dark"] .badge.bg-success {
+    background-color: #198754 !important;
+}
+
+[data-theme="dark"] .badge.bg-info {
+    background-color: #0dcaf0 !important;
+    color: #212529 !important;
+}

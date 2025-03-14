@@ -1,0 +1,71 @@
+{% extends "boe_analisis/base.html" %}
+
+{% block title %}Sumario BOE {{ fecha|date:"d/m/Y" }} | BOE Alertas{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2"><i class="fas fa-newspaper me-2"></i>Sumario BOE {{ fecha|date:"d/m/Y" }}</h1>
+        
+        <div class="btn-group">
+            <a href="{% url 'sumario_hoy' %}" class="btn btn-primary active">
+                <i class="fas fa-calendar-day me-1"></i>Sumario de hoy
+            </a>
+            <a href="{% url 'busqueda_avanzada' %}" class="btn btn-outline-primary">
+                <i class="fas fa-search me-1"></i>Búsqueda avanzada
+            </a>
+        </div>
+    </div>
+    
+    {% if not documentos %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>No hay documentos disponibles para la fecha seleccionada.
+    </div>
+    {% else %}
+    
+    <!-- Sumario por departamentos -->
+    <div class="accordion" id="acordeonDepartamentos">
+        {% for departamento, docs in departamentos.items %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ forloop.counter }}">
+                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" 
+                        data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" 
+                        aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" 
+                        aria-controls="collapse{{ forloop.counter }}">
+                    <strong>{{ departamento|default:"Sin departamento" }}</strong>
+                    <span class="badge bg-primary ms-2">{{ docs|length }}</span>
+                </button>
+            </h2>
+            <div id="collapse{{ forloop.counter }}" 
+                 class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" 
+                 aria-labelledby="heading{{ forloop.counter }}" 
+                 data-bs-parent="#acordeonDepartamentos">
+                <div class="accordion-body p-0">
+                    <div class="list-group list-group-flush">
+                        {% for doc in docs %}
+                        <a href="{% url 'ver_documento' doc.identificador %}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <h5 class="mb-1">{{ doc.identificador }}</h5>
+                                <small class="text-muted">{{ doc.fecha_publicacion|date:"d/m/Y" }}</small>
+                            </div>
+                            <p class="mb-1">{{ doc.titulo }}</p>
+                            <small>
+                                {% if doc.materias %}
+                                <span class="badge bg-secondary">{{ doc.materias }}</span>
+                                {% endif %}
+                                <span class="badge bg-info text-dark">
+                                    <i class="fas fa-file-pdf me-1"></i>
+                                    <a href="{{ doc.url_pdf }}" target="_blank" class="text-dark">PDF</a>
+                                </span>
+                            </small>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,291 @@
+/* Correcciones adicionales para el tema oscuro */
+
+/* Correcciones para campos de entrada en modo oscuro */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background-color: #2b2b2b !important;
+    color: #e0e0e0 !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+    color: #aaaaaa !important;
+}
+
+[data-theme="dark"] .form-control {
+    background-color: #2b2b2b !important;
+    color: #e0e0e0 !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .form-control:focus {
+    background-color: #333333 !important;
+    color: #ffffff !important;
+}
+
+/* Correcciones para títulos y encabezados */
+[data-theme="dark"] h1, 
+[data-theme="dark"] h2, 
+[data-theme="dark"] h3, 
+[data-theme="dark"] h4, 
+[data-theme="dark"] h5, 
+[data-theme="dark"] h6,
+[data-theme="dark"] .h1, 
+[data-theme="dark"] .h2, 
+[data-theme="dark"] .h3, 
+[data-theme="dark"] .h4, 
+[data-theme="dark"] .h5, 
+[data-theme="dark"] .h6 {
+    color: #ffffff !important;
+}
+
+/* Corrección para los textos en los campos de formulario */
+[data-theme="dark"] label {
+    color: #e0e0e0 !important;
+}
+
+/* Corrección para los textos en los botones */
+[data-theme="dark"] .btn-outline-primary,
+[data-theme="dark"] .btn-outline-secondary,
+[data-theme="dark"] .btn-outline-danger,
+[data-theme="dark"] .btn-outline-success,
+[data-theme="dark"] .btn-outline-warning,
+[data-theme="dark"] .btn-outline-info {
+    color: inherit !important;
+}
+
+[data-theme="dark"] .btn-primary,
+[data-theme="dark"] .btn-secondary,
+[data-theme="dark"] .btn-danger,
+[data-theme="dark"] .btn-success,
+[data-theme="dark"] .btn-warning,
+[data-theme="dark"] .btn-info {
+    color: #ffffff !important;
+}
+
+/* Corrección para los textos en los acordeones */
+[data-theme="dark"] .accordion-item {
+    color: #e0e0e0 !important;
+}
+
+/* Corrección para los textos en las tarjetas */
+[data-theme="dark"] .card {
+    color: #e0e0e0 !important;
+}
+
+/* Corrección para los textos en las alertas */
+[data-theme="dark"] .alert {
+    color: #e0e0e0 !important;
+}
+
+/* Correcciones para los campos en las tablas */
+[data-theme="dark"] .table input,
+[data-theme="dark"] .table textarea,
+[data-theme="dark"] .table select {
+    background-color: #2b2b2b !important;
+    color: #e0e0e0 !important;
+}
+
+/* Correcciones para los campos de búsqueda */
+[data-theme="dark"] .form-control-search {
+    background-color: #2b2b2b !important;
+    color: #e0e0e0 !important;
+}
+
+/* Correcciones específicas para los campos en el dashboard */
+[data-theme="dark"] .card input,
+[data-theme="dark"] .card textarea,
+[data-theme="dark"] .card select {
+    background-color: #2b2b2b !important;
+    color: #e0e0e0 !important;
+}
+
+/* Corrección para los elementos con fondo blanco y texto negro */
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background-color: #ffffff"],
+[data-theme="dark"] [style*="background: white"],
+[data-theme="dark"] [style*="background: #fff"],
+[data-theme="dark"] [style*="background: #ffffff"] {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] [style*="background-color: white"] *,
+[data-theme="dark"] [style*="background-color: #fff"] *,
+[data-theme="dark"] [style*="background-color: #ffffff"] *,
+[data-theme="dark"] [style*="background: white"] *,
+[data-theme="dark"] [style*="background: #fff"] *,
+[data-theme="dark"] [style*="background: #ffffff"] * {
+    color: var(--text-color) !important;
+}
+
+/* Corrección para los elementos con texto negro explícito */
+[data-theme="dark"] [style*="color: black"],
+[data-theme="dark"] [style*="color: #000"],
+[data-theme="dark"] [style*="color: #000000"] {
+    color: var(--text-color) !important;
+}
+
+/* Correcciones específicas para los botones en el sumario y documentos */
+[data-theme="dark"] .btn-ver-documento,
+[data-theme="dark"] a.btn-ver-documento,
+[data-theme="dark"] button.btn-ver-documento {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    border-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .btn-ver-pdf,
+[data-theme="dark"] a.btn-ver-pdf,
+[data-theme="dark"] button.btn-ver-pdf {
+    background-color: transparent !important;
+    color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .btn-ver-pdf:hover,
+[data-theme="dark"] a.btn-ver-pdf:hover,
+[data-theme="dark"] button.btn-ver-pdf:hover {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Correcciones específicas para los elementos del sumario del BOE */
+[data-theme="dark"] .accordion-button.collapsed {
+    background-color: var(--secondary-color) !important;
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Correcciones para los elementos de la tabla en el dashboard */
+[data-theme="dark"] td.nombre,
+[data-theme="dark"] td.palabras-clave,
+[data-theme="dark"] td.frecuencia,
+[data-theme="dark"] td.estado,
+[data-theme="dark"] td.notificaciones,
+[data-theme="dark"] td.acciones {
+    color: #e0e0e0 !important;
+}
+
+/* Correcciones para los badges en el sumario */
+[data-theme="dark"] .badge {
+    color: white !important;
+}
+
+[data-theme="dark"] .badge.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .badge.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+[data-theme="dark"] .badge.bg-success {
+    background-color: #198754 !important;
+}
+
+[data-theme="dark"] .badge.bg-info {
+    background-color: #0dcaf0 !important;
+    color: #212529 !important;
+}
+
+/* Correcciones para los elementos de la tabla en el dashboard */
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.075) !important;
+    color: #e0e0e0 !important;
+}
+
+/* Correcciones para los botones de acción en el dashboard */
+[data-theme="dark"] .btn-sm {
+    color: inherit !important;
+}
+
+[data-theme="dark"] .btn-outline-primary.btn-sm {
+    color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] .btn-outline-danger.btn-sm {
+    color: #dc3545 !important;
+}
+
+/* Correcciones para el texto en los botones "Ver documento" */
+[data-theme="dark"] a.btn-ver-documento,
+[data-theme="dark"] button.btn-ver-documento,
+[data-theme="dark"] .btn-ver-documento {
+    color: white !important;
+}
+
+/* Correcciones para los campos de búsqueda en el sumario */
+[data-theme="dark"] .busqueda-avanzada input,
+[data-theme="dark"] .busqueda-avanzada select {
+    background-color: #2b2b2b !important;
+    color: #e0e0e0 !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Correcciones específicas para los botones Ver PDF y Ver documento */
+[data-theme="dark"] a[href$=".pdf"],
+[data-theme="dark"] a[href*="ver_documento"] {
+    color: var(--primary-color) !important;
+}
+
+[data-theme="dark"] a.btn[href$=".pdf"],
+[data-theme="dark"] a.btn[href*="ver_documento"] {
+    color: white !important;
+}
+
+/* Correcciones para los elementos con texto negro en el dashboard */
+[data-theme="dark"] .text-dark {
+    color: #e0e0e0 !important;
+}
+
+/* Correcciones para los textos en las celdas de la tabla */
+[data-theme="dark"] .table td,
+[data-theme="dark"] .table th {
+    color: #e0e0e0 !important;
+}
+
+/* Correcciones para los enlaces dentro de las tablas */
+[data-theme="dark"] .table a:not(.btn) {
+    color: var(--primary-color) !important;
+}
+
+/* Correcciones para los elementos del sumario con clase text-muted */
+[data-theme="dark"] .text-muted {
+    color: #adb5bd !important;
+}
+
+/* Correcciones para los elementos con fondo blanco en el sumario */
+[data-theme="dark"] .list-group-item {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Correcciones para los botones en el sumario */
+[data-theme="dark"] .btn-ver-documento {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+}
+
+/* Correcciones para los textos en los botones */
+[data-theme="dark"] .btn-primary {
+    color: white !important;
+}
+
+/* Correcciones para los textos en los botones outline */
+[data-theme="dark"] .btn-outline-primary {
+    color: var(--primary-color) !important;
+}
+
+/* Correcciones para los textos en los acordeones */
+[data-theme="dark"] .accordion-button strong,
+[data-theme="dark"] .accordion-button span {
+    color: inherit !important;
+}

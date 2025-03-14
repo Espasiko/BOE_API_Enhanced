@@ -1,0 +1,160 @@
+/* 
+ * Tema oscuro - Base y variables
+ * Este archivo contiene las variables y estilos base para el tema oscuro
+ */
+
+/* Variables del tema oscuro */
+[data-theme="dark"] {
+    --primary-color: #4285f4;
+    --secondary-color: #2d2d2d;
+    --accent-color: #ff5252;
+    --text-color: #e0e0e0;
+    --light-text: #b0b0b0;
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --sidebar-bg: #1e1e1e;
+    --navbar-bg: #1e1e1e;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --hover-bg: rgba(66, 133, 244, 0.2);
+    --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    --input-bg: #333;
+    --input-text: #eee;
+    --input-border: #555;
+    --placeholder-color: #aaa;
+    --light-bg: #252525;
+    --chat-bg: #252525;
+    --user-message-bg: #2a3f5f;
+    --ai-message-bg: #2a2a2a;
+    --accordion-header-bg: #2a2a2a;
+    --accordion-header-active-bg: #3a3a3a;
+    --accordion-body-bg: #252525;
+    --list-group-bg: #2a2a2a;
+    --list-group-text: #e0e0e0;
+    --list-group-hover: #333333;
+    --btn-text: #fff;
+    --btn-primary-bg: #1a73e8;
+    --btn-primary-border: #1a73e8;
+    --table-bg: #1e1e1e;
+    --table-text: #eee;
+    --table-border: #444;
+    --table-hover: rgba(255, 255, 255, 0.075);
+    --sidebar-link-color: #e0e0e0;
+    --sidebar-link-active-bg: #1a73e8;
+    --sidebar-link-active-color: #ffffff;
+    --sidebar-link-hover-bg: rgba(255, 255, 255, 0.1);
+}
+
+/* Aplicar variables a los elementos básicos */
+[data-theme="dark"] body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .bg-light {
+    background-color: var(--light-bg) !important;
+}
+
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] .text-dark {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .border {
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] hr {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .table {
+    color: var(--table-text);
+}
+
+[data-theme="dark"] .table td,
+[data-theme="dark"] .table th {
+    border-color: var(--table-border);
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: var(--table-hover);
+}
+
+[data-theme="dark"] .modal-content {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .modal-header,
+[data-theme="dark"] .modal-footer {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .close {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .pagination .page-link {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .pagination .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .pagination .page-item.disabled .page-link {
+    background-color: var(--card-bg);
+    color: #6c757d;
+}
+
+[data-theme="dark"] .alert-info {
+    background-color: rgba(13, 202, 240, 0.2) !important;
+    color: #e0e0e0 !important;
+    border-color: rgba(13, 202, 240, 0.3) !important;
+}
+
+[data-theme="dark"] .alert-success {
+    background-color: rgba(25, 135, 84, 0.2) !important;
+    color: #e0e0e0 !important;
+    border-color: rgba(25, 135, 84, 0.3) !important;
+}
+
+[data-theme="dark"] .alert-warning {
+    background-color: rgba(255, 193, 7, 0.2) !important;
+    color: #e0e0e0 !important;
+    border-color: rgba(255, 193, 7, 0.3) !important;
+}
+
+[data-theme="dark"] .alert-danger {
+    background-color: rgba(220, 53, 69, 0.2) !important;
+    color: #e0e0e0 !important;
+    border-color: rgba(220, 53, 69, 0.3) !important;
+}
+
+[data-theme="dark"] code {
+    background-color: #2d2d2d;
+    color: #e83e8c;
+}
+
+[data-theme="dark"] pre {
+    background-color: #2d2d2d;
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] blockquote {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .footer {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}

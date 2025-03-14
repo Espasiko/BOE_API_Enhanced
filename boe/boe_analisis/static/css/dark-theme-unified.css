@@ -1,0 +1,1770 @@
+/* 
+ * Tema oscuro unificado para BOE Alertas
+ * Este archivo contiene todas las reglas necesarias para el tema oscuro
+ * y reemplaza los archivos dark-theme.css, dark-theme-fixes.css y dark-theme-corrections.css
+ */
+
+/* Variables del tema oscuro */
+[data-theme="dark"] {
+    --primary-color: #4285f4;
+    --secondary-color: #2d2d2d;
+    --accent-color: #ff5252;
+    --text-color: #e0e0e0;
+    --light-text: #b0b0b0;
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --sidebar-bg: #1e1e1e;
+    --navbar-bg: #1e1e1e;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --hover-bg: rgba(66, 133, 244, 0.2);
+    --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    --input-bg: #333;
+    --input-text: #eee;
+    --input-border: #555;
+    --placeholder-color: #aaa;
+    --light-bg: #252525;
+    --chat-bg: #252525;
+    --user-message-bg: #2a3f5f;
+    --ai-message-bg: #2a2a2a;
+    --accordion-header-bg: #2a2a2a;
+    --accordion-header-active-bg: #3a3a3a;
+    --accordion-body-bg: #252525;
+    --list-group-bg: #2a2a2a;
+    --list-group-text: #e0e0e0;
+    --list-group-hover: #333333;
+    --btn-text: #fff;
+    --btn-primary-bg: #1a73e8;
+    --btn-primary-border: #1a73e8;
+    --table-bg: #1e1e1e;
+    --table-text: #eee;
+    --table-border: #444;
+    --table-hover: rgba(255, 255, 255, 0.075);
+    --sidebar-link-color: #e0e0e0;
+    --sidebar-link-active-bg: #1a73e8;
+    --sidebar-link-active-color: #ffffff;
+    --sidebar-link-hover-bg: rgba(255, 255, 255, 0.1);
+}
+
+/* Aplicar variables a los elementos básicos */
+[data-theme="dark"] body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .navbar {
+    background-color: var(--navbar-bg);
+    border-color: var(--border-color);
+}
+
+/* Correcciones específicas para la barra lateral */
+[data-theme="dark"] .sidebar {
+    background-color: var(--sidebar-bg);
+    border-color: var(--border-color);
+    color: var(--sidebar-link-color);
+}
+
+[data-theme="dark"] .sidebar .nav-link {
+    color: var(--sidebar-link-color) !important;
+    border-radius: 4px;
+    margin: 2px 0;
+    transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .sidebar .nav-link.active {
+    background-color: var(--sidebar-link-active-bg) !important;
+    color: var(--sidebar-link-active-color) !important;
+    font-weight: 500;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .sidebar .nav-link:hover:not(.active) {
+    background-color: var(--sidebar-link-hover-bg) !important;
+}
+
+[data-theme="dark"] .sidebar .nav-link i {
+    color: inherit !important;
+}
+
+[data-theme="dark"] .card {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+[data-theme="dark"] .card-header {
+    background-color: #2a2a2a;
+    color: #fff;
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .card-footer {
+    background-color: #2a2a2a;
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+/* Correcciones para campos de entrada */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+    background-color: var(--input-bg) !important;
+    color: var(--input-text) !important;
+    border-color: var(--input-border) !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+    color: var(--placeholder-color) !important;
+}
+
+[data-theme="dark"] .form-control {
+    background-color: var(--input-bg) !important;
+    color: var(--input-text) !important;
+    border-color: var(--input-border) !important;
+}
+
+[data-theme="dark"] .form-control:focus {
+    background-color: #444 !important;
+    color: #fff !important;
+    border-color: #777 !important;
+    box-shadow: 0 0 0 0.25rem rgba(66, 133, 244, 0.25) !important;
+}
+
+/* Correcciones para títulos y encabezados */
+[data-theme="dark"] h1, 
+[data-theme="dark"] h2, 
+[data-theme="dark"] h3, 
+[data-theme="dark"] h4, 
+[data-theme="dark"] h5, 
+[data-theme="dark"] h6,
+[data-theme="dark"] .h1, 
+[data-theme="dark"] .h2, 
+[data-theme="dark"] .h3, 
+[data-theme="dark"] .h4, 
+[data-theme="dark"] .h5, 
+[data-theme="dark"] .h6 {
+    color: #fff !important;
+}
+
+/* Correcciones para textos */
+[data-theme="dark"] p {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .text-dark {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .text-muted {
+    color: #adb5bd !important;
+}
+
+/* Correcciones mejoradas para acordeones */
+[data-theme="dark"] .accordion-item {
+    background-color: var(--accordion-body-bg) !important;
+    border-color: rgba(255, 255, 255, 0.125) !important;
+    margin-bottom: 5px;
+}
+
+[data-theme="dark"] .accordion-button {
+    background-color: var(--accordion-header-bg) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.125) !important;
+    box-shadow: none !important;
+    padding: 15px;
+}
+
+[data-theme="dark"] .accordion-button.collapsed {
+    background-color: var(--accordion-header-bg) !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: var(--accordion-header-active-bg) !important;
+    color: #ffffff !important;
+    font-weight: 500;
+}
+
+[data-theme="dark"] .accordion-button::after {
+    filter: invert(1) brightness(1.5);
+    opacity: 0.8;
+}
+
+[data-theme="dark"] .accordion-button:hover {
+    background-color: #333333 !important;
+}
+
+[data-theme="dark"] .accordion-body {
+    background-color: var(--accordion-body-bg) !important;
+    color: var(--text-color) !important;
+    padding: 15px;
+}
+
+[data-theme="dark"] .accordion-button strong,
+[data-theme="dark"] .accordion-button span {
+    color: inherit !important;
+}
+
+[data-theme="dark"] .accordion-button .badge {
+    background-color: var(--btn-primary-bg) !important;
+    color: white !important;
+}
+
+/* Correcciones para botones */
+[data-theme="dark"] .btn-primary {
+    background-color: var(--btn-primary-bg) !important;
+    color: var(--btn-text) !important;
+    border-color: var(--btn-primary-border) !important;
+}
+
+[data-theme="dark"] .btn-primary:hover {
+    background-color: #155ab6 !important;
+    border-color: #155ab6 !important;
+}
+
+[data-theme="dark"] .btn-secondary {
+    background-color: #6c757d !important;
+    color: #fff !important;
+    border-color: #6c757d !important;
+}
+
+[data-theme="dark"] .btn-success {
+    background-color: #198754 !important;
+    color: #fff !important;
+    border-color: #198754 !important;
+}
+
+[data-theme="dark"] .btn-danger {
+    background-color: #dc3545 !important;
+    color: #fff !important;
+    border-color: #dc3545 !important;
+}
+
+[data-theme="dark"] .btn-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+    border-color: #ffc107 !important;
+}
+
+[data-theme="dark"] .btn-info {
+    background-color: #0dcaf0 !important;
+    color: #212529 !important;
+    border-color: #0dcaf0 !important;
+}
+
+[data-theme="dark"] .btn-light {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+    border-color: #f8f9fa !important;
+}
+
+[data-theme="dark"] .btn-dark {
+    background-color: #212529 !important;
+    color: #fff !important;
+    border-color: #212529 !important;
+}
+
+[data-theme="dark"] .btn-outline-primary {
+    color: var(--btn-primary-bg) !important;
+    border-color: var(--btn-primary-bg) !important;
+}
+
+[data-theme="dark"] .btn-outline-primary:hover {
+    background-color: var(--btn-primary-bg) !important;
+    color: #fff !important;
+}
+
+[data-theme="dark"] .btn-outline-secondary {
+    color: #6c757d !important;
+    border-color: #6c757d !important;
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+    background-color: #6c757d !important;
+    color: #fff !important;
+}
+
+[data-theme="dark"] .btn-outline-danger {
+    color: #dc3545 !important;
+    border-color: #dc3545 !important;
+}
+
+[data-theme="dark"] .btn-outline-danger:hover {
+    background-color: #dc3545 !important;
+    color: #fff !important;
+}
+
+[data-theme="dark"] .btn-outline-success {
+    color: #198754 !important;
+    border-color: #198754 !important;
+}
+
+[data-theme="dark"] .btn-outline-success:hover {
+    background-color: #198754 !important;
+    color: #fff !important;
+}
+
+/* Correcciones para enlaces */
+[data-theme="dark"] a {
+    color: #81d4fa !important;
+}
+
+[data-theme="dark"] a:hover {
+    color: #4ac1f7 !important;
+}
+
+/* Correcciones para tablas */
+[data-theme="dark"] .table {
+    color: var(--table-text) !important;
+    border-color: var(--table-border) !important;
+}
+
+[data-theme="dark"] .table th,
+[data-theme="dark"] .table td {
+    color: var(--table-text) !important;
+    border-color: var(--table-border) !important;
+}
+
+[data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: var(--table-hover) !important;
+}
+
+[data-theme="dark"] td.nombre,
+[data-theme="dark"] td.palabras-clave,
+[data-theme="dark"] td.frecuencia,
+[data-theme="dark"] td.estado,
+[data-theme="dark"] td.notificaciones,
+[data-theme="dark"] td.acciones {
+    color: var(--table-text) !important;
+}
+
+[data-theme="dark"] .table a:not(.btn) {
+    color: #81d4fa !important;
+}
+
+/* Correcciones para badges */
+[data-theme="dark"] .badge {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .badge.bg-primary {
+    background-color: var(--btn-primary-bg) !important;
+}
+
+[data-theme="dark"] .badge.bg-secondary {
+    background-color: #6c757d !important;
+}
+
+[data-theme="dark"] .badge.bg-success {
+    background-color: #198754 !important;
+}
+
+[data-theme="dark"] .badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+[data-theme="dark"] .badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+[data-theme="dark"] .badge.bg-info {
+    background-color: #0dcaf0 !important;
+    color: #212529 !important;
+}
+
+[data-theme="dark"] .badge.bg-light {
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
+}
+
+[data-theme="dark"] .badge.bg-dark {
+    background-color: #212529 !important;
+}
+
+/* Correcciones para list-group */
+[data-theme="dark"] .list-group-item {
+    background-color: var(--list-group-bg) !important;
+    color: var(--list-group-text) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .list-group-item:hover {
+    background-color: var(--list-group-hover) !important;
+}
+
+/* Correcciones para formularios */
+[data-theme="dark"] label {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .form-label {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .form-text {
+    color: var(--light-text) !important;
+}
+
+[data-theme="dark"] .form-select {
+    background-color: var(--input-bg) !important;
+    color: var(--input-text) !important;
+    border-color: var(--input-border) !important;
+}
+
+/* Correcciones para alertas */
+[data-theme="dark"] .alert {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .alert-primary {
+    background-color: rgba(26, 115, 232, 0.2) !important;
+    border-color: rgba(26, 115, 232, 0.4) !important;
+}
+
+[data-theme="dark"] .alert-secondary {
+    background-color: rgba(108, 117, 125, 0.2) !important;
+    border-color: rgba(108, 117, 125, 0.4) !important;
+}
+
+[data-theme="dark"] .alert-success {
+    background-color: rgba(25, 135, 84, 0.2) !important;
+    border-color: rgba(25, 135, 84, 0.4) !important;
+}
+
+[data-theme="dark"] .alert-danger {
+    background-color: rgba(220, 53, 69, 0.2) !important;
+    border-color: rgba(220, 53, 69, 0.4) !important;
+}
+
+[data-theme="dark"] .alert-warning {
+    background-color: rgba(255, 193, 7, 0.2) !important;
+    border-color: rgba(255, 193, 7, 0.4) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .alert-info {
+    background-color: rgba(13, 202, 240, 0.2) !important;
+    border-color: rgba(13, 202, 240, 0.4) !important;
+    color: var(--text-color) !important;
+}
+
+/* Correcciones para modales */
+[data-theme="dark"] .modal-content {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .modal-header {
+    background-color: #2a2a2a !important;
+    color: #fff !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .modal-footer {
+    background-color: #2a2a2a !important;
+    border-color: var(--border-color) !important;
+}
+
+/* Correcciones para el footer */
+[data-theme="dark"] footer.bg-light {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] footer .text-center {
+    color: var(--text-color) !important;
+}
+
+/* Correcciones para elementos con estilos inline */
+[data-theme="dark"] [style*="background-color: white"],
+[data-theme="dark"] [style*="background-color: #fff"],
+[data-theme="dark"] [style*="background-color: #ffffff"],
+[data-theme="dark"] [style*="background: white"],
+[data-theme="dark"] [style*="background: #fff"],
+[data-theme="dark"] [style*="background: #ffffff"] {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] [style*="color: black"],
+[data-theme="dark"] [style*="color: #000"],
+[data-theme="dark"] [style*="color: #000000"] {
+    color: var(--text-color) !important;
+}
+
+/* Correcciones específicas para los botones en el sumario */
+[data-theme="dark"] .btn-ver-documento,
+[data-theme="dark"] a.btn-ver-documento,
+[data-theme="dark"] button.btn-ver-documento {
+    background-color: var(--btn-primary-bg) !important;
+    color: #fff !important;
+    border-color: var(--btn-primary-bg) !important;
+}
+
+[data-theme="dark"] .btn-ver-pdf,
+[data-theme="dark"] a.btn-ver-pdf,
+[data-theme="dark"] button.btn-ver-pdf {
+    background-color: transparent !important;
+    color: var(--btn-primary-bg) !important;
+    border-color: var(--btn-primary-bg) !important;
+}
+
+[data-theme="dark"] .btn-ver-pdf:hover,
+[data-theme="dark"] a.btn-ver-pdf:hover,
+[data-theme="dark"] button.btn-ver-pdf:hover {
+    background-color: var(--btn-primary-bg) !important;
+    color: #fff !important;
+}
+
+/* Correcciones específicas para los botones Ver PDF y Ver documento */
+[data-theme="dark"] a[href$=".pdf"],
+[data-theme="dark"] a[href*="ver_documento"] {
+    color: #81d4fa !important;
+}
+
+[data-theme="dark"] a.btn[href$=".pdf"],
+[data-theme="dark"] a.btn[href*="ver_documento"] {
+    color: #fff !important;
+}
+
+/* Correcciones para los campos de búsqueda en el sumario */
+[data-theme="dark"] .busqueda-avanzada input,
+[data-theme="dark"] .busqueda-avanzada select {
+    background-color: var(--input-bg) !important;
+    color: var(--input-text) !important;
+    border-color: var(--input-border) !important;
+}
+
+/* Correcciones para el asistente IA */
+[data-theme="dark"] .chat-container {
+    background-color: var(--chat-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .user-message {
+    background-color: var(--user-message-bg) !important;
+    color: #fff !important;
+}
+
+[data-theme="dark"] .ai-message {
+    background-color: var(--ai-message-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Correcciones para el comparador de versiones */
+[data-theme="dark"] .cambio-anadido {
+    background-color: rgba(25, 135, 84, 0.3) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .cambio-eliminado {
+    background-color: rgba(220, 53, 69, 0.3) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .cambio-modificado {
+    background-color: rgba(255, 193, 7, 0.3) !important;
+    color: var(--text-color) !important;
+}
+
+/* Correcciones para el switch del tema */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.theme-switch {
+    display: inline-block;
+    height: 24px;
+    position: relative;
+    width: 50px;
+}
+
+.theme-switch input {
+    display: none;
+}
+
+.slider {
+    background-color: #ccc;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    background-color: white;
+    bottom: 4px;
+    content: "";
+    height: 16px;
+    left: 4px;
+    position: absolute;
+    transition: .4s;
+    width: 16px;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--btn-primary-bg);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Correcciones específicas para el dashboard */
+[data-theme="dark"] .dashboard-card {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .dashboard-card .card-title {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .dashboard-card .card-text {
+    color: var(--text-color) !important;
+}
+
+/* Correcciones para Select2 */
+[data-theme="dark"] .select2-container--default .select2-selection--single,
+[data-theme="dark"] .select2-container--default .select2-selection--multiple {
+    background-color: var(--input-bg) !important;
+    color: var(--input-text) !important;
+    border-color: var(--input-border) !important;
+}
+
+[data-theme="dark"] .select2-container--default .select2-selection__rendered {
+    color: var(--input-text) !important;
+}
+
+[data-theme="dark"] .select2-dropdown {
+    background-color: var(--input-bg) !important;
+    color: var(--input-text) !important;
+    border-color: var(--input-border) !important;
+}
+
+[data-theme="dark"] .select2-results__option {
+    color: var(--input-text) !important;
+}
+
+[data-theme="dark"] .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: var(--btn-primary-bg) !important;
+    color: #fff !important;
+}
+
+/* Correcciones para Bootstrap Tags Input */
+[data-theme="dark"] .bootstrap-tagsinput {
+    background-color: var(--input-bg) !important;
+    color: var(--input-text) !important;
+    border-color: var(--input-border) !important;
+}
+
+[data-theme="dark"] .bootstrap-tagsinput .tag {
+    background-color: var(--btn-primary-bg) !important;
+    color: #fff !important;
+}
+
+/* Correcciones para paginación */
+[data-theme="dark"] .pagination .page-link {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .pagination .page-item.active .page-link {
+    background-color: var(--btn-primary-bg) !important;
+    color: #fff !important;
+    border-color: var(--btn-primary-bg) !important;
+}
+
+[data-theme="dark"] .pagination .page-item.disabled .page-link {
+    background-color: var(--card-bg) !important;
+    color: var(--light-text) !important;
+}
+
+/* Correcciones para los botones de acción en el dashboard */
+[data-theme="dark"] .btn-sm {
+    color: inherit !important;
+}
+
+[data-theme="dark"] .btn-outline-primary.btn-sm {
+    color: var(--btn-primary-bg) !important;
+}
+
+[data-theme="dark"] .btn-outline-danger.btn-sm {
+    color: #dc3545 !important;
+}
+
+/* Correcciones específicas para el selector de modelos en el asistente IA */
+[data-theme="dark"] .modelo-ia-selector {
+    background-color: var(--card-bg) !important;
+}
+
+[data-theme="dark"] .modelo-ia-selector .card {
+    background-color: #252525 !important;
+    border-color: var(--border-color) !important;
+}
+
+[data-theme="dark"] .modelo-ia-selector .card-title {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .modelo-ia-item {
+    background-color: transparent !important;
+}
+
+[data-theme="dark"] .form-check-label {
+    color: var(--text-color) !important;
+}
+
+[data-theme="dark"] .form-check-input {
+    background-color: #444 !important;
+    border-color: #666 !important;
+}
+
+[data-theme="dark"] .form-check-input:checked {
+    background-color: var(--btn-primary-bg) !important;
+    border-color: var(--btn-primary-bg) !important;
+}
+
+/* Correcciones para botones con fondo claro en modo oscuro */
+[data-theme="dark"] .btn-light,
+[data-theme="dark"] .btn-outline-light,
+[data-theme="dark"] .bg-light,
+[data-theme="dark"] .badge-light,
+[data-theme="dark"] .alert-light {
+    color: #212529 !important;
+}
+
+/* Corrección específica para botones y badges con clase .bg-light y similares */
+[data-theme="dark"] [class*="bg-light"] {
+    color: #212529 !important;
+}
+
+/* Corrección para elementos con fondo blanco y texto blanco */
+[data-theme="dark"] .btn-primary.bg-white,
+[data-theme="dark"] .btn-secondary.bg-white,
+[data-theme="dark"] .btn-info.bg-white,
+[data-theme="dark"] .btn.bg-white,
+[data-theme="dark"] .badge.bg-white,
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Correcciones para los botones específicos que se ven en la imagen */
+[data-theme="dark"] .publicar,
+[data-theme="dark"] .btn.publicar,
+[data-theme="dark"] button.publicar {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+
+[data-theme="dark"] .practicas-en-documento,
+[data-theme="dark"] .btn.practicas-en-documento,
+[data-theme="dark"] button.practicas-en-documento {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+    border-color: #198754 !important;
+}
+
+[data-theme="dark"] .limitaciones,
+[data-theme="dark"] .btn.limitaciones,
+[data-theme="dark"] button.limitaciones {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+    border-color: #ffc107 !important;
+}
+
+/* Corrección para el botón "El modelo no está" */
+[data-theme="dark"] [class*="modelo-no-esta"],
+[data-theme="dark"] .btn[class*="modelo-no-esta"],
+[data-theme="dark"] button[class*="modelo-no-esta"] {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    border-color: #dc3545 !important;
+}
+
+/* Asegurar que todos los botones con fondos claros tengan texto oscuro */
+[data-theme="dark"] .btn-light,
+[data-theme="dark"] .btn-outline-light,
+[data-theme="dark"] .btn.bg-light,
+[data-theme="dark"] .btn.bg-white,
+[data-theme="dark"] .btn.text-white.bg-white {
+    color: #212529 !important;
+}
+
+/* Corrección para elementos con texto blanco sobre fondo blanco */
+[data-theme="dark"] .text-white.bg-white,
+[data-theme="dark"] .text-white[style*="background-color: white"],
+[data-theme="dark"] .text-white[style*="background-color: #fff"],
+[data-theme="dark"] .text-white[style*="background-color: #ffffff"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Corrección específica para los botones de sugerencias */
+[data-theme="dark"] .sugerencias button,
+[data-theme="dark"] .sugerencias .btn {
+    background-color: #2a2a2a !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+[data-theme="dark"] .sugerencias button:hover,
+[data-theme="dark"] .sugerencias .btn:hover {
+    background-color: #3a3a3a !important;
+}
+
+/* Correcciones específicas para los botones en el chat del asistente IA */
+[data-theme="dark"] #chatContainer .btn,
+[data-theme="dark"] .chat-container .btn {
+    color: inherit !important;
+}
+
+[data-theme="dark"] #chatContainer .btn-primary,
+[data-theme="dark"] .chat-container .btn-primary {
+    color: #ffffff !important;
+}
+
+/* Corrección para los botones de enviar en el chat */
+[data-theme="dark"] .btn-enviar,
+[data-theme="dark"] button[type="submit"],
+[data-theme="dark"] input[type="submit"] {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+/* Correcciones específicas para los elementos marcados en la imagen */
+[data-theme="dark"] .publicar,
+[data-theme="dark"] button.publicar,
+[data-theme="dark"] a.publicar {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+
+[data-theme="dark"] .el-modelo-no-esta,
+[data-theme="dark"] button.el-modelo-no-esta,
+[data-theme="dark"] a.el-modelo-no-esta {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    border-color: #dc3545 !important;
+}
+
+/* Corrección para los botones de sugerencias en el chat */
+[data-theme="dark"] .sugerencias-preguntas button,
+[data-theme="dark"] .sugerencias-preguntas .btn,
+[data-theme="dark"] button[onclick*="insertarTexto"] {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Correcciones para los botones específicos de la interfaz del asistente IA */
+[data-theme="dark"] button[class*="publicar"],
+[data-theme="dark"] a[class*="publicar"],
+[data-theme="dark"] div[class*="publicar"] {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] button[class*="practicas"],
+[data-theme="dark"] a[class*="practicas"],
+[data-theme="dark"] div[class*="practicas"] {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] button[class*="limitaciones"],
+[data-theme="dark"] a[class*="limitaciones"],
+[data-theme="dark"] div[class*="limitaciones"] {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+[data-theme="dark"] button[class*="modelo-no-esta"],
+[data-theme="dark"] a[class*="modelo-no-esta"],
+[data-theme="dark"] div[class*="modelo-no-esta"] {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+/* Corrección específica para elementos con id */
+[data-theme="dark"] #publicar,
+[data-theme="dark"] #practicas-en-documento,
+[data-theme="dark"] #limitaciones,
+[data-theme="dark"] #el-modelo-no-esta {
+    color: #ffffff !important;
+}
+
+/* Corrección para botones con texto blanco */
+[data-theme="dark"] .text-white {
+    color: #ffffff !important;
+}
+
+/* Corrección para elementos con atributos de estilo inline */
+[data-theme="dark"] [style*="color: white"],
+[data-theme="dark"] [style*="color: #fff"],
+[data-theme="dark"] [style*="color: #ffffff"] {
+    color: #ffffff !important;
+}
+
+/* Corrección para elementos con fondo blanco y texto blanco */
+[data-theme="dark"] [style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] [style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] [style*="background-color: #ffffff"][style*="color: white"],
+[data-theme="dark"] [style*="background: white"][style*="color: white"],
+[data-theme="dark"] [style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] [style*="background: #ffffff"][style*="color: white"],
+[data-theme="dark"] [style*="background-color: white"][style*="color: #fff"],
+[data-theme="dark"] [style*="background-color: #fff"][style*="color: #fff"],
+[data-theme="dark"] [style*="background-color: #ffffff"][style*="color: #fff"],
+[data-theme="dark"] [style*="background-color: white"][style*="color: #ffffff"],
+[data-theme="dark"] [style*="background-color: #fff"][style*="color: #ffffff"],
+[data-theme="dark"] [style*="background-color: #ffffff"][style*="color: #ffffff"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Correcciones específicas para los botones con nombres de clase exactos */
+[data-theme="dark"] .btn.publicar,
+[data-theme="dark"] button.publicar,
+[data-theme="dark"] a.publicar,
+[data-theme="dark"] .publicar {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+
+[data-theme="dark"] .btn.el-modelo-no-esta,
+[data-theme="dark"] button.el-modelo-no-esta,
+[data-theme="dark"] a.el-modelo-no-esta,
+[data-theme="dark"] .el-modelo-no-esta {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    border-color: #dc3545 !important;
+}
+
+[data-theme="dark"] .btn.practicas-en-documento,
+[data-theme="dark"] button.practicas-en-documento,
+[data-theme="dark"] a.practicas-en-documento,
+[data-theme="dark"] .practicas-en-documento {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+    border-color: #198754 !important;
+}
+
+[data-theme="dark"] .btn.limitaciones,
+[data-theme="dark"] button.limitaciones,
+[data-theme="dark"] a.limitaciones,
+[data-theme="dark"] .limitaciones {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+    border-color: #ffc107 !important;
+}
+
+/* Correcciones para los botones de sugerencias de preguntas */
+[data-theme="dark"] button.sugerencia,
+[data-theme="dark"] .btn.sugerencia,
+[data-theme="dark"] .sugerencia {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Correcciones específicas para los botones de enviar */
+[data-theme="dark"] .btn-enviar,
+[data-theme="dark"] button.btn-enviar,
+[data-theme="dark"] a.btn-enviar {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+
+/* Correcciones para los botones con texto blanco */
+[data-theme="dark"] .btn.text-white,
+[data-theme="dark"] button.text-white,
+[data-theme="dark"] a.text-white,
+[data-theme="dark"] .text-white {
+    color: #ffffff !important;
+}
+
+/* Correcciones para los botones con fondo blanco */
+[data-theme="dark"] .btn.bg-white,
+[data-theme="dark"] button.bg-white,
+[data-theme="dark"] a.bg-white,
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+/* Corrección específica para los botones con fondo blanco y texto blanco */
+[data-theme="dark"] .btn.bg-white.text-white,
+[data-theme="dark"] button.bg-white.text-white,
+[data-theme="dark"] a.bg-white.text-white,
+[data-theme="dark"] .bg-white.text-white {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Corrección para los botones de clase específica en la imagen */
+[data-theme="dark"] .btn-ai,
+[data-theme="dark"] button.btn-ai,
+[data-theme="dark"] a.btn-ai {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+/* Corrección para elementos específicos por su ID */
+[data-theme="dark"] #ai-assistant,
+[data-theme="dark"] #ai-button,
+[data-theme="dark"] #publicar,
+[data-theme="dark"] #practicas-en-documento,
+[data-theme="dark"] #limitaciones,
+[data-theme="dark"] #el-modelo-no-esta {
+    color: #ffffff !important;
+}
+
+/* Corrección específica para los botones de la interfaz del asistente IA */
+[data-theme="dark"] .ai-interface button,
+[data-theme="dark"] .ai-interface .btn,
+[data-theme="dark"] .ai-chat button,
+[data-theme="dark"] .ai-chat .btn {
+    color: inherit !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline */
+[data-theme="dark"] button[style*="color: white"],
+[data-theme="dark"] button[style*="color: #fff"],
+[data-theme="dark"] button[style*="color: #ffffff"],
+[data-theme="dark"] a[style*="color: white"],
+[data-theme="dark"] a[style*="color: #fff"],
+[data-theme="dark"] a[style*="color: #ffffff"] {
+    color: #ffffff !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline de fondo blanco */
+[data-theme="dark"] button[style*="background-color: white"],
+[data-theme="dark"] button[style*="background-color: #fff"],
+[data-theme="dark"] button[style*="background-color: #ffffff"],
+[data-theme="dark"] button[style*="background: white"],
+[data-theme="dark"] button[style*="background: #fff"],
+[data-theme="dark"] button[style*="background: #ffffff"],
+[data-theme="dark"] a[style*="background-color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"],
+[data-theme="dark"] a[style*="background-color: #ffffff"],
+[data-theme="dark"] a[style*="background: white"],
+[data-theme="dark"] a[style*="background: #fff"],
+[data-theme="dark"] a[style*="background: #ffffff"] {
+    background-color: var(--card-bg) !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline de fondo blanco y texto blanco */
+[data-theme="dark"] button[style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] button[style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] button[style*="background-color: #ffffff"][style*="color: white"],
+[data-theme="dark"] button[style*="background: white"][style*="color: white"],
+[data-theme="dark"] button[style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] button[style*="background: #ffffff"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #ffffff"][style*="color: white"],
+[data-theme="dark"] a[style*="background: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background: #ffffff"][style*="color: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Correcciones específicas para los botones con nombres de clase exactos */
+[data-theme="dark"] .btn.publicar,
+[data-theme="dark"] button.publicar,
+[data-theme="dark"] a.publicar,
+[data-theme="dark"] .publicar {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+
+[data-theme="dark"] .btn.el-modelo-no-esta,
+[data-theme="dark"] button.el-modelo-no-esta,
+[data-theme="dark"] a.el-modelo-no-esta,
+[data-theme="dark"] .el-modelo-no-esta {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    border-color: #dc3545 !important;
+}
+
+[data-theme="dark"] .btn.practicas-en-documento,
+[data-theme="dark"] button.practicas-en-documento,
+[data-theme="dark"] a.practicas-en-documento,
+[data-theme="dark"] .practicas-en-documento {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+    border-color: #198754 !important;
+}
+
+[data-theme="dark"] .btn.limitaciones,
+[data-theme="dark"] button.limitaciones,
+[data-theme="dark"] a.limitaciones,
+[data-theme="dark"] .limitaciones {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+    border-color: #ffc107 !important;
+}
+
+/* Correcciones para los botones de sugerencias de preguntas */
+[data-theme="dark"] button.sugerencia,
+[data-theme="dark"] .btn.sugerencia,
+[data-theme="dark"] .sugerencia {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Correcciones específicas para los botones de enviar */
+[data-theme="dark"] .btn-enviar,
+[data-theme="dark"] button.btn-enviar,
+[data-theme="dark"] a.btn-enviar {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+
+/* Correcciones para los botones con texto blanco */
+[data-theme="dark"] .btn.text-white,
+[data-theme="dark"] button.text-white,
+[data-theme="dark"] a.text-white,
+[data-theme="dark"] .text-white {
+    color: #ffffff !important;
+}
+
+/* Correcciones para los botones con fondo blanco */
+[data-theme="dark"] .btn.bg-white,
+[data-theme="dark"] button.bg-white,
+[data-theme="dark"] a.bg-white,
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+/* Corrección específica para los botones con fondo blanco y texto blanco */
+[data-theme="dark"] .btn.bg-white.text-white,
+[data-theme="dark"] button.bg-white.text-white,
+[data-theme="dark"] a.bg-white.text-white,
+[data-theme="dark"] .bg-white.text-white {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Corrección para los botones de clase específica en la imagen */
+[data-theme="dark"] .btn-ai,
+[data-theme="dark"] button.btn-ai,
+[data-theme="dark"] a.btn-ai {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+/* Corrección para elementos específicos por su ID */
+[data-theme="dark"] #ai-assistant,
+[data-theme="dark"] #ai-button,
+[data-theme="dark"] #publicar,
+[data-theme="dark"] #practicas-en-documento,
+[data-theme="dark"] #limitaciones,
+[data-theme="dark"] #el-modelo-no-esta {
+    color: #ffffff !important;
+}
+
+/* Corrección específica para los botones de la interfaz del asistente IA */
+[data-theme="dark"] .ai-interface button,
+[data-theme="dark"] .ai-interface .btn,
+[data-theme="dark"] .ai-chat button,
+[data-theme="dark"] .ai-chat .btn {
+    color: inherit !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline */
+[data-theme="dark"] button[style*="color: white"],
+[data-theme="dark"] button[style*="color: #fff"],
+[data-theme="dark"] button[style*="color: #ffffff"],
+[data-theme="dark"] a[style*="color: white"],
+[data-theme="dark"] a[style*="color: #fff"],
+[data-theme="dark"] a[style*="color: #ffffff"] {
+    color: #ffffff !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline de fondo blanco */
+[data-theme="dark"] button[style*="background-color: white"],
+[data-theme="dark"] button[style*="background-color: #fff"],
+[data-theme="dark"] button[style*="background-color: #ffffff"],
+[data-theme="dark"] button[style*="background: white"],
+[data-theme="dark"] button[style*="background: #fff"],
+[data-theme="dark"] button[style*="background: #ffffff"],
+[data-theme="dark"] a[style*="background-color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"],
+[data-theme="dark"] a[style*="background-color: #ffffff"],
+[data-theme="dark"] a[style*="background: white"],
+[data-theme="dark"] a[style*="background: #fff"],
+[data-theme="dark"] a[style*="background: #ffffff"] {
+    background-color: var(--card-bg) !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline de fondo blanco y texto blanco */
+[data-theme="dark"] button[style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] button[style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] button[style*="background-color: #ffffff"][style*="color: white"],
+[data-theme="dark"] button[style*="background: white"][style*="color: white"],
+[data-theme="dark"] button[style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] button[style*="background: #ffffff"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #ffffff"][style*="color: white"],
+[data-theme="dark"] a[style*="background: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background: #ffffff"][style*="color: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Correcciones específicas para los botones con nombres de clase exactos */
+[data-theme="dark"] .btn.publicar,
+[data-theme="dark"] button.publicar,
+[data-theme="dark"] a.publicar,
+[data-theme="dark"] .publicar {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+
+[data-theme="dark"] .btn.el-modelo-no-esta,
+[data-theme="dark"] button.el-modelo-no-esta,
+[data-theme="dark"] a.el-modelo-no-esta,
+[data-theme="dark"] .el-modelo-no-esta {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    border-color: #dc3545 !important;
+}
+
+[data-theme="dark"] .btn.practicas-en-documento,
+[data-theme="dark"] button.practicas-en-documento,
+[data-theme="dark"] a.practicas-en-documento,
+[data-theme="dark"] .practicas-en-documento {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+    border-color: #198754 !important;
+}
+
+[data-theme="dark"] .btn.limitaciones,
+[data-theme="dark"] button.limitaciones,
+[data-theme="dark"] a.limitaciones,
+[data-theme="dark"] .limitaciones {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+    border-color: #ffc107 !important;
+}
+
+/* Correcciones para los botones de sugerencias de preguntas */
+[data-theme="dark"] button.sugerencia,
+[data-theme="dark"] .btn.sugerencia,
+[data-theme="dark"] .sugerencia {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Correcciones específicas para los botones de enviar */
+[data-theme="dark"] .btn-enviar,
+[data-theme="dark"] button.btn-enviar,
+[data-theme="dark"] a.btn-enviar {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+
+/* Correcciones para los botones con texto blanco */
+[data-theme="dark"] .btn.text-white,
+[data-theme="dark"] button.text-white,
+[data-theme="dark"] a.text-white,
+[data-theme="dark"] .text-white {
+    color: #ffffff !important;
+}
+
+/* Correcciones para los botones con fondo blanco */
+[data-theme="dark"] .btn.bg-white,
+[data-theme="dark"] button.bg-white,
+[data-theme="dark"] a.bg-white,
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+/* Corrección específica para los botones con fondo blanco y texto blanco */
+[data-theme="dark"] .btn.bg-white.text-white,
+[data-theme="dark"] button.bg-white.text-white,
+[data-theme="dark"] a.bg-white.text-white,
+[data-theme="dark"] .bg-white.text-white {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Corrección para los botones de clase específica en la imagen */
+[data-theme="dark"] .btn-ai,
+[data-theme="dark"] button.btn-ai,
+[data-theme="dark"] a.btn-ai {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+/* Corrección para elementos específicos por su ID */
+[data-theme="dark"] #ai-assistant,
+[data-theme="dark"] #ai-button,
+[data-theme="dark"] #publicar,
+[data-theme="dark"] #practicas-en-documento,
+[data-theme="dark"] #limitaciones,
+[data-theme="dark"] #el-modelo-no-esta {
+    color: #ffffff !important;
+}
+
+/* Corrección específica para los botones de la interfaz del asistente IA */
+[data-theme="dark"] .ai-interface button,
+[data-theme="dark"] .ai-interface .btn,
+[data-theme="dark"] .ai-chat button,
+[data-theme="dark"] .ai-chat .btn {
+    color: inherit !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline */
+[data-theme="dark"] button[style*="color: white"],
+[data-theme="dark"] button[style*="color: #fff"],
+[data-theme="dark"] button[style*="color: #ffffff"],
+[data-theme="dark"] a[style*="color: white"],
+[data-theme="dark"] a[style*="color: #fff"],
+[data-theme="dark"] a[style*="color: #ffffff"] {
+    color: #ffffff !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline de fondo blanco */
+[data-theme="dark"] button[style*="background-color: white"],
+[data-theme="dark"] button[style*="background-color: #fff"],
+[data-theme="dark"] button[style*="background-color: #ffffff"],
+[data-theme="dark"] button[style*="background: white"],
+[data-theme="dark"] button[style*="background: #fff"],
+[data-theme="dark"] button[style*="background: #ffffff"],
+[data-theme="dark"] a[style*="background-color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"],
+[data-theme="dark"] a[style*="background-color: #ffffff"],
+[data-theme="dark"] a[style*="background: white"],
+[data-theme="dark"] a[style*="background: #fff"],
+[data-theme="dark"] a[style*="background: #ffffff"] {
+    background-color: var(--card-bg) !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline de fondo blanco y texto blanco */
+[data-theme="dark"] button[style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] button[style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] button[style*="background-color: #ffffff"][style*="color: white"],
+[data-theme="dark"] button[style*="background: white"][style*="color: white"],
+[data-theme="dark"] button[style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] button[style*="background: #ffffff"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #ffffff"][style*="color: white"],
+[data-theme="dark"] a[style*="background: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background: #ffffff"][style*="color: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Correcciones específicas para los botones con nombres de clase exactos */
+[data-theme="dark"] .btn.publicar,
+[data-theme="dark"] button.publicar,
+[data-theme="dark"] a.publicar,
+[data-theme="dark"] .publicar {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+
+[data-theme="dark"] .btn.el-modelo-no-esta,
+[data-theme="dark"] button.el-modelo-no-esta,
+[data-theme="dark"] a.el-modelo-no-esta,
+[data-theme="dark"] .el-modelo-no-esta {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    border-color: #dc3545 !important;
+}
+
+[data-theme="dark"] .btn.practicas-en-documento,
+[data-theme="dark"] button.practicas-en-documento,
+[data-theme="dark"] a.practicas-en-documento,
+[data-theme="dark"] .practicas-en-documento {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+    border-color: #198754 !important;
+}
+
+[data-theme="dark"] .btn.limitaciones,
+[data-theme="dark"] button.limitaciones,
+[data-theme="dark"] a.limitaciones,
+[data-theme="dark"] .limitaciones {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+    border-color: #ffc107 !important;
+}
+
+/* Correcciones para los botones de sugerencias de preguntas */
+[data-theme="dark"] button.sugerencia,
+[data-theme="dark"] .btn.sugerencia,
+[data-theme="dark"] .sugerencia {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Correcciones específicas para los botones de enviar */
+[data-theme="dark"] .btn-enviar,
+[data-theme="dark"] button.btn-enviar,
+[data-theme="dark"] a.btn-enviar {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+
+/* Correcciones para los botones con texto blanco */
+[data-theme="dark"] .btn.text-white,
+[data-theme="dark"] button.text-white,
+[data-theme="dark"] a.text-white,
+[data-theme="dark"] .text-white {
+    color: #ffffff !important;
+}
+
+/* Correcciones para los botones con fondo blanco */
+[data-theme="dark"] .btn.bg-white,
+[data-theme="dark"] button.bg-white,
+[data-theme="dark"] a.bg-white,
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+/* Corrección específica para los botones con fondo blanco y texto blanco */
+[data-theme="dark"] .btn.bg-white.text-white,
+[data-theme="dark"] button.bg-white.text-white,
+[data-theme="dark"] a.bg-white.text-white,
+[data-theme="dark"] .bg-white.text-white {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Corrección para los botones de clase específica en la imagen */
+[data-theme="dark"] .btn-ai,
+[data-theme="dark"] button.btn-ai,
+[data-theme="dark"] a.btn-ai {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+/* Corrección para elementos específicos por su ID */
+[data-theme="dark"] #ai-assistant,
+[data-theme="dark"] #ai-button,
+[data-theme="dark"] #publicar,
+[data-theme="dark"] #practicas-en-documento,
+[data-theme="dark"] #limitaciones,
+[data-theme="dark"] #el-modelo-no-esta {
+    color: #ffffff !important;
+}
+
+/* Corrección específica para los botones de la interfaz del asistente IA */
+[data-theme="dark"] .ai-interface button,
+[data-theme="dark"] .ai-interface .btn,
+[data-theme="dark"] .ai-chat button,
+[data-theme="dark"] .ai-chat .btn {
+    color: inherit !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline */
+[data-theme="dark"] button[style*="color: white"],
+[data-theme="dark"] button[style*="color: #fff"],
+[data-theme="dark"] button[style*="color: #ffffff"],
+[data-theme="dark"] a[style*="color: white"],
+[data-theme="dark"] a[style*="color: #fff"],
+[data-theme="dark"] a[style*="color: #ffffff"] {
+    color: #ffffff !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline de fondo blanco */
+[data-theme="dark"] button[style*="background-color: white"],
+[data-theme="dark"] button[style*="background-color: #fff"],
+[data-theme="dark"] button[style*="background-color: #ffffff"],
+[data-theme="dark"] button[style*="background: white"],
+[data-theme="dark"] button[style*="background: #fff"],
+[data-theme="dark"] button[style*="background: #ffffff"],
+[data-theme="dark"] a[style*="background-color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"],
+[data-theme="dark"] a[style*="background-color: #ffffff"],
+[data-theme="dark"] a[style*="background: white"],
+[data-theme="dark"] a[style*="background: #fff"],
+[data-theme="dark"] a[style*="background: #ffffff"] {
+    background-color: var(--card-bg) !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline de fondo blanco y texto blanco */
+[data-theme="dark"] button[style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] button[style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] button[style*="background-color: #ffffff"][style*="color: white"],
+[data-theme="dark"] button[style*="background: white"][style*="color: white"],
+[data-theme="dark"] button[style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] button[style*="background: #ffffff"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #ffffff"][style*="color: white"],
+[data-theme="dark"] a[style*="background: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background: #ffffff"][style*="color: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Correcciones específicas para los botones con nombres de clase exactos */
+[data-theme="dark"] .btn.publicar,
+[data-theme="dark"] button.publicar,
+[data-theme="dark"] a.publicar,
+[data-theme="dark"] .publicar {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+
+[data-theme="dark"] .btn.el-modelo-no-esta,
+[data-theme="dark"] button.el-modelo-no-esta,
+[data-theme="dark"] a.el-modelo-no-esta,
+[data-theme="dark"] .el-modelo-no-esta {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    border-color: #dc3545 !important;
+}
+
+[data-theme="dark"] .btn.practicas-en-documento,
+[data-theme="dark"] button.practicas-en-documento,
+[data-theme="dark"] a.practicas-en-documento,
+[data-theme="dark"] .practicas-en-documento {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+    border-color: #198754 !important;
+}
+
+[data-theme="dark"] .btn.limitaciones,
+[data-theme="dark"] button.limitaciones,
+[data-theme="dark"] a.limitaciones,
+[data-theme="dark"] .limitaciones {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+    border-color: #ffc107 !important;
+}
+
+/* Correcciones para los botones de sugerencias de preguntas */
+[data-theme="dark"] button.sugerencia,
+[data-theme="dark"] .btn.sugerencia,
+[data-theme="dark"] .sugerencia {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Correcciones específicas para los botones de enviar */
+[data-theme="dark"] .btn-enviar,
+[data-theme="dark"] button.btn-enviar,
+[data-theme="dark"] a.btn-enviar {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+
+/* Correcciones para los botones con texto blanco */
+[data-theme="dark"] .btn.text-white,
+[data-theme="dark"] button.text-white,
+[data-theme="dark"] a.text-white,
+[data-theme="dark"] .text-white {
+    color: #ffffff !important;
+}
+
+/* Correcciones para los botones con fondo blanco */
+[data-theme="dark"] .btn.bg-white,
+[data-theme="dark"] button.bg-white,
+[data-theme="dark"] a.bg-white,
+[data-theme="dark"] .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+/* Corrección específica para los botones con fondo blanco y texto blanco */
+[data-theme="dark"] .btn.bg-white.text-white,
+[data-theme="dark"] button.bg-white.text-white,
+[data-theme="dark"] a.bg-white.text-white,
+[data-theme="dark"] .bg-white.text-white {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Corrección para los botones de clase específica en la imagen */
+[data-theme="dark"] .btn-ai,
+[data-theme="dark"] button.btn-ai,
+[data-theme="dark"] a.btn-ai {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+/* Corrección para elementos específicos por su ID */
+[data-theme="dark"] #ai-assistant,
+[data-theme="dark"] #ai-button,
+[data-theme="dark"] #publicar,
+[data-theme="dark"] #practicas-en-documento,
+[data-theme="dark"] #limitaciones,
+[data-theme="dark"] #el-modelo-no-esta {
+    color: #ffffff !important;
+}
+
+/* Corrección específica para los botones de la interfaz del asistente IA */
+[data-theme="dark"] .ai-interface button,
+[data-theme="dark"] .ai-interface .btn,
+[data-theme="dark"] .ai-chat button,
+[data-theme="dark"] .ai-chat .btn {
+    color: inherit !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline */
+[data-theme="dark"] button[style*="color: white"],
+[data-theme="dark"] button[style*="color: #fff"],
+[data-theme="dark"] button[style*="color: #ffffff"],
+[data-theme="dark"] a[style*="color: white"],
+[data-theme="dark"] a[style*="color: #fff"],
+[data-theme="dark"] a[style*="color: #ffffff"] {
+    color: #ffffff !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline de fondo blanco */
+[data-theme="dark"] button[style*="background-color: white"],
+[data-theme="dark"] button[style*="background-color: #fff"],
+[data-theme="dark"] button[style*="background-color: #ffffff"],
+[data-theme="dark"] button[style*="background: white"],
+[data-theme="dark"] button[style*="background: #fff"],
+[data-theme="dark"] button[style*="background: #ffffff"],
+[data-theme="dark"] a[style*="background-color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"],
+[data-theme="dark"] a[style*="background-color: #ffffff"],
+[data-theme="dark"] a[style*="background: white"],
+[data-theme="dark"] a[style*="background: #fff"],
+[data-theme="dark"] a[style*="background: #ffffff"] {
+    background-color: var(--card-bg) !important;
+}
+
+/* Corrección para los botones con atributos de estilo inline de fondo blanco y texto blanco */
+[data-theme="dark"] button[style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] button[style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] button[style*="background-color: #ffffff"][style*="color: white"],
+[data-theme="dark"] button[style*="background: white"][style*="color: white"],
+[data-theme="dark"] button[style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] button[style*="background: #ffffff"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background-color: #ffffff"][style*="color: white"],
+[data-theme="dark"] a[style*="background: white"][style*="color: white"],
+[data-theme="dark"] a[style*="background: #fff"][style*="color: white"],
+[data-theme="dark"] a[style*="background: #ffffff"][style*="color: white"] {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+}
+
+/* Corrección para botones con modelo-no-esta (variación del nombre) */
+[data-theme="dark"] .btn.modelo-no-esta,
+[data-theme="dark"] button.modelo-no-esta,
+[data-theme="dark"] a.modelo-no-esta,
+[data-theme="dark"] .modelo-no-esta {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    border-color: #dc3545 !important;
+}
+
+/* Correcciones para botones con clases compuestas de Bootstrap */
+[data-theme="dark"] .btn-primary {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    border-color: #0d6efd !important;
+}
+
+[data-theme="dark"] .btn-success {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+    border-color: #198754 !important;
+}
+
+[data-theme="dark"] .btn-danger {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    border-color: #dc3545 !important;
+}
+
+[data-theme="dark"] .btn-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+    border-color: #ffc107 !important;
+}
+
+[data-theme="dark"] .btn-info {
+    background-color: #0dcaf0 !important;
+    color: #212529 !important;
+    border-color: #0dcaf0 !important;
+}
+
+/* Correcciones para badges */
+[data-theme="dark"] .badge.bg-primary,
+[data-theme="dark"] .badge.bg-secondary,
+[data-theme="dark"] .badge.bg-success,
+[data-theme="dark"] .badge.bg-danger,
+[data-theme="dark"] .badge.bg-warning,
+[data-theme="dark"] .badge.bg-info {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .badge.bg-warning,
+[data-theme="dark"] .badge.bg-light {
+    color: #212529 !important;
+}
+
+/* Corrección para botones en el chat */
+[data-theme="dark"] .chat-container button,
+[data-theme="dark"] .message-container button,
+[data-theme="dark"] .ejemplos-preguntas button {
+    color: inherit !important;
+}
+
+/* Asegurando que los botones con clases específicas tengan el color correcto */
+[data-theme="dark"] .btn-primary.publicar,
+[data-theme="dark"] .btn-success.practicas-en-documento,
+[data-theme="dark"] .btn-warning.limitaciones,
+[data-theme="dark"] .btn-danger.modelo-no-esta,
+[data-theme="dark"] .btn-danger.el-modelo-no-esta {
+    color: #ffffff !important;
+}
+
+/* Corrección específica para botones con clase model-button */
+[data-theme="dark"] .model-button {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .model-button:hover,
+[data-theme="dark"] .model-button.active {
+    background-color: #3a3a3a !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}

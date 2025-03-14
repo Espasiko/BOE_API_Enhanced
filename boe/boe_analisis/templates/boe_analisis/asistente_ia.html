@@ -1,0 +1,785 @@
+{% extends "boe_analisis/base.html" %}
+
+{% block title %}Asistente IA | BOE Alertas{% endblock %}
+
+{% block extra_css %}
+<style>.typing-indicator {
+    padding: 10px;
+}
+
+.typing-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.typing-dots span {
+    width: 8px;
+    height: 8px;
+    background: #666;
+    border-radius: 50%;
+    animation: typing 1s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(1) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(2) { animation-delay: 0.4s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes typing {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+    .chat-container {
+        height: 400px;
+        overflow-y: auto;
+        border: 1px solid #e9ecef;
+        border-radius: 4px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        margin-bottom: 15px;
+    }
+    
+    .message {
+        margin-bottom: 15px;
+        padding: 10px 15px;
+        border-radius: 10px;
+        max-width: 80%;
+    }
+    
+    .user-message {
+        background-color: #e3f2fd;
+        margin-left: auto;
+        border-top-right-radius: 0;
+    }
+    
+    .ai-message {
+        background-color: #ffffff;
+        margin-right: auto;
+        border-top-left-radius: 0;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .message p {
+        margin-bottom: 0;
+    }
+    
+    .typing-indicator {
+        display: none;
+        padding: 10px 15px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        width: fit-content;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .typing-indicator span {
+        height: 8px;
+        width: 8px;
+        background-color: #3498db;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 3px;
+        animation: typing 1s infinite;
+    }
+    
+    .typing-indicator span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    
+    .typing-indicator span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    
+    @keyframes typing {
+        0% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+        100% { transform: translateY(0); }
+    }
+    
+    .sources {
+        font-size: 0.9rem;
+        border-top: 1px solid #e9ecef;
+        padding-top: 10px;
+        margin-top: 10px;
+    }
+    
+    .source-item {
+        margin-top: 8px;
+        padding: 8px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+    }
+    
+    .examples-container {
+        margin-top: 20px;
+    }
+    
+    .example-query {
+        cursor: pointer;
+        padding: 8px 12px;
+        margin-bottom: 8px;
+        background-color: #f1f3f5;
+        border-radius: 20px;
+        display: inline-block;
+        transition: all 0.2s;
+    }
+    
+    .example-query:hover {
+        background-color: #e9ecef;
+    }
+    
+    /* Estilos para el selector de modelo de IA */
+    .modelo-ia-selector {
+        display: none;
+        margin-bottom: 15px;
+    }
+    
+    #modelo-actual {
+        padding: 5px 10px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        display: inline-block;
+    }
+    
+    .form-check {
+        margin-bottom: 8px;
+    }
+    
+    /* Estilos para las capacidades del asistente */
+    .asistente-capacidades {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .capacidad-item {
+        padding: 8px;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .capacidad-item:last-child {
+        border-bottom: none;
+    }
+    
+    .capacidad-item i {
+        margin-right: 8px;
+    }
+    
+    /* Estilos para las limitaciones del asistente */
+    .asistente-limitaciones {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .limitacion-item {
+        padding: 8px;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .limitacion-item:last-child {
+        border-bottom: none;
+    }
+    
+    .limitacion-item i {
+        margin-right: 8px;
+    }
+    
+    /* Estilos para el selector de modelo de IA */
+    .modelo-ia-item {
+        padding: 10px;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .modelo-ia-item:last-child {
+        border-bottom: none;
+    }
+    
+    .modelo-ia-item input[type="radio"] {
+        margin-right: 10px;
+    }
+    
+    .modelo-ia-item label {
+        font-weight: bold;
+    }
+    
+    .modelo-destacado {
+        font-weight: bold;
+        color: #007bff;
+    }
+    
+    /* Estilos para el acordeón en modo oscuro */
+    [data-bs-theme="dark"] .accordion-item {
+        background-color: var(--bs-dark);
+        border-color: var(--bs-gray-700);
+    }
+
+    [data-bs-theme="dark"] .accordion-button {
+        background-color: var(--bs-gray-800);
+        color: var(--bs-light);
+        border-color: var(--bs-gray-700);
+    }
+
+    [data-bs-theme="dark"] .accordion-button:not(.collapsed) {
+        background-color: var(--bs-gray-900);
+        color: var(--bs-white);
+        border-color: var(--bs-gray-700);
+    }
+
+    [data-bs-theme="dark"] .accordion-button::after {
+        filter: invert(1);
+    }
+
+    [data-bs-theme="dark"] .accordion-body {
+        background-color: var(--bs-dark);
+        color: var(--bs-light);
+    }
+
+    /* Optimizaciones de rendimiento */
+    .accordion-button {
+        transition: all 0.2s ease-in-out;
+        will-change: transform, background-color;
+    }
+
+    /* Mejoras en la experiencia de usuario */
+    .accordion-button:hover {
+        background-color: var(--bs-gray-700);
+        color: var(--bs-white);
+    }
+
+    .accordion-button.collapsed:hover {
+        background-color: var(--bs-gray-600);
+    }
+
+    /* Estilos para resultados agrupados */
+    .departamento-grupo {
+        margin-bottom: 1rem;
+        border-radius: 0.375rem;
+        overflow: hidden;
+    }
+
+    [data-bs-theme="dark"] .departamento-grupo {
+        background-color: var(--bs-gray-800);
+    }
+
+    .resultado-item {
+        padding: 0.75rem;
+        border-bottom: 1px solid var(--bs-gray-700);
+    }
+
+    [data-bs-theme="dark"] .resultado-item {
+        border-color: var(--bs-gray-700);
+    }
+
+    /* Indicadores de relevancia */
+    .relevancia-score {
+        font-size: 0.875rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        background-color: var(--bs-gray-200);
+    }
+
+    [data-bs-theme="dark"] .relevancia-score {
+        background-color: var(--bs-gray-700);
+    }
+
+    .relevancia-alta {
+        color: var(--bs-success);
+    }
+
+    [data-bs-theme="dark"] .relevancia-alta {
+        color: var(--bs-success-text);
+    }
+    
+    .sources-container {
+        margin-top: 15px;
+    }
+    
+    .resultado-item {
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        padding: 10px;
+    }
+    
+    .resultado-item h6 {
+        margin-top: 0;
+    }
+    
+    .resultado-item .relevancia-score {
+        font-size: 0.875rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        background-color: var(--bs-gray-200);
+    }
+    
+    [data-bs-theme="dark"] .resultado-item .relevancia-score {
+        background-color: var(--bs-gray-700);
+    }
+    
+    .resultado-item .relevancia-alta {
+        color: var(--bs-success);
+    }
+    
+    [data-bs-theme="dark"] .resultado-item .relevancia-alta {
+        color: var(--bs-success-text);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2"><i class="fas fa-robot me-2"></i>Asistente IA del BOE</h1>
+        
+        <div class="btn-group">
+            <a href="{% url 'sumario_hoy' %}" class="btn btn-outline-primary">
+                <i class="fas fa-calendar-day me-1"></i>Sumario de hoy
+            </a>
+            <a href="{% url 'busqueda_avanzada' %}" class="btn btn-outline-primary">
+                <i class="fas fa-search me-1"></i>Búsqueda avanzada
+            </a>
+            <a href="{% url 'asistente_ia' %}" class="btn btn-primary active">
+                <i class="fas fa-robot me-1"></i>Asistente IA
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0"><i class="fas fa-comment-dots me-2"></i>Consulta al asistente</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text text-muted mb-4">
+                        Haz preguntas en lenguaje natural sobre normativas, leyes o cualquier información publicada en el BOE.
+                        El asistente buscará la información relevante y te proporcionará respuestas precisas con referencias a los documentos oficiales.
+                    </p>
+                    
+                    <!-- Selector de modelo de IA -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label fw-bold mb-0"><i class="fas fa-microchip me-2"></i>Modelo de IA:</label>
+                            <button id="btn-elegir-modelo" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-cog me-1"></i>Cambiar modelo
+                            </button>
+                        </div>
+                        <div class="d-flex">
+                            <span class="badge bg-primary me-2" id="modelo-actual">GPT-3.5</span>
+                            <span class="badge bg-success me-2" id="badge-web-search" style="display: none;">
+                                <i class="fas fa-globe me-1"></i>Búsqueda web
+                            </span>
+                            <span class="badge bg-info" id="badge-tavily" style="display: none; cursor: pointer;" title="Haz clic para activar Mistral con Tavily">
+                                <i class="fas fa-search me-1"></i>Tavily
+                            </span>
+                        </div>
+                        
+                        <!-- Selector de modelo de IA (oculto por defecto) -->
+                        <div class="modelo-ia-selector mt-3" id="modelo-ia-selector" style="display: none;">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Selecciona el modelo de IA</h6>
+                                    <div class="form-check modelo-ia-item">
+                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-default" value="default" checked>
+                                        <label class="form-check-label" for="modelo-default">
+                                            Modelo estándar (T5 para español)
+                                        </label>
+                                    </div>
+                                    <div class="form-check modelo-ia-item">
+                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-legal" value="legal">
+                                        <label class="form-check-label" for="modelo-legal">
+                                            Modelo legal (especializado en textos jurídicos)
+                                        </label>
+                                    </div>
+                                    <div class="form-check modelo-ia-item">
+                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-bert" value="bert">
+                                        <label class="form-check-label" for="modelo-bert">
+                                            Modelo BERT2BERT (mejor para textos largos en español)
+                                        </label>
+                                    </div>
+                                    <div class="form-check modelo-ia-item">
+                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-bart" value="bart">
+                                        <label class="form-check-label" for="modelo-bart">
+                                            Modelo BART (mayor fluidez en español)
+                                        </label>
+                                    </div>
+                                    <div class="form-check modelo-ia-item">
+                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-openai" value="openai">
+                                        <label class="form-check-label" for="modelo-openai">
+                                            <span class="modelo-destacado">OpenAI GPT</span> (alta calidad, actualizado)
+                                        </label>
+                                    </div>
+                                    <div class="form-check modelo-ia-item">
+                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-mistral" value="mistral">
+                                        <label class="form-check-label" for="modelo-mistral">
+                                            <span class="modelo-destacado">Mistral AI</span> (alta calidad, bueno para textos legales)
+                                        </label>
+                                    </div>
+                                    <div class="form-check modelo-ia-item">
+                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-deepseek" value="deepseek">
+                                        <label class="form-check-label" for="modelo-deepseek">
+                                            <span class="modelo-destacado">DeepSeek AI</span> (alta calidad, respuestas detalladas)
+                                        </label>
+                                    </div>
+                                    <div class="form-check modelo-ia-item">
+                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-gpt3" value="gpt3" checked>
+                                        <label class="form-check-label" for="modelo-gpt3">
+                                            GPT-3.5 Turbo (Rápido y eficiente)
+                                        </label>
+                                    </div>
+                                    <div class="form-check modelo-ia-item">
+                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-gpt4" value="gpt4">
+                                        <label class="form-check-label" for="modelo-gpt4">
+                                            GPT-4 (Mayor precisión, más lento)
+                                        </label>
+                                    </div>
+                                    <div class="form-check modelo-ia-item">
+                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-mistral-tavily" value="mistral-tavily">
+                                        <label class="form-check-label" for="modelo-mistral-tavily">
+                                            Mistral con Tavily (Búsqueda web en tiempo real)
+                                        </label>
+                                    </div>
+                                    <div class="mt-3">
+                                        <button id="btn-aplicar-modelo" class="btn btn-sm btn-primary">Aplicar</button>
+                                        <button id="btn-cancelar-modelo" class="btn btn-sm btn-outline-secondary">Cancelar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-container" id="chatContainer">
+                        <div class="message ai-message">
+                            <p>¡Hola! Soy el asistente del BOE. Puedo ayudarte a encontrar información sobre normativas, leyes y publicaciones oficiales. ¿Qué te gustaría saber?</p>
+                            <div class="message-time">Ahora</div>
+                        </div>
+                        
+                        <div class="typing-indicator" id="typingIndicator">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    
+                    <form id="queryForm" class="mt-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="userQuery" placeholder="Escribe tu pregunta aquí..." required>
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-paper-plane me-1"></i>Enviar
+                            </button>
+                        </div>
+                        <div class="form-text text-muted mt-2">
+                            <i class="fas fa-info-circle me-1"></i>Ejemplos de preguntas:
+                            <ul class="mt-1 mb-0">
+                                <li><a href="#" class="example-query">¿Cuáles son las últimas normativas sobre protección de datos?</a></li>
+                                <li><a href="#" class="example-query">Explícame la ley de cambio climático</a></li>
+                                <li><a href="#" class="example-query">¿Qué ayudas hay disponibles para autónomos?</a></li>
+                            </ul>
+                        </div>
+                        <div class="mt-3">
+                            <button id="testButton" type="button" class="btn btn-outline-secondary">
+                                <i class="fas fa-vial me-1"></i>Probar conexión
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0"><i class="fas fa-info-circle me-2"></i>Acerca del asistente</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-check-circle text-success me-2"></i>Capacidades</h6>
+                            <ul class="mb-3 asistente-capacidades">
+                                <li class="capacidad-item">Búsqueda semántica en documentos del BOE</li>
+                                <li class="capacidad-item">Interpretación de normativas y leyes</li>
+                                <li class="capacidad-item">Resumen de información relevante</li>
+                                <li class="capacidad-item">Referencias a documentos oficiales</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-exclamation-triangle text-warning me-2"></i>Limitaciones</h6>
+                            <ul class="mb-3 asistente-limitaciones">
+                                <li class="limitacion-item">No proporciona asesoramiento legal</li>
+                                <li class="limitacion-item">La información puede no estar actualizada</li>
+                                <li class="limitacion-item">Consulta siempre los documentos oficiales</li>
+                                <li class="limitacion-item">Verifica la información con profesionales</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Constantes
+    const EXACT_SEARCH_WEIGHT = 0.6;
+    const SEMANTIC_SEARCH_WEIGHT = 0.4;
+    
+    // Variables globales
+    let messageHistory = [];  // Historial de mensajes para el contexto
+    let currentModelId = 'modelo-default';  // Modelo seleccionado por defecto
+    
+    function showTypingIndicator() {
+        const typingIndicator = document.createElement('div');
+        typingIndicator.id = 'typingIndicator';
+        typingIndicator.className = 'message ai-message typing-indicator';
+        typingIndicator.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+        document.getElementById('chatContainer').appendChild(typingIndicator);
+    }
+    
+    function hideTypingIndicator() {
+        const typingIndicator = document.getElementById('typingIndicator');
+        if (typingIndicator) {
+            typingIndicator.remove();
+        }
+    }
+    async function processQuery(query) {
+        showTypingIndicator();
+        
+        try {
+            const response = await fetch('/boe_analisis/procesar_consulta_ia/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ 
+                    query: query,
+                    model: currentModelId // Enviar el modelo seleccionado
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor: ' + response.status);
+            }
+
+            const data = await response.json();
+            console.log("Respuesta del servidor:", data);
+            
+            if (data.status === 'success') {
+                // Mostrar resumen
+                addMessage(data.summary, false, data);
+            } else {
+                addMessage("Lo siento, ha ocurrido un error al procesar tu consulta: " + (data.error || "Error desconocido"), false);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            addMessage("Ha ocurrido un error en la comunicación con el servidor: " + error.message, false);
+        } finally {
+            hideTypingIndicator();
+        }
+    }
+
+    function procesarResultadosHibridos(data) {
+        let resultsHtml = '';
+        
+        if (data.results && data.results.length > 0) {
+            resultsHtml += '<div class="sources mt-3">';
+            resultsHtml += '<h6 class="fw-bold"><i class="fas fa-file-alt me-2"></i>Fuentes de información del BOE:</h6>';
+            
+            // Contador para documentos totales y relevantes
+            let totalDocs = 0;
+            let relevantDocs = 0;
+            
+            // Palabras clave de la consulta para filtrado semántico
+            const queryKeywords = data.query ? data.query.toLowerCase().split(/\s+/).filter(word => word.length > 3) : [];
+            
+            data.results.forEach(departamento => {
+                if (departamento.documentos && departamento.documentos.length > 0) {
+                    let departamentoHtml = '';
+                    let departamentoDocs = 0;
+                    
+                    // Filtrar documentos por relevancia y contenido
+                    const documentosFiltrados = departamento.documentos.filter(doc => {
+                        // Calcular porcentaje de relevancia (promedio de exact_score y semantic_score)
+                        const relevancia = Math.round(((doc.exact_score * 0.6) + (doc.semantic_score * 0.4)) * 100);
+                        
+                        // Verificar si el título o descripción contiene palabras clave de la consulta
+                        const tituloLower = doc.titulo.toLowerCase();
+                        const descripcionLower = doc.descripcion ? doc.descripcion.toLowerCase() : '';
+                        
+                        // Contar cuántas palabras clave de la consulta están en el título o descripción
+                        let keywordMatches = 0;
+                        queryKeywords.forEach(keyword => {
+                            if (tituloLower.includes(keyword) || descripcionLower.includes(keyword)) {
+                                keywordMatches++;
+                            }
+                        });
+                        
+                        // Filtrar documentos irrelevantes o sin coincidencias de palabras clave
+                        const esRelevante = 
+                            relevancia >= 50 && // Umbral de relevancia más alto
+                            (keywordMatches > 0 || queryKeywords.length === 0) && // Debe contener al menos una palabra clave
+                            !doc.titulo.includes("No se encontraron documentos específicos") && // No mostrar mensajes de error
+                            doc.descripcion && doc.descripcion.trim() !== ''; // Debe tener descripción
+                        
+                        return esRelevante;
+                    });
+                    
+                    totalDocs += departamento.documentos.length;
+                    departamentoDocs = documentosFiltrados.length;
+                    relevantDocs += departamentoDocs;
+                    
+                    // Solo mostrar departamentos con documentos relevantes
+                    if (departamentoDocs > 0) {
+                        departamentoHtml += `<div class="source-department mb-3">`;
+                        departamentoHtml += `<h6 class="mt-2 mb-2 text-muted">${departamento.departamento}</h6>`;
+                        
+                        // Ordenar documentos por relevancia
+                        documentosFiltrados.sort((a, b) => {
+                            const relevanciaA = ((a.exact_score * 0.6) + (a.semantic_score * 0.4));
+                            const relevanciaB = ((b.exact_score * 0.6) + (b.semantic_score * 0.4));
+                            return relevanciaB - relevanciaA;
+                        });
+                        
+                        documentosFiltrados.forEach(doc => {
+                            // Calcular porcentaje de relevancia
+                            const relevancia = Math.round(((doc.exact_score * 0.6) + (doc.semantic_score * 0.4)) * 100);
+                            
+                            departamentoHtml += `<div class="source-item">`;
+                            departamentoHtml += `<a href="${doc.url}" target="_blank" class="fw-bold text-decoration-none">${doc.titulo}</a>`;
+                            
+                            // Mostrar la descripción si es relevante
+                            if (doc.descripcion && doc.descripcion.trim() !== '' && 
+                                !doc.descripcion.includes("no produjo resultados")) {
+                                departamentoHtml += `<p class="mb-1 small text-muted">${doc.descripcion}</p>`;
+                            }
+                            
+                            // Mostrar fecha solo si está disponible
+                            if (doc.fecha && doc.fecha.trim() !== '') {
+                                departamentoHtml += `<div class="d-flex justify-content-between align-items-center">`;
+                                departamentoHtml += `<small class="text-muted">Fecha: ${doc.fecha}</small>`;
+                                departamentoHtml += `<span class="badge ${relevancia >= 80 ? 'bg-success' : 'bg-primary'}">Relevancia: ${relevancia}%</span>`;
+                                departamentoHtml += `</div>`;
+                            } else {
+                                departamentoHtml += `<div class="text-end">`;
+                                departamentoHtml += `<span class="badge ${relevancia >= 80 ? 'bg-success' : 'bg-primary'}">Relevancia: ${relevancia}%</span>`;
+                                departamentoHtml += `</div>`;
+                            }
+                            
+                            departamentoHtml += `</div>`;
+                        });
+                        
+                        departamentoHtml += `</div>`;
+                        resultsHtml += departamentoHtml;
+                    }
+                }
+            });
+            
+            // Si no hay documentos relevantes después de filtrar, mostrar mensaje informativo
+            if (relevantDocs === 0) {
+                resultsHtml += `<div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>No se encontraron documentos relevantes del BOE para esta consulta.
+                    La información proporcionada está basada en el conocimiento general del asistente.
+                </div>`;
+            }
+            
+            resultsHtml += '</div>';
+        }
+        
+        return resultsHtml;
+    }
+
+    function addMessage(message, isUser, results = null) {
+        const chatContainer = document.getElementById('chatContainer');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = isUser ? 'message user-message' : 'message ai-message';
+        
+        // Convertir URLs en enlaces clicables
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const messageWithLinks = message.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+        
+        // Convertir saltos de línea en <br>
+        const formattedMessage = messageWithLinks.replace(/\n/g, '<br>');
+        
+        messageDiv.innerHTML = `<p>${formattedMessage}</p>`;
+        
+        // Si hay resultados y no es un mensaje del usuario, agregar las fuentes
+        if (!isUser && results) {
+            // Procesar los resultados y agregarlos al mensaje
+            const sourcesHtml = procesarResultadosHibridos(results);
+            if (sourcesHtml) {
+                messageDiv.innerHTML += sourcesHtml;
+            }
+        }
+        
+        chatContainer.appendChild(messageDiv);
+        
+        // Scroll al final del chat
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        
+        // Guardar el mensaje en el historial
+        if (isUser) {
+            messageHistory.push({ role: 'user', content: message });
+        } else {
+            messageHistory.push({ role: 'assistant', content: message });
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatContainer = document.getElementById('chatContainer');
+        const queryForm = document.getElementById('queryForm');
+        const userQueryInput = document.getElementById('userQuery');
+        const btnElegirModelo = document.getElementById('btn-elegir-modelo');
+        const modeloIaSelector = document.getElementById('modelo-ia-selector');
+        const btnAplicarModelo = document.getElementById('btn-aplicar-modelo');
+        const btnCancelarModelo = document.getElementById('btn-cancelar-modelo');
+        const nombreModeloActual = document.getElementById('modelo-actual');
+        
+        // Mostrar/ocultar selector de modelo
+        btnElegirModelo.addEventListener('click', function() {
+            modeloIaSelector.style.display = 'block';
+        });
+        
+        // Cancelar selección de modelo
+        btnCancelarModelo.addEventListener('click', function() {
+            modeloIaSelector.style.display = 'none';
+        });
+        
+        // Aplicar selección de modelo
+        btnAplicarModelo.addEventListener('click', function() {
+            const modeloSeleccionado = document.querySelector('input[name="modelo-ia"]:checked');
+            if (modeloSeleccionado) {
+                currentModelId = modeloSeleccionado.value;
+                nombreModeloActual.textContent = modeloSeleccionado.nextElementSibling.textContent.trim().split('(')[0].trim();
+                
+                // Limpiar historial de mensajes al cambiar de modelo
+                messageHistory = [];
+            }
+            modeloIaSelector.style.display = 'none';
+        });
+        
+        // Manejar envío del formulario
+        queryForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const query = userQueryInput.value.trim();
+            if (query) {
+                addMessage(query, true);
+                userQueryInput.value = '';
+                
+                processQuery(query);
+            }
+        });
+        
+        // Manejar ejemplos de consultas
+        document.querySelectorAll('.example-query').forEach(example => {
+            example.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const query = this.textContent;
+                userQueryInput.value = query;
+                userQueryInput.focus();
+            });
+        });
+    });
+</script>
+{% endblock %}

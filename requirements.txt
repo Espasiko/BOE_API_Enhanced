@@ -4,7 +4,6 @@ Django==5.1.7
 Mako==0.8.1
 Markdown==3.4.0
 MarkupSafe==2.1.0
-Pattern==2.6
 PyYAML==3.10
 South==0.8.1
 anyjson==0.3.3

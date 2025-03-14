@@ -83,5 +83,15 @@ logs/
 # Archivos temporales
 .DS_Store
 Thumbs.db
-. e n v 
+
+15:11 ~/BOE_API_Enhanced (main)$    cd ~/BOE_API_Enhanced
+15:31 ~/BOE_API_Enhanced (main)$    git pull origin main
+  1                                                                                                           
+  2 #rreglado
+  3 nesessarynesesaryneed it
+  4  Please enter a commit message to explain why this merge is necessary,                                    
+  5 # especially if it merges an updated upstream into a topic branch.
+  6 #
+  7 # Lines starting with '#' will be ignored, and an empty message aborts
+  8 # the commit.
  

@@ -1,0 +1,84 @@
+{% extends 'boe_analisis/base.html' %}
+{% load static %}
+
+{% block title %}Actualizar Base de Datos BOE{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0"><i class="fas fa-database me-2"></i>Actualización de la Base de Datos BOE</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>Esta herramienta permite actualizar la base de datos con las últimas publicaciones del BOE. Puedes especificar cuántos días atrás deseas buscar.
+                    </div>
+                    
+                    {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <form method="post" action="{% url 'actualizar_base_datos' %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="dias" class="form-label">Número de días a actualizar:</label>
+                            <input type="number" class="form-control" id="dias" name="dias" value="30" min="1" max="365">
+                            <div class="form-text">Indica cuántos días atrás deseas buscar publicaciones del BOE (máximo 365 días).</div>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sync-alt me-2"></i>Iniciar Actualización
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="card-title mb-0"><i class="fas fa-info-circle me-2"></i>Información sobre la actualización</h5>
+                </div>
+                <div class="card-body">
+                    <h6><i class="fas fa-check-circle text-success me-2"></i>El proceso de actualización:</h6>
+                    <ul class="mb-3">
+                        <li>Descarga los sumarios del BOE para los días especificados</li>
+                        <li>Extrae la información de cada documento publicado</li>
+                        <li>Actualiza la base de datos con los nuevos documentos</li>
+                        <li>Actualiza los documentos existentes si han sido modificados</li>
+                    </ul>
+                    
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Aviso: Este proceso puede tardar varios minutos dependiendo del número de días seleccionados. No cierre esta página hasta que se complete la actualización.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        const submitButton = form.querySelector('button[type="submit"]');
+        
+        form.addEventListener('submit', function() {
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Actualizando... (esto puede tardar varios minutos)';
+        });
+    });
+</script>
+{% endblock %}

@@ -5,6 +5,7 @@ Permite a las IAs y otros sistemas realizar búsquedas por similitud conceptual.
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.cache import cache
 import json
 import datetime
 import logging
@@ -168,7 +169,7 @@ def api_busqueda_semantica(request):
     Parámetros:
     - q: Consulta de búsqueda
     - limite: Número máximo de resultados (opcional, por defecto 10)
-    - umbral: Umbral mínimo de similitud (opcional, por defecto 0.3)
+    - umbral: Umbral mínimo de similitud (opcional, por defecto 0.1)
     - departamento: Filtrar por departamento (opcional)
     - fecha_desde: Filtrar por fecha desde (opcional, formato YYYY-MM-DD)
     - fecha_hasta: Filtrar por fecha hasta (opcional, formato YYYY-MM-DD)
@@ -256,9 +257,9 @@ def api_busqueda_semantica(request):
         }, status=500)
 
 @csrf_exempt
-def api_tavily_search(request):
+def api_cohere_search(request):
     """
-    API para realizar búsquedas usando Tavily Search API.
+    API para realizar búsquedas usando Cohere.
     Permite buscar información en la web y combinarla con resultados locales.
     
     Parámetros:
@@ -286,22 +287,57 @@ def api_tavily_search(request):
                 'error': 'Consulta vacía'
             }, status=400)
         
-        # Realizar búsqueda en Tavily
-        resultados_tavily = buscar_con_tavily(query, limite, include_domains)
+        # Realizar búsqueda con Cohere
+        resultados_cohere = buscar_con_cohere(query, limite, include_domains)
         
         # Combinar con resultados locales si es posible
         try:
             # Intentar búsqueda local
-            qdrant_client = QdrantBOE()
-            resultados_locales = qdrant_client.buscar_por_palabras_clave(query, limite=limite)
+            from .models_simplified import DocumentoSimplificado
+            from django.db.models import Q
+            
+            # Dividir la consulta en palabras clave
+            palabras_clave = query.lower().split()
+            
+            # Filtrar documentos que contengan al menos una de las palabras clave
+            resultados_db = DocumentoSimplificado.objects.all()
+            
+            for palabra in palabras_clave:
+                if len(palabra) > 3:  # Ignorar palabras muy cortas
+                    resultados_db = resultados_db.filter(
+                        Q(titulo__icontains=palabra) | 
+                        Q(texto__icontains=palabra) | 
+                        Q(departamento__icontains=palabra)
+                    )
+            
+            # Limitar resultados
+            resultados_db = resultados_db[:limite]
+            
+            # Formatear resultados
+            resultados_locales = []
+            for doc in resultados_db:
+                # Generar URL real al documento del BOE
+                url_real = f"https://www.boe.es/diario_boe/xml.php?id={doc.identificador}" if doc.identificador else "#"
+                
+                resultados_locales.append({
+                    'id': str(doc.id),
+                    'titulo': doc.titulo,
+                    'texto': doc.texto[:500] + '...' if len(doc.texto) > 500 else doc.texto,
+                    'url': url_real,
+                    'score': 0.8,  # Score base para resultados locales
+                    'origen': 'local',
+                    'departamento': doc.departamento,
+                    'fecha': doc.fecha.strftime('%Y-%m-%d') if doc.fecha else '',
+                    'identificador': doc.identificador
+                })
             
             # Combinar resultados
-            resultados_combinados = combinar_resultados(resultados_tavily, resultados_locales, limite)
+            resultados_combinados = combinar_resultados(resultados_cohere, resultados_locales, limite)
             tipo_busqueda = 'combinada'
         except Exception as e:
-            logger.warning(f"Error en búsqueda local, usando solo Tavily: {str(e)}")
-            resultados_combinados = resultados_tavily
-            tipo_busqueda = 'tavily'
+            logger.warning(f"Error en búsqueda local, usando solo Cohere: {str(e)}")
+            resultados_combinados = resultados_cohere
+            tipo_busqueda = 'cohere'
         
         return JsonResponse({
             'success': True,
@@ -312,7 +348,7 @@ def api_tavily_search(request):
         })
         
     except Exception as e:
-        logger.error(f"Error en búsqueda Tavily: {str(e)}")
+        logger.error(f"Error en búsqueda Cohere: {str(e)}")
         import traceback
         logger.error(traceback.format_exc())
         return JsonResponse({
@@ -323,83 +359,223 @@ def api_tavily_search(request):
 @csrf_exempt
 def api_asistente_mistral(request):
     """
-    API para el asistente IA con Mistral y Tavily.
-    Permite realizar consultas que combinan búsqueda de información y generación de respuestas.
-    
-    Parámetros:
-    - q: Consulta del usuario
-    - contexto: Contexto de la conversación (opcional)
+    API para el asistente que usa Mistral y Cohere
     """
     if request.method != 'POST':
-        return JsonResponse({
-            'success': False,
-            'error': 'Método no permitido'
-        }, status=405)
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
     
     try:
-        # Obtener datos de la petición
         data = json.loads(request.body)
-        query = data.get('q', '')
-        contexto = data.get('contexto', [])
+        query = data.get('query', '')
+        modelo = data.get('modelo', 'mistral')  # Modelo por defecto: mistral
         
-        # Validar parámetros
         if not query:
-            return JsonResponse({
-                'success': False,
-                'error': 'Consulta vacía'
-            }, status=400)
+            return JsonResponse({'error': 'Consulta vacía'}, status=400)
         
-        # Realizar búsqueda de información relevante
-        resultados_busqueda = buscar_con_tavily(query, limite=3)
+        # Verificar si tenemos la respuesta en caché
+        cache_key = f"asistente_{modelo}_{query}"
+        cached_response = cache.get(cache_key)
         
-        # Preparar contexto para Mistral
-        contexto_mistral = preparar_contexto_mistral(query, resultados_busqueda, contexto)
+        if cached_response:
+            return JsonResponse(cached_response)
         
-        # Generar respuesta con Mistral
-        respuesta_mistral = generar_respuesta_mistral(contexto_mistral)
-        
-        return JsonResponse({
-            'success': True,
-            'respuesta': respuesta_mistral,
-            'fuentes': resultados_busqueda,
-            'consulta': query
-        })
-        
+        # Procesar según el modelo seleccionado
+        if modelo == 'mistral-cohere':
+            # Usar Cohere directamente para búsqueda
+            try:
+                from .import_os import cohere_client
+                
+                # Buscar documentos relevantes con Cohere
+                resultados_busqueda = buscar_con_cohere(query, limite=3)
+                
+                # Construir contexto con los resultados
+                contexto = ""
+                if resultados_busqueda:
+                    contexto = "Documentos relevantes:\n"
+                    for i, doc in enumerate(resultados_busqueda):
+                        contexto += f"{i+1}. {doc['titulo']} - {doc['url']}\n"
+                
+                # Generar respuesta con Cohere
+                response = cohere_client.chat(
+                    message=f"Responde a la siguiente consulta sobre documentos del BOE: {query}\n\n{contexto}",
+                    model="command-r",
+                    temperature=0.2
+                )
+                
+                respuesta = {
+                    'respuesta': response.text,
+                    'documentos': resultados_busqueda,
+                    'modelo': 'con Cohere'
+                }
+                
+                # Guardar en caché
+                cache.set(cache_key, respuesta, 3600)  # 1 hora
+                
+                return JsonResponse(respuesta)
+                
+            except Exception as e:
+                import traceback
+                print(f"Error al usar Cohere: {str(e)}")
+                print(traceback.format_exc())
+                
+                # Intentar fallback a búsqueda local
+                resultados_busqueda = buscar_local_fallback(query)
+                return JsonResponse({
+                    'respuesta': f"Lo siento, hubo un error al procesar tu consulta con Cohere. Aquí tienes algunos resultados relacionados.",
+                    'documentos': resultados_busqueda,
+                    'error': str(e),
+                    'modelo': 'fallback'
+                })
+        else:
+            # Usar Mistral para otros modelos
+            try:
+                from .import_os import mistral_client, planning_agent, summarization_agent
+                
+                # Buscar documentos relevantes
+                resultados_busqueda = buscar_con_cohere(query, limite=3)
+                
+                # Construir contexto con los resultados
+                contexto = ""
+                if resultados_busqueda:
+                    contexto = "Documentos relevantes:\n"
+                    for i, doc in enumerate(resultados_busqueda):
+                        contexto += f"{i+1}. {doc['titulo']} - {doc['url']}\n"
+                
+                # Generar respuesta con Mistral
+                messages = [{"role": "user", "content": f"Responde a la siguiente consulta sobre documentos del BOE: {query}\n\n{contexto}"}]
+                response = mistral_client.chat.complete(
+                    model="mistral-medium",
+                    messages=messages,
+                    stream=False
+                )
+                
+                respuesta = {
+                    'respuesta': response.choices[0].message.content,
+                    'documentos': resultados_busqueda,
+                    'modelo': modelo
+                }
+                
+                # Guardar en caché
+                cache.set(cache_key, respuesta, 3600)  # 1 hora
+                
+                return JsonResponse(respuesta)
+                
+            except Exception as e:
+                import traceback
+                print(f"Error al usar Mistral: {str(e)}")
+                print(traceback.format_exc())
+                
+                # Intentar fallback a búsqueda local
+                resultados_busqueda = buscar_local_fallback(query)
+                return JsonResponse({
+                    'respuesta': f"Lo siento, hubo un error al procesar tu consulta con Mistral. Aquí tienes algunos resultados relacionados.",
+                    'documentos': resultados_busqueda,
+                    'error': str(e),
+                    'modelo': 'fallback'
+                })
+    
     except Exception as e:
-        logger.error(f"Error en asistente Mistral: {str(e)}")
         import traceback
-        logger.error(traceback.format_exc())
-        return JsonResponse({
-            'success': False,
-            'error': f'Error al procesar la consulta: {str(e)}'
-        }, status=500)
+        print(f"Error general en api_asistente_mistral: {str(e)}")
+        print(traceback.format_exc())
+        return JsonResponse({'error': str(e)}, status=500)
 
-# Funciones auxiliares para Tavily y Mistral
+# Funciones auxiliares para Cohere y Mistral
 
-def buscar_con_tavily(query: str, limite: int = 5, include_domains: List[str] = None) -> List[Dict[str, Any]]:
+def buscar_con_cohere(query: str, limite: int = 5, include_domains: List[str] = None) -> List[Dict[str, Any]]:
     """
-    Realiza una búsqueda en la base de datos local, simulando la funcionalidad de Tavily.
-    En lugar de buscar en la web, buscamos en nuestra propia base de datos.
+    Realiza una búsqueda usando la API de Cohere.
     
     Args:
         query: Consulta de búsqueda
         limite: Número máximo de resultados
-        include_domains: No se usa, se mantiene por compatibilidad
+        include_domains: Dominios específicos para incluir
         
     Returns:
         List[Dict[str, Any]]: Lista de resultados de la búsqueda
     """
     try:
-        logger.info(f"Realizando búsqueda local para: {query}")
+        logger.info(f"Realizando búsqueda con Cohere para: {query}")
+        
+        # Configurar cliente de Cohere
+        from cohere import Client as CohereClient
+        import os
+        from dotenv import load_dotenv
+        
+        load_dotenv()
+        cohere_api_key = os.getenv('COHERE_API_KEY')
+        cohere_client = CohereClient(api_key=cohere_api_key)
+        
+        # Construir la consulta con dominios específicos si se proporcionan
+        search_query = query
+        if include_domains and len(include_domains) > 0:
+            domain_filter = " OR ".join([f"site:{domain}" for domain in include_domains])
+            search_query = f"{query} ({domain_filter})"
+        
+        # Realizar búsqueda con Cohere
+        response = cohere_client.chat(
+            model='command',
+            message=search_query,
+            search_queries_only=True
+        )
+        
+        # Obtener resultados de la búsqueda
+        search_results = cohere_client.search(
+            query=search_query,
+            limit=limite
+        )
+        
+        # Formatear resultados
+        resultados_formateados = []
+        for i, result in enumerate(search_results.results):
+            # Calcular un score simulado basado en la posición
+            score = 0.9 - (i * 0.1)
+            score = max(0.3, score)  # Asegurar que el score no sea menor a 0.3
+            
+            resultados_formateados.append({
+                'id': f"cohere_{i}",
+                'titulo': result.title,
+                'texto': result.snippet,
+                'url': result.url,
+                'score': score,
+                'origen': 'cohere',
+                'departamento': 'Web',
+                'fecha': '',
+                'identificador': ''
+            })
+        
+        return resultados_formateados
+        
+    except Exception as e:
+        logger.error(f"Error en búsqueda con Cohere: {str(e)}")
+        import traceback
+        logger.error(traceback.format_exc())
+        
+        # Devolver resultados simulados en caso de error
+        return buscar_local_fallback(query, limite)
+
+def buscar_local_fallback(query: str, limite: int = 5) -> List[Dict[str, Any]]:
+    """
+    Función de fallback para búsqueda local cuando Cohere falla.
+    
+    Args:
+        query: Consulta de búsqueda
+        limite: Número máximo de resultados
+        
+    Returns:
+        List[Dict[str, Any]]: Lista de resultados de la búsqueda
+    """
+    try:
+        logger.info(f"Realizando búsqueda local de fallback para: {query}")
         
         # Usar la búsqueda por palabras clave en nuestra base de datos
         from .models_simplified import DocumentoSimplificado
+        from django.db.models import Q
         
         # Dividir la consulta en palabras clave
         palabras_clave = query.lower().split()
         
         # Filtrar documentos que contengan al menos una de las palabras clave
-        # en el título, texto o departamento
         resultados_db = DocumentoSimplificado.objects.all()
         
         for palabra in palabras_clave:
@@ -413,76 +589,96 @@ def buscar_con_tavily(query: str, limite: int = 5, include_domains: List[str] = 
         # Limitar resultados
         resultados_db = resultados_db[:limite]
         
-        # Formatear resultados como si vinieran de Tavily
+        # Formatear resultados
         resultados_formateados = []
-        for doc in resultados_db:
-            # Calcular un score simulado basado en la relevancia
-            score = 0.5  # Score base
-            for palabra in palabras_clave:
-                if palabra in doc.titulo.lower():
-                    score += 0.3
-                if palabra in doc.texto.lower():
-                    score += 0.1
-                if palabra in doc.departamento.lower():
-                    score += 0.1
+        for i, doc in enumerate(resultados_db):
+            # Generar URL real al documento del BOE
+            url_real = f"https://www.boe.es/diario_boe/xml.php?id={doc.identificador}" if doc.identificador else "#"
             
-            # Normalizar score entre 0 y 1
-            score = min(score, 1.0)
+            # Calcular un score simulado basado en la posición
+            score = 0.9 - (i * 0.1)
+            score = max(0.3, score)  # Asegurar que el score no sea menor a 0.3
             
             resultados_formateados.append({
                 'id': str(doc.id),
                 'titulo': doc.titulo,
                 'texto': doc.texto[:500] + '...' if len(doc.texto) > 500 else doc.texto,
-                'url': f"/documento/{doc.id}/" if doc.id else "#",
+                'url': url_real,
                 'score': score,
-                'origen': 'tavily_local',
+                'origen': 'local',
                 'departamento': doc.departamento,
                 'fecha': doc.fecha.strftime('%Y-%m-%d') if doc.fecha else '',
                 'identificador': doc.identificador
             })
         
-        # Ordenar por score
-        resultados_formateados = sorted(resultados_formateados, key=lambda x: x['score'], reverse=True)
+        # Si no hay resultados, devolver un mensaje informativo
+        if not resultados_formateados:
+            resultados_formateados.append({
+                'id': 'no_results',
+                'titulo': 'No se encontraron documentos específicos',
+                'texto': f'No se encontraron documentos que coincidan con la consulta: "{query}"',
+                'url': 'https://www.boe.es',
+                'score': 0.1,
+                'origen': 'local',
+                'departamento': 'Sistema',
+                'fecha': '',
+                'identificador': ''
+            })
         
         return resultados_formateados
         
     except Exception as e:
-        logger.error(f"Error en búsqueda local (Tavily): {str(e)}")
+        logger.error(f"Error en búsqueda local de fallback: {str(e)}")
         import traceback
         logger.error(traceback.format_exc())
-        return []
+        
+        # En caso de error crítico, devolver un mensaje informativo
+        return [{
+            'id': 'error',
+            'titulo': 'Error en la búsqueda',
+            'texto': f'Se produjo un error al buscar: {str(e)}',
+            'url': 'https://www.boe.es',
+            'score': 0.1,
+            'origen': 'error',
+            'departamento': 'Sistema',
+            'fecha': '',
+            'identificador': ''
+        }]
 
-def combinar_resultados(resultados_tavily: List[Dict[str, Any]], resultados_locales: List[Dict[str, Any]], limite: int = 10) -> List[Dict[str, Any]]:
+def combinar_resultados(resultados_cohere: List[Dict[str, Any]], resultados_locales: List[Dict[str, Any]], limite: int = 10) -> List[Dict[str, Any]]:
     """
-    Combina resultados de Tavily y búsqueda local, eliminando duplicados.
+    Combina resultados de Cohere y búsqueda local, eliminando duplicados.
     
     Args:
-        resultados_tavily: Resultados de Tavily
+        resultados_cohere: Resultados de Cohere
         resultados_locales: Resultados de búsqueda local
         limite: Número máximo de resultados combinados
         
     Returns:
         List[Dict[str, Any]]: Lista combinada de resultados
     """
-    # Combinar resultados eliminando duplicados
-    ids_vistos = set()
+    # Crear un diccionario para detectar duplicados por URL
+    urls_vistas = {}
     resultados_combinados = []
     
-    # Primero añadimos los resultados locales
-    for doc in resultados_locales:
-        ids_vistos.add(doc['id'])
-        resultados_combinados.append(doc)
-    
-    # Luego añadimos los resultados de Tavily que no estén ya incluidos
-    for doc in resultados_tavily:
-        if doc['id'] not in ids_vistos:
-            ids_vistos.add(doc['id'])
+    # Añadir resultados de Cohere
+    for doc in resultados_cohere:
+        url = doc.get('url', '')
+        if url and url not in urls_vistas:
+            urls_vistas[url] = True
             resultados_combinados.append(doc)
     
-    # Ordenar por score descendente
-    resultados_combinados = sorted(resultados_combinados, key=lambda x: x['score'], reverse=True)
+    # Añadir resultados locales
+    for doc in resultados_locales:
+        url = doc.get('url', '')
+        if url and url not in urls_vistas:
+            urls_vistas[url] = True
+            resultados_combinados.append(doc)
     
-    # Limitar al número máximo de resultados
+    # Ordenar por score
+    resultados_combinados = sorted(resultados_combinados, key=lambda x: x.get('score', 0), reverse=True)
+    
+    # Limitar resultados
     return resultados_combinados[:limite]
 
 def preparar_contexto_mistral(query: str, resultados: List[Dict[str, Any]], contexto_previo: List[Dict[str, str]] = None) -> List[Dict[str, str]]:
@@ -536,42 +732,36 @@ def generar_respuesta_mistral(contexto: List[Dict[str, str]]) -> str:
     """
     try:
         # Obtener la API key de Mistral desde la configuración
-        api_key = getattr(settings, 'MISTRAL_API_KEY', '')
-        modelo = getattr(settings, 'MISTRAL_MODEL', 'mistral-medium')
+        import os
+        from dotenv import load_dotenv
+        
+        load_dotenv()
+        mistral_api_key = os.getenv('MISTRAL_API_KEY', '')
+        modelo = os.getenv('MISTRAL_MODEL', 'mistral-medium')
         
         # Si no hay API key, devolver respuesta simulada
-        if not api_key:
+        if not mistral_api_key:
             logger.warning("No se ha configurado MISTRAL_API_KEY. Usando respuesta simulada.")
             return "Esta es una respuesta simulada de Mistral AI. Para usar Mistral, configura MISTRAL_API_KEY en las variables de entorno."
         
-        # Realizar llamada a la API de Mistral
-        headers = {
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-        }
+        # Usar el SDK de Mistral
+        from mistralai import Mistral
         
-        payload = {
-            "model": modelo,
-            "messages": contexto,
-            "temperature": 0.7,
-            "max_tokens": 1000
-        }
+        # Inicializar el cliente de Mistral
+        mistral_client = Mistral(api_key=mistral_api_key)
         
-        response = requests.post(
-            "https://api.mistral.ai/v1/chat/completions",
-            headers=headers,
-            json=payload,
-            timeout=30
+        # Realizar la llamada a la API
+        response = mistral_client.chat.complete(
+            model=modelo,
+            messages=contexto,
+            temperature=0.7,
+            max_tokens=1000,
+            stream=False
         )
         
-        # Verificar si la respuesta es correcta
-        if response.status_code == 200:
-            respuesta_json = response.json()
-            respuesta = respuesta_json.get("choices", [{}])[0].get("message", {}).get("content", "")
-            return respuesta
-        else:
-            logger.error(f"Error al llamar a la API de Mistral: {response.status_code} - {response.text}")
-            return f"Error al generar respuesta con Mistral: {response.status_code}. Verifica tu API key y configuración."
+        # Obtener la respuesta
+        respuesta = response.choices[0].message.content
+        return respuesta
         
     except Exception as e:
         logger.error(f"Error al generar respuesta con Mistral: {str(e)}")

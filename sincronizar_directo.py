@@ -192,38 +192,38 @@ class QdrantSincronizador:
             return {"error": str(e)}
 
 
-class TavilySincronizador:
+class CohereSincronizador:
     """
-    Clase para sincronizar documentos con Tavily
+    Clase para sincronizar documentos con Cohere
     """
     
     def __init__(self, api_key=None):
         """
-        Inicializa la conexión con Tavily
+        Inicializa la conexión con Cohere
         
         Args:
             api_key: API Key para autenticación
         """
         try:
-            from tavily import TavilyClient
+            import cohere
             
-            self.api_key = api_key or os.environ.get("TAVILY_API_KEY")
+            self.api_key = api_key or os.environ.get("COHERE_API_KEY")
             
             if not self.api_key:
-                raise ValueError("Se requiere API Key para Tavily")
+                raise ValueError("Se requiere API Key para Cohere")
             
             # Inicializar cliente
-            self.client = TavilyClient(api_key=self.api_key)
+            self.client = cohere.Client(api_key=self.api_key)
             
-            logger.info("Inicializado cliente Tavily")
+            logger.info("Inicializado cliente Cohere")
             
         except ImportError:
-            logger.error("No se pudo importar TavilyClient. Instala tavily-python con: pip install tavily-python")
+            logger.error("No se pudo importar el módulo cohere. Instálalo con: pip install cohere")
             raise
     
     def sincronizar_documento(self, documento):
         """
-        Sincroniza un documento con Tavily
+        Sincroniza un documento con Cohere generando embeddings
         
         Args:
             documento: Diccionario con los datos del documento
@@ -239,54 +239,39 @@ class TavilySincronizador:
             
             # Metadatos adicionales
             metadata = {
-                "identificador": documento['identificador'],
-                "fecha_publicacion": documento['fecha_publicacion'],
-                "departamento": documento['departamento'] or "",
-                "materias": documento['materias'] or ""
+                'identificador': documento['identificador'],
+                'fecha': documento['fecha'],
+                'departamento': documento['departamento'] or "Desconocido",
+                'url': url
             }
             
-            # Enviar documento a Tavily usando el método correcto según la versión actual
-            # Intentar primero con el método upload_file de la API más reciente
-            try:
-                # Crear un archivo temporal con el contenido
-                import tempfile
-                
-                with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as temp:
-                    temp.write(f"# {titulo}\n\n{contenido}")
-                    temp_path = temp.name
-                
-                # Subir el archivo a Tavily
-                response = self.client.upload_file(
-                    file_path=temp_path,
-                    description=f"Documento BOE: {documento['identificador']} - {titulo}",
-                    metadata=metadata
-                )
-                
-                # Eliminar el archivo temporal
-                os.unlink(temp_path)
-                
-            except (AttributeError, TypeError) as e:
-                # Si upload_file no está disponible, intentar con search_and_upload
-                logger.warning(f"Método upload_file no disponible, intentando con search_and_upload: {str(e)}")
-                
-                response = self.client.search_and_upload(
-                    query=titulo,
-                    url=url,
-                    include_raw_content=True,
-                    include_domains=[url],
-                    max_results=1
-                )
+            # Preparar el texto completo para el embedding
+            texto_completo = f"""
+            Título: {titulo}
+            Fecha: {metadata['fecha']}
+            Departamento: {metadata['departamento']}
+            URL: {url}
             
-            # Verificar respuesta
-            if response:
-                logger.info(f"Documento {documento['identificador']} sincronizado exitosamente con Tavily")
+            Contenido:
+            {contenido}
+            """
+            
+            # Generar embedding con Cohere
+            response = self.client.embed(
+                texts=[texto_completo],
+                model="embed-multilingual-v3.0",
+                input_type="search_document"
+            )
+            
+            if response and hasattr(response, 'embeddings'):
+                logger.info(f"Documento {documento['identificador']} sincronizado exitosamente con Cohere")
                 return True
             else:
-                logger.error(f"Error al sincronizar documento {documento['identificador']} con Tavily: Respuesta vacía")
+                logger.error(f"Error al sincronizar documento {documento['identificador']} con Cohere: Respuesta inesperada")
                 return False
                 
         except Exception as e:
-            logger.error(f"Error al sincronizar documento {documento['identificador']} con Tavily: {str(e)}")
+            logger.error(f"Error al sincronizar documento {documento['identificador']} con Cohere: {str(e)}")
             return False
 
 
@@ -359,16 +344,16 @@ def obtener_documentos_sqlite(fecha_str=None, db_path="boe/boe.db", max_docs=Non
         return []
 
 
-def sincronizar_documentos(fecha_str=None, recrear_qdrant=False, max_docs=None, solo_qdrant=False, solo_tavily=False):
+def sincronizar_documentos(fecha_str=None, recrear_qdrant=False, max_docs=None, solo_qdrant=False, solo_cohere=False):
     """
-    Sincroniza los documentos con Qdrant y Tavily
+    Sincroniza los documentos con Qdrant y Cohere
     
     Args:
         fecha_str: Fecha en formato YYYY-MM-DD (si es None, se usa la fecha actual)
         recrear_qdrant: Si es True, recrea la colección de Qdrant
         max_docs: Número máximo de documentos a sincronizar
         solo_qdrant: Si es True, solo sincroniza con Qdrant
-        solo_tavily: Si es True, solo sincroniza con Tavily
+        solo_cohere: Si es True, solo sincroniza con Cohere
     """
     try:
         # Usar la fecha proporcionada o la fecha actual
@@ -390,7 +375,7 @@ def sincronizar_documentos(fecha_str=None, recrear_qdrant=False, max_docs=None, 
         print(f"Se encontraron {total_docs} documentos para sincronizar")
         
         # Sincronizar con Qdrant
-        if not solo_tavily:
+        if not solo_cohere:
             print("\n=== SINCRONIZACIÓN CON QDRANT ===\n")
             
             try:
@@ -440,44 +425,36 @@ def sincronizar_documentos(fecha_str=None, recrear_qdrant=False, max_docs=None, 
             except Exception as e:
                 print(f"Error durante la sincronización con Qdrant: {str(e)}")
         
-        # Sincronizar con Tavily
+        # Sincronizar con Cohere
         if not solo_qdrant:
-            print("\n=== SINCRONIZACIÓN CON TAVILY ===\n")
+            print("\n=== SINCRONIZACIÓN CON COHERE ===\n")
             
             try:
-                # Verificar si está instalada la biblioteca de Tavily
-                try:
-                    from tavily import TavilyClient
-                except ImportError:
-                    print("Error: No se pudo importar TavilyClient.")
-                    print("Instala tavily-python con: pip install tavily-python")
-                    return
-                
-                # Inicializar sincronizador de Tavily
-                tavily = TavilySincronizador()
+                # Inicializar sincronizador de Cohere
+                cohere = CohereSincronizador()
                 
                 # Sincronizar documentos
-                print(f"Sincronizando {total_docs} documentos con Tavily...")
+                print(f"Sincronizando {total_docs} documentos con Cohere...")
                 
                 # Estadísticas
-                exitosos_tavily = 0
-                fallidos_tavily = 0
+                exitosos_cohere = 0
+                fallidos_cohere = 0
                 
                 # Sincronizar cada documento con barra de progreso
-                for documento in tqdm(documentos, total=total_docs, desc="Sincronizando con Tavily"):
-                    if tavily.sincronizar_documento(documento):
-                        exitosos_tavily += 1
+                for documento in tqdm(documentos, total=total_docs, desc="Sincronizando con Cohere"):
+                    if cohere.sincronizar_documento(documento):
+                        exitosos_cohere += 1
                     else:
-                        fallidos_tavily += 1
+                        fallidos_cohere += 1
                 
                 # Mostrar estadísticas
-                print(f"\nSincronización con Tavily completada:")
+                print(f"\nSincronización con Cohere completada:")
                 print(f"Total de documentos: {total_docs}")
-                print(f"Documentos sincronizados exitosamente: {exitosos_tavily}")
-                print(f"Documentos con errores: {fallidos_tavily}")
+                print(f"Documentos sincronizados exitosamente: {exitosos_cohere}")
+                print(f"Documentos con errores: {fallidos_cohere}")
                 
             except Exception as e:
-                print(f"Error durante la sincronización con Tavily: {str(e)}")
+                print(f"Error durante la sincronización con Cohere: {str(e)}")
         
         print("\n=== Sincronización completada ===\n")
         
@@ -489,12 +466,12 @@ if __name__ == "__main__":
     import argparse
     
     # Configurar argumentos de línea de comandos
-    parser = argparse.ArgumentParser(description='Sincronizar documentos con Qdrant y Tavily para IA')
+    parser = argparse.ArgumentParser(description='Sincronizar documentos con Qdrant y Cohere para IA')
     parser.add_argument('--fecha', type=str, help='Fecha en formato YYYY-MM-DD (por defecto: fecha actual)')
     parser.add_argument('--recrear-qdrant', action='store_true', help='Recrear la colección de Qdrant')
     parser.add_argument('--max-docs', type=int, help='Número máximo de documentos a sincronizar')
     parser.add_argument('--solo-qdrant', action='store_true', help='Solo sincronizar con Qdrant')
-    parser.add_argument('--solo-tavily', action='store_true', help='Solo sincronizar con Tavily')
+    parser.add_argument('--solo-cohere', action='store_true', help='Solo sincronizar con Cohere')
     
     args = parser.parse_args()
     
@@ -504,5 +481,5 @@ if __name__ == "__main__":
         recrear_qdrant=args.recrear_qdrant, 
         max_docs=args.max_docs,
         solo_qdrant=args.solo_qdrant,
-        solo_tavily=args.solo_tavily
+        solo_cohere=args.solo_cohere
     )

@@ -365,12 +365,12 @@
                             </button>
                         </div>
                         <div class="d-flex">
-                            <span class="badge bg-primary me-2" id="modelo-actual">GPT-3.5</span>
+                            <span class="badge bg-primary me-2" id="modelo-actual">Mistral</span>
                             <span class="badge bg-success me-2" id="badge-web-search" style="display: none;">
                                 <i class="fas fa-globe me-1"></i>Búsqueda web
                             </span>
-                            <span class="badge bg-info" id="badge-tavily" style="display: none; cursor: pointer;" title="Haz clic para activar Mistral con Tavily">
-                                <i class="fas fa-search me-1"></i>Tavily
+                            <span class="badge bg-info" id="badge-cohere" style="display: none; cursor: pointer;" title="Haz clic para activar Mistral con Cohere">
+                                <i class="fas fa-search me-1"></i>Cohere
                             </span>
                         </div>
                         
@@ -380,63 +380,15 @@
                                 <div class="card-body">
                                     <h6 class="card-title">Selecciona el modelo de IA</h6>
                                     <div class="form-check modelo-ia-item">
-                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-default" value="default" checked>
-                                        <label class="form-check-label" for="modelo-default">
-                                            Modelo estándar (T5 para español)
-                                        </label>
-                                    </div>
-                                    <div class="form-check modelo-ia-item">
-                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-legal" value="legal">
-                                        <label class="form-check-label" for="modelo-legal">
-                                            Modelo legal (especializado en textos jurídicos)
-                                        </label>
-                                    </div>
-                                    <div class="form-check modelo-ia-item">
-                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-bert" value="bert">
-                                        <label class="form-check-label" for="modelo-bert">
-                                            Modelo BERT2BERT (mejor para textos largos en español)
-                                        </label>
-                                    </div>
-                                    <div class="form-check modelo-ia-item">
-                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-bart" value="bart">
-                                        <label class="form-check-label" for="modelo-bart">
-                                            Modelo BART (mayor fluidez en español)
-                                        </label>
-                                    </div>
-                                    <div class="form-check modelo-ia-item">
-                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-openai" value="openai">
-                                        <label class="form-check-label" for="modelo-openai">
-                                            <span class="modelo-destacado">OpenAI GPT</span> (alta calidad, actualizado)
-                                        </label>
-                                    </div>
-                                    <div class="form-check modelo-ia-item">
-                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-mistral" value="mistral">
+                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-mistral" value="mistral" checked>
                                         <label class="form-check-label" for="modelo-mistral">
-                                            <span class="modelo-destacado">Mistral AI</span> (alta calidad, bueno para textos legales)
+                                            Mistral (predeterminado)
                                         </label>
                                     </div>
                                     <div class="form-check modelo-ia-item">
-                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-deepseek" value="deepseek">
-                                        <label class="form-check-label" for="modelo-deepseek">
-                                            <span class="modelo-destacado">DeepSeek AI</span> (alta calidad, respuestas detalladas)
-                                        </label>
-                                    </div>
-                                    <div class="form-check modelo-ia-item">
-                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-gpt3" value="gpt3" checked>
-                                        <label class="form-check-label" for="modelo-gpt3">
-                                            GPT-3.5 Turbo (Rápido y eficiente)
-                                        </label>
-                                    </div>
-                                    <div class="form-check modelo-ia-item">
-                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-gpt4" value="gpt4">
-                                        <label class="form-check-label" for="modelo-gpt4">
-                                            GPT-4 (Mayor precisión, más lento)
-                                        </label>
-                                    </div>
-                                    <div class="form-check modelo-ia-item">
-                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-mistral-tavily" value="mistral-tavily">
-                                        <label class="form-check-label" for="modelo-mistral-tavily">
-                                            Mistral con Tavily (Búsqueda web en tiempo real)
+                                        <input class="form-check-input" type="radio" name="modelo-ia" id="modelo-mistral-cohere" value="mistral-cohere">
+                                        <label class="form-check-label" for="modelo-mistral-cohere">
+                                            con Cohere
                                         </label>
                                     </div>
                                     <div class="mt-3">
@@ -524,8 +476,7 @@
     const SEMANTIC_SEARCH_WEIGHT = 0.4;
     
     // Variables globales
-    let messageHistory = [];  // Historial de mensajes para el contexto
-    let currentModelId = 'modelo-default';  // Modelo seleccionado por defecto
+    let currentModelId = 'mistral';  // Modelo seleccionado por defecto
     
     function showTypingIndicator() {
         const typingIndicator = document.createElement('div');
@@ -541,11 +492,12 @@
             typingIndicator.remove();
         }
     }
+    
     async function processQuery(query) {
         showTypingIndicator();
         
         try {
-            const response = await fetch('/boe_analisis/procesar_consulta_ia/', {
+            const response = await fetch('/api/asistente/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -553,7 +505,7 @@
                 },
                 body: JSON.stringify({ 
                     query: query,
-                    model: currentModelId // Enviar el modelo seleccionado
+                    modelo: currentModelId // Enviar el modelo seleccionado
                 })
             });
 
@@ -564,12 +516,9 @@
             const data = await response.json();
             console.log("Respuesta del servidor:", data);
             
-            if (data.status === 'success') {
-                // Mostrar resumen
-                addMessage(data.summary, false, data);
-            } else {
-                addMessage("Lo siento, ha ocurrido un error al procesar tu consulta: " + (data.error || "Error desconocido"), false);
-            }
+            // Mostrar respuesta del asistente
+            addMessage(data.respuesta, false, data.documentos);
+            
         } catch (error) {
             console.error('Error:', error);
             addMessage("Ha ocurrido un error en la comunicación con el servidor: " + error.message, false);
@@ -578,117 +527,36 @@
         }
     }
 
-    function procesarResultadosHibridos(data) {
-        let resultsHtml = '';
-        
-        if (data.results && data.results.length > 0) {
-            resultsHtml += '<div class="sources mt-3">';
-            resultsHtml += '<h6 class="fw-bold"><i class="fas fa-file-alt me-2"></i>Fuentes de información del BOE:</h6>';
-            
-            // Contador para documentos totales y relevantes
-            let totalDocs = 0;
-            let relevantDocs = 0;
-            
-            // Palabras clave de la consulta para filtrado semántico
-            const queryKeywords = data.query ? data.query.toLowerCase().split(/\s+/).filter(word => word.length > 3) : [];
-            
-            data.results.forEach(departamento => {
-                if (departamento.documentos && departamento.documentos.length > 0) {
-                    let departamentoHtml = '';
-                    let departamentoDocs = 0;
-                    
-                    // Filtrar documentos por relevancia y contenido
-                    const documentosFiltrados = departamento.documentos.filter(doc => {
-                        // Calcular porcentaje de relevancia (promedio de exact_score y semantic_score)
-                        const relevancia = Math.round(((doc.exact_score * 0.6) + (doc.semantic_score * 0.4)) * 100);
-                        
-                        // Verificar si el título o descripción contiene palabras clave de la consulta
-                        const tituloLower = doc.titulo.toLowerCase();
-                        const descripcionLower = doc.descripcion ? doc.descripcion.toLowerCase() : '';
-                        
-                        // Contar cuántas palabras clave de la consulta están en el título o descripción
-                        let keywordMatches = 0;
-                        queryKeywords.forEach(keyword => {
-                            if (tituloLower.includes(keyword) || descripcionLower.includes(keyword)) {
-                                keywordMatches++;
-                            }
-                        });
-                        
-                        // Filtrar documentos irrelevantes o sin coincidencias de palabras clave
-                        const esRelevante = 
-                            relevancia >= 50 && // Umbral de relevancia más alto
-                            (keywordMatches > 0 || queryKeywords.length === 0) && // Debe contener al menos una palabra clave
-                            !doc.titulo.includes("No se encontraron documentos específicos") && // No mostrar mensajes de error
-                            doc.descripcion && doc.descripcion.trim() !== ''; // Debe tener descripción
-                        
-                        return esRelevante;
-                    });
-                    
-                    totalDocs += departamento.documentos.length;
-                    departamentoDocs = documentosFiltrados.length;
-                    relevantDocs += departamentoDocs;
-                    
-                    // Solo mostrar departamentos con documentos relevantes
-                    if (departamentoDocs > 0) {
-                        departamentoHtml += `<div class="source-department mb-3">`;
-                        departamentoHtml += `<h6 class="mt-2 mb-2 text-muted">${departamento.departamento}</h6>`;
-                        
-                        // Ordenar documentos por relevancia
-                        documentosFiltrados.sort((a, b) => {
-                            const relevanciaA = ((a.exact_score * 0.6) + (a.semantic_score * 0.4));
-                            const relevanciaB = ((b.exact_score * 0.6) + (b.semantic_score * 0.4));
-                            return relevanciaB - relevanciaA;
-                        });
-                        
-                        documentosFiltrados.forEach(doc => {
-                            // Calcular porcentaje de relevancia
-                            const relevancia = Math.round(((doc.exact_score * 0.6) + (doc.semantic_score * 0.4)) * 100);
-                            
-                            departamentoHtml += `<div class="source-item">`;
-                            departamentoHtml += `<a href="${doc.url}" target="_blank" class="fw-bold text-decoration-none">${doc.titulo}</a>`;
-                            
-                            // Mostrar la descripción si es relevante
-                            if (doc.descripcion && doc.descripcion.trim() !== '' && 
-                                !doc.descripcion.includes("no produjo resultados")) {
-                                departamentoHtml += `<p class="mb-1 small text-muted">${doc.descripcion}</p>`;
-                            }
-                            
-                            // Mostrar fecha solo si está disponible
-                            if (doc.fecha && doc.fecha.trim() !== '') {
-                                departamentoHtml += `<div class="d-flex justify-content-between align-items-center">`;
-                                departamentoHtml += `<small class="text-muted">Fecha: ${doc.fecha}</small>`;
-                                departamentoHtml += `<span class="badge ${relevancia >= 80 ? 'bg-success' : 'bg-primary'}">Relevancia: ${relevancia}%</span>`;
-                                departamentoHtml += `</div>`;
-                            } else {
-                                departamentoHtml += `<div class="text-end">`;
-                                departamentoHtml += `<span class="badge ${relevancia >= 80 ? 'bg-success' : 'bg-primary'}">Relevancia: ${relevancia}%</span>`;
-                                departamentoHtml += `</div>`;
-                            }
-                            
-                            departamentoHtml += `</div>`;
-                        });
-                        
-                        departamentoHtml += `</div>`;
-                        resultsHtml += departamentoHtml;
-                    }
-                }
-            });
-            
-            // Si no hay documentos relevantes después de filtrar, mostrar mensaje informativo
-            if (relevantDocs === 0) {
-                resultsHtml += `<div class="alert alert-info">
-                    <i class="fas fa-info-circle me-2"></i>No se encontraron documentos relevantes del BOE para esta consulta.
-                    La información proporcionada está basada en el conocimiento general del asistente.
-                </div>`;
-            }
-            
-            resultsHtml += '</div>';
+    function formatarDocumentos(documentos) {
+        if (!documentos || documentos.length === 0) {
+            return '';
         }
         
+        let resultsHtml = '<div class="sources mt-3">';
+        resultsHtml += '<h6 class="fw-bold"><i class="fas fa-file-alt me-2"></i>Documentos relacionados:</h6>';
+        
+        documentos.forEach((doc, index) => {
+            resultsHtml += `<div class="source-item">`;
+            resultsHtml += `<a href="${doc.url}" target="_blank" class="fw-bold text-decoration-none">${doc.titulo}</a>`;
+            
+            if (doc.descripcion && doc.descripcion.trim() !== '') {
+                resultsHtml += `<p class="mb-1 small text-muted">${doc.descripcion}</p>`;
+            }
+            
+            if (doc.fecha && doc.fecha.trim() !== '') {
+                resultsHtml += `<div class="d-flex justify-content-between align-items-center">`;
+                resultsHtml += `<small class="text-muted">Fecha: ${doc.fecha}</small>`;
+                resultsHtml += `</div>`;
+            }
+            
+            resultsHtml += `</div>`;
+        });
+        
+        resultsHtml += '</div>';
         return resultsHtml;
     }
 
-    function addMessage(message, isUser, results = null) {
+    function addMessage(message, isUser, documentos = null) {
         const chatContainer = document.getElementById('chatContainer');
         const messageDiv = document.createElement('div');
         messageDiv.className = isUser ? 'message user-message' : 'message ai-message';
@@ -700,86 +568,85 @@
         // Convertir saltos de línea en <br>
         const formattedMessage = messageWithLinks.replace(/\n/g, '<br>');
         
-        messageDiv.innerHTML = `<p>${formattedMessage}</p>`;
+        // Contenido del mensaje
+        let messageContent = `<div class="message-content">${formattedMessage}</div>`;
         
-        // Si hay resultados y no es un mensaje del usuario, agregar las fuentes
-        if (!isUser && results) {
-            // Procesar los resultados y agregarlos al mensaje
-            const sourcesHtml = procesarResultadosHibridos(results);
-            if (sourcesHtml) {
-                messageDiv.innerHTML += sourcesHtml;
-            }
+        // Añadir documentos relacionados si existen
+        if (!isUser && documentos) {
+            messageContent += formatarDocumentos(documentos);
         }
         
+        messageDiv.innerHTML = messageContent;
         chatContainer.appendChild(messageDiv);
         
         // Scroll al final del chat
         chatContainer.scrollTop = chatContainer.scrollHeight;
-        
-        // Guardar el mensaje en el historial
-        if (isUser) {
-            messageHistory.push({ role: 'user', content: message });
-        } else {
-            messageHistory.push({ role: 'assistant', content: message });
-        }
     }
-    
+
     document.addEventListener('DOMContentLoaded', function() {
-        const chatContainer = document.getElementById('chatContainer');
-        const queryForm = document.getElementById('queryForm');
-        const userQueryInput = document.getElementById('userQuery');
-        const btnElegirModelo = document.getElementById('btn-elegir-modelo');
-        const modeloIaSelector = document.getElementById('modelo-ia-selector');
-        const btnAplicarModelo = document.getElementById('btn-aplicar-modelo');
-        const btnCancelarModelo = document.getElementById('btn-cancelar-modelo');
-        const nombreModeloActual = document.getElementById('modelo-actual');
-        
-        // Mostrar/ocultar selector de modelo
-        btnElegirModelo.addEventListener('click', function() {
-            modeloIaSelector.style.display = 'block';
-        });
-        
-        // Cancelar selección de modelo
-        btnCancelarModelo.addEventListener('click', function() {
-            modeloIaSelector.style.display = 'none';
-        });
-        
-        // Aplicar selección de modelo
-        btnAplicarModelo.addEventListener('click', function() {
-            const modeloSeleccionado = document.querySelector('input[name="modelo-ia"]:checked');
-            if (modeloSeleccionado) {
-                currentModelId = modeloSeleccionado.value;
-                nombreModeloActual.textContent = modeloSeleccionado.nextElementSibling.textContent.trim().split('(')[0].trim();
-                
-                // Limpiar historial de mensajes al cambiar de modelo
-                messageHistory = [];
-            }
-            modeloIaSelector.style.display = 'none';
-        });
-        
         // Manejar envío del formulario
-        queryForm.addEventListener('submit', function(e) {
+        document.getElementById('queryForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const query = userQueryInput.value.trim();
+            const queryInput = document.getElementById('userQuery');
+            const query = queryInput.value.trim();
+            
             if (query) {
+                // Añadir mensaje del usuario
                 addMessage(query, true);
-                userQueryInput.value = '';
                 
+                // Procesar consulta
                 processQuery(query);
+                
+                // Limpiar input
+                queryInput.value = '';
             }
         });
         
-        // Manejar ejemplos de consultas
-        document.querySelectorAll('.example-query').forEach(example => {
-            example.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const query = this.textContent;
-                userQueryInput.value = query;
-                userQueryInput.focus();
+        // Manejar cambio de modelo con los botones del selector
+        const btnElegirModelo = document.getElementById('btn-elegir-modelo');
+        const modeloSelector = document.getElementById('modelo-ia-selector');
+        const btnAplicarModelo = document.getElementById('btn-aplicar-modelo');
+        const btnCancelarModelo = document.getElementById('btn-cancelar-modelo');
+        const modeloActual = document.getElementById('modelo-actual');
+        const badgeCohere = document.getElementById('badge-cohere');
+        const badgeWebSearch = document.getElementById('badge-web-search');
+        
+        // Mostrar/ocultar selector de modelo
+        if (btnElegirModelo) {
+            btnElegirModelo.addEventListener('click', function() {
+                modeloSelector.style.display = 'block';
             });
-        });
+        }
+        
+        // Aplicar modelo seleccionado
+        if (btnAplicarModelo) {
+            btnAplicarModelo.addEventListener('click', function() {
+                const modeloSeleccionado = document.querySelector('input[name="modelo-ia"]:checked');
+                if (modeloSeleccionado) {
+                    currentModelId = modeloSeleccionado.value;
+                    console.log("Modelo seleccionado:", currentModelId);
+                    
+                    // Actualizar UI
+                    modeloActual.textContent = currentModelId === 'mistral-cohere' ? 'Mistral+Cohere' : 'Mistral';
+                    badgeCohere.style.display = currentModelId === 'mistral-cohere' ? 'inline-block' : 'none';
+                    badgeWebSearch.style.display = currentModelId === 'mistral-cohere' ? 'inline-block' : 'none';
+                    
+                    // Ocultar selector
+                    modeloSelector.style.display = 'none';
+                }
+            });
+        }
+        
+        // Cancelar selección de modelo
+        if (btnCancelarModelo) {
+            btnCancelarModelo.addEventListener('click', function() {
+                modeloSelector.style.display = 'none';
+            });
+        }
+        
+        // Mensaje de bienvenida
+        addMessage("¡Hola! Soy el asistente de consultas del BOE. ¿En qué puedo ayudarte hoy?", false);
     });
 </script>
 {% endblock %}

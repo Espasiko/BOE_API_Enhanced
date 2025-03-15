@@ -1,272 +1,504 @@
 import os
-import re
 import sys
-import io
 import logging
+import re
+import io
 from dotenv import load_dotenv
-from qdrant_client import QdrantClient
-from qdrant_client.http.models import Filter, FieldCondition, MatchValue
 from mistralai import Mistral
-from transformers import pipeline
+from cohere import Client as CohereClient
 
-# Cargar variables de entorno desde el archivo .env
+# Cargar variables de entorno
 load_dotenv()
 
 # Configuración de logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Configuración del cliente de Qdrant
-qdrant_url = os.getenv("QDRANT_URL")
-qdrant_api_key = os.getenv("QDRANT_API_KEY")
-client = QdrantClient(url=qdrant_url, api_key=qdrant_api_key)
-
-# Configuración del cliente de Mistral
-mistral_api_key = os.getenv("MISTRAL_API_KEY")
+# Configurar clientes de API
+mistral_api_key = os.getenv('MISTRAL_API_KEY')
+mistral_model = os.getenv('MISTRAL_MODEL', 'mistral-medium')
 mistral_client = Mistral(api_key=mistral_api_key)
 
-# Configuración del modelo de embeddings
-embedding_model = pipeline("feature-extraction", model="sentence-transformers/all-MiniLM-L6-v2")
+cohere_api_key = os.getenv('COHERE_API_KEY', 'Cz5uxPlfvNKq2zT3Vhk4KXxx3f13dRzVtoXYIylS')
+cohere_client = CohereClient(api_key=cohere_api_key)
+
+# Configuración de Qdrant (mantenemos la compatibilidad)
+qdrant_url = os.getenv("QDRANT_URL")
+qdrant_api_key = os.getenv("QDRANT_API_KEY")
 
 # Nombre correcto de la colección en Qdrant
 QDRANT_COLLECTION_NAME = "boe_documentos"  # Nombre correcto de la colección
 
+# Funciones específicas para el comparador de versiones
+def buscar_documentos_boe(query, max_results=5):
+    """
+    Busca documentos del BOE usando Cohere
+    """
+    try:
+        response = cohere_client.chat(
+            message=f"""Busca documentos del BOE relacionados con: {query}
+            
+            Proporciona una lista de documentos relevantes con la siguiente información para cada uno:
+            1. Referencia del documento (código BOE)
+            2. Título del documento
+            3. Fecha de publicación en formato DD/MM/YYYY
+            4. URL del documento (debe ser una URL válida del BOE)
+            5. Breve descripción del contenido
+            
+            Formatea la respuesta en JSON con la estructura adecuada.
+            """,
+            model="command-r",
+            temperature=0.2
+        )
+        return response.text
+    except Exception as e:
+        logging.error(f"Error en buscar_documentos_boe: {e}")
+        return f"Error al buscar documentos: {str(e)}"
+
+def obtener_versiones_documento(referencia):
+    """
+    Obtiene las versiones disponibles de un documento del BOE
+    """
+    try:
+        response = cohere_client.chat(
+            message=f"""Busca las diferentes versiones del documento del BOE con referencia {referencia}.
+            
+            Proporciona una lista de todas las versiones disponibles con la siguiente información para cada una:
+            1. Identificador de la versión
+            2. Nombre descriptivo de la versión
+            3. Fecha de publicación
+            
+            Formatea la respuesta en JSON con la estructura adecuada.
+            """,
+            model="command-r",
+            temperature=0.2
+        )
+        return response.text
+    except Exception as e:
+        logging.error(f"Error en obtener_versiones_documento: {e}")
+        return f"Error al obtener versiones: {str(e)}"
+
+def comparar_versiones_documento(referencia, version_original, version_comparar):
+    """
+    Compara dos versiones de un documento del BOE
+    """
+    try:
+        response = cohere_client.chat(
+            message=f"""Analiza las diferencias entre dos versiones del documento del BOE con referencia {referencia}.
+            
+            Versión original: {version_original}
+            Versión a comparar: {version_comparar}
+            
+            Proporciona un análisis detallado de las diferencias entre ambas versiones. Debes seguir EXACTAMENTE este formato de respuesta en JSON:
+
+            ```json
+            {{
+                "comparacion": "Resumen general de los cambios entre las versiones",
+                "estadisticas": {{
+                    "adiciones": 5,
+                    "eliminaciones": 3,
+                    "modificaciones": 7
+                }},
+                "cambios_detallados": [
+                    {{
+                        "seccion": "Artículo 1",
+                        "tipo_cambio": "modificación",
+                        "descripcion": "Se ha modificado la redacción del artículo",
+                        "texto_original": "Texto original del artículo",
+                        "texto_nuevo": "Nuevo texto del artículo"
+                    }},
+                    {{
+                        "seccion": "Artículo 2",
+                        "tipo_cambio": "adición",
+                        "descripcion": "Se ha añadido un nuevo artículo",
+                        "texto_original": "",
+                        "texto_nuevo": "Texto del nuevo artículo"
+                    }},
+                    {{
+                        "seccion": "Artículo 3",
+                        "tipo_cambio": "eliminación",
+                        "descripcion": "Se ha eliminado este artículo",
+                        "texto_original": "Texto del artículo eliminado",
+                        "texto_nuevo": ""
+                    }}
+                ]
+            }}
+            ```
+
+            Es IMPRESCINDIBLE que sigas este formato exacto y que proporciones valores numéricos (no texto) para las estadísticas. Los tipos de cambio deben ser únicamente: "adición", "eliminación" o "modificación".
+            
+            Para cada cambio, incluye la sección o artículo afectado, una descripción del cambio, el texto original y el texto nuevo.
+            """,
+            model="command-r",
+            temperature=0.2,
+            max_tokens=4000
+        )
+        return response.text
+    except Exception as e:
+        logging.error(f"Error en comparar_versiones_documento: {e}")
+        return f"Error al comparar versiones: {str(e)}"
+
+def planning_agent(prompt):
+    """Agente de planificación usando Mistral"""
+    try:
+        messages = [{"role": "user", "content": prompt}]
+        response = mistral_client.chat.complete(
+            model=mistral_model,
+            messages=messages,
+            stream=False
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        logging.error(f"Error en planning_agent: {e}")
+        return "No se pudo procesar la solicitud."
+
+def summarization_agent(text):
+    """Agente de resumen usando Cohere"""
+    try:
+        response = cohere_client.summarize(
+            text=text,
+            model='command',
+            length='medium'
+        )
+        return response.summary
+    except Exception as e:
+        logging.error(f"Error en summarization_agent: {e}")
+        return "No se pudo generar el resumen."
+
+def workflow(prompt, context=None):
+    """Flujo de trabajo simplificado"""
+    result = planning_agent(prompt)
+    return result
+
+# Clase para búsqueda en Qdrant (simplificada para usar Cohere)
+class QdrantSearch:
+    def __init__(self, collection_name=QDRANT_COLLECTION_NAME):
+        self.collection_name = collection_name
+        self._cache = {}
+    
+    def search(self, query, limit=5, exact_match_weight=0.6, semantic_weight=0.4):
+        """Buscar documentos usando Cohere en lugar de Qdrant"""
+        try:
+            # Usar caché si existe
+            cache_key = f"search_{query}_{limit}"
+            if cache_key in self._cache:
+                return self._cache[cache_key]
+            
+            # Realizar búsqueda con Cohere
+            response = cohere_client.chat(
+                message=f"""Busca documentos del BOE relacionados con: {query}
+                
+                Proporciona una lista de {limit} documentos relevantes con la siguiente información para cada uno:
+                1. Identificador único del documento
+                2. Título del documento
+                3. Texto completo o extracto relevante
+                4. URL del documento en el BOE
+                5. Porcentaje de relevancia con respecto a la consulta
+                
+                Formatea la respuesta en JSON.
+                """,
+                model="command-r",
+                temperature=0.2
+            )
+            
+            # Procesar respuesta
+            texto_respuesta = response.text
+            
+            # Intentar extraer JSON de la respuesta
+            import json
+            json_match = re.search(r'```json\n(.*?)\n```', texto_respuesta, re.DOTALL)
+            
+            if json_match:
+                resultados = json.loads(json_match.group(1))
+            else:
+                # Si no se encuentra JSON con formato de código, buscar cualquier JSON válido
+                json_match = re.search(r'({[\s\S]*})', texto_respuesta)
+                if json_match:
+                    try:
+                        resultados = json.loads(json_match.group(1))
+                    except:
+                        # Si no se puede parsear, crear resultados básicos
+                        resultados = {
+                            "documentos": []
+                        }
+                else:
+                    # Si no se encuentra ningún JSON, crear resultados básicos
+                    resultados = {
+                        "documentos": []
+                    }
+            
+            # Guardar en caché
+            self._cache[cache_key] = resultados
+            
+            return resultados
+            
+        except Exception as e:
+            logging.error(f"Error en QdrantSearch.search: {e}")
+            return {"documentos": []}
+    
+    def process_query(self, query, context=None):
+        """Procesar consulta con Mistral"""
+        try:
+            # Buscar documentos relevantes
+            search_results = self.search(query)
+            
+            # Preparar contexto para Mistral
+            context_str = ""
+            if "documentos" in search_results:
+                for i, doc in enumerate(search_results["documentos"]):
+                    context_str += f"\nDocumento {i+1}:\n"
+                    context_str += f"Título: {doc.get('titulo', 'Sin título')}\n"
+                    context_str += f"Texto: {doc.get('texto', 'Sin texto')}\n"
+                    context_str += f"URL: {doc.get('url', 'Sin URL')}\n"
+                    context_str += f"Relevancia: {doc.get('relevancia', '0')}%\n"
+            
+            # Procesar con Mistral
+            prompt = f"""Consulta: {query}
+            
+            Contexto de documentos del BOE:
+            {context_str}
+            
+            Responde a la consulta basándote en la información proporcionada en los documentos. 
+            Si la información no es suficiente, indícalo claramente.
+            """
+            
+            messages = [{"role": "user", "content": prompt}]
+            response = mistral_client.chat.complete(
+                model=mistral_model,
+                messages=messages,
+                stream=False
+            )
+            
+            return response.choices[0].message.content
+            
+        except Exception as e:
+            logging.error(f"Error en QdrantSearch.process_query: {e}")
+            return f"Error al procesar la consulta: {str(e)}"
+    
+    def summarize_document(self, document_id, query=None):
+        """Resumir documento usando Cohere"""
+        try:
+            # Obtener documento (simulado)
+            document_text = f"Documento con ID {document_id} relacionado con la consulta: {query}"
+            
+            # Resumir con Cohere
+            response = cohere_client.summarize(
+                text=document_text,
+                model='command',
+                length='medium',
+                format='paragraph'
+            )
+            
+            return response.summary
+            
+        except Exception as e:
+            logging.error(f"Error en QdrantSearch.summarize_document: {e}")
+            return f"Error al resumir el documento: {str(e)}"
+
+# Clase base para agentes
 class Agent:
     def __init__(self, agent_id):
         self.agent_id = agent_id
         self.cache = {}
-
+    
     def preprocess_query(self, query):
-        # Lógica de preprocesamiento
+        """Preprocesar la consulta"""
         return query
-
+    
     def postprocess_response(self, response):
-        # Lógica de postprocesamiento
+        """Postprocesar la respuesta"""
         return response
-
+    
     def validate_query(self, query):
-        # Lógica de validación de la consulta
-        if not query:
-            raise ValueError("La consulta no puede estar vacía")
-        return query
-
+        """Validar la consulta"""
+        return True
+    
     def validate_response(self, response):
-        # Lógica de validación de la respuesta
-        if not response:
-            raise ValueError("La respuesta no puede estar vacía")
-        return response
-
+        """Validar la respuesta"""
+        return True
+    
     def get_from_cache(self, query):
+        """Obtener respuesta de la caché"""
         return self.cache.get(query)
-
+    
     def add_to_cache(self, query, response):
+        """Añadir respuesta a la caché"""
         self.cache[query] = response
-
+    
     def run(self, query):
-        try:
-            query = self.preprocess_query(query)
-            query = self.validate_query(query)
+        """Ejecutar el agente"""
+        # Verificar caché
+        cached_response = self.get_from_cache(query)
+        if cached_response:
+            return cached_response
+        
+        # Preprocesar
+        processed_query = self.preprocess_query(query)
+        
+        # Validar
+        if not self.validate_query(processed_query):
+            return "Consulta no válida"
+        
+        # Ejecutar lógica específica del agente
+        response = "No implementado"
+        
+        # Postprocesar
+        processed_response = self.postprocess_response(response)
+        
+        # Validar respuesta
+        if not self.validate_response(processed_response):
+            return "Respuesta no válida"
+        
+        # Guardar en caché
+        self.add_to_cache(query, processed_response)
+        
+        return processed_response
 
-            cached_response = self.get_from_cache(query)
-            if cached_response:
-                return cached_response
-
-            response = client.search(
-                collection_name=self.agent_id,
-                query_vector=query,
-                limit=5  # Número de resultados a devolver
-            )
-            response = self.validate_response(response)
-            response = self.postprocess_response(response)
-            self.add_to_cache(query, response)
-            return response
-        except Exception as e:
-            logging.error(f"Error al ejecutar el agente {self.agent_id}: {e}")
-            return None
-
+# Agente de planificación
 class PlanningAgent(Agent):
     def run(self, query):
+        """Ejecutar el agente de planificación"""
+        # Verificar caché
+        cached_response = self.get_from_cache(query)
+        if cached_response:
+            return cached_response
+        
         try:
-            query = self.preprocess_query(query)
-            query = self.validate_query(query)
-
-            cached_response = self.get_from_cache(query)
-            if cached_response:
-                return cached_response
-
-            # Generar embedding para la consulta
-            embeddings = embedding_model(query)
-            query_vector = embeddings[0][0]  # Obtener el vector de embedding
-
-            # Buscar en Qdrant
-            logging.info(f"Buscando en Qdrant con la consulta: {query}")
-            try:
-                search_results = client.search(
-                    collection_name=QDRANT_COLLECTION_NAME,  # Usar la variable global
-                    query_vector=query_vector,
-                    limit=5  # Número de resultados a devolver
-                )
-            except Exception as qdrant_error:
-                logging.error(f"Error al buscar en Qdrant: {str(qdrant_error)}")
-                # Intentar listar las colecciones disponibles para diagnóstico
-                try:
-                    collections = client.get_collections()
-                    available_collections = [collection.name for collection in collections.collections]
-                    logging.info(f"Colecciones disponibles en Qdrant: {available_collections}")
-                    context = f"Error al buscar en Qdrant: {str(qdrant_error)}. Colecciones disponibles: {available_collections}"
-                except:
-                    context = f"Error al buscar en Qdrant: {str(qdrant_error)}. No se pudo obtener la lista de colecciones disponibles."
-                
-                # Continuar con Mistral aunque falle Qdrant
-                search_results = []
-            
-            if not search_results:
-                logging.warning("No se encontraron resultados en Qdrant")
-                if 'context' not in locals():
-                    context = "No se encontraron documentos relevantes en la base de datos del BOE."
-            else:
-                # Extraer el contenido de los resultados
-                context = "Documentos relevantes encontrados en el BOE:\n\n"
-                for i, result in enumerate(search_results):
-                    doc_info = result.payload
-                    context += f"Documento {i+1}:\n"
-                    context += f"Título: {doc_info.get('titulo', 'Sin título')}\n"
-                    context += f"Fecha: {doc_info.get('fecha_publicacion', 'Sin fecha')}\n"
-                    context += f"Departamento: {doc_info.get('departamento', 'Sin departamento')}\n"
-                    context += f"Contenido: {doc_info.get('texto', 'Sin contenido')[:500]}...\n\n"
-
-            # Generar prompt para Mistral con los resultados de Qdrant
-            prompt = f"""Eres un asistente especializado en analizar consultas sobre el BOE (Boletín Oficial del Estado).
-            Tu tarea es entender la consulta del usuario y proporcionar una respuesta basada en los documentos encontrados.
-            
-            Consulta del usuario: {query}
-            
-            Información relevante del BOE:
-            {context}
-            
-            Por favor, analiza la consulta y la información proporcionada, y genera:
-            1. Un resumen de los documentos relevantes encontrados
-            2. Los aspectos clave que responden a la consulta del usuario
-            3. Recomendaciones basadas en la legislación encontrada
-            """
-
-            # Usar el cliente de Mistral con el contexto de Qdrant
-            messages = [{"role": "user", "content": prompt}]
+            # Ejecutar con Mistral
+            messages = [{"role": "user", "content": query}]
             response = mistral_client.chat.complete(
-                model="mistral-large-latest",
+                model=mistral_model,
                 messages=messages,
                 stream=False
             )
-
-            if not response or not response.choices:
-                raise ValueError("La API de Mistral no devolvió un resultado válido.")
-
+            
             result = response.choices[0].message.content
-            result = self.validate_response(result)
-            result = self.postprocess_response(result)
+            
+            # Guardar en caché
             self.add_to_cache(query, result)
+            
             return result
-
+            
         except Exception as e:
-            logging.error(f"Error en PlanningAgent.run: {str(e)}")
-            return f"Error al procesar la consulta: {str(e)}"
+            logging.error(f"Error en PlanningAgent.run: {e}")
+            return f"Error en el agente de planificación: {str(e)}"
 
+# Agente de resumen
 class SummarizationAgent(Agent):
     def run(self, query):
+        """Ejecutar el agente de resumen"""
+        # Verificar caché
+        cached_response = self.get_from_cache(query)
+        if cached_response:
+            return cached_response
+        
         try:
-            query = self.preprocess_query(query)
-            query = self.validate_query(query)
-
-            cached_response = self.get_from_cache(query)
-            if cached_response:
-                return cached_response
-
-            # Resumir el contenido usando el agente de Mistral
-            messages = [{"role": "user", "content": query}]
-            summary = mistral_client.chat.complete(
-                model="mistral-large-latest", 
-                messages=messages,
-                stream=False
+            # Ejecutar con Cohere
+            response = cohere_client.summarize(
+                text=query,
+                model='command',
+                length='medium',
+                format='paragraph'
             )
-            if not summary or not summary.choices:
-                raise ValueError("La API de Mistral no devolvió un resultado válido.")
-            response = summary.choices[0].message.content
-            response = self.validate_response(response)
-            response = self.postprocess_response(response)
-            self.add_to_cache(query, response)
-            return response
+            
+            result = response.summary
+            
+            # Guardar en caché
+            self.add_to_cache(query, result)
+            
+            return result
+            
         except Exception as e:
-            logging.error(f"Error al ejecutar el agente {self.agent_id}: {e}")
-            return None
+            logging.error(f"Error en SummarizationAgent.run: {e}")
+            return f"Error en el agente de resumen: {str(e)}"
 
+# Agente de Python
 class PythonAgent(Agent):
     def extract_code(self, text):
         """Extrae el código Python del texto dado."""
-        pattern = r'```python(.*?)```'
-        match = re.search(pattern, text, flags=re.DOTALL)
-        return match.group(1).strip() if match else None
-
+        code_blocks = re.findall(r'```python\n(.*?)\n```', text, re.DOTALL)
+        if code_blocks:
+            return code_blocks[0]
+        return text
+    
     def run_code(self, code):
         """Ejecuta el código Python y verifica si hay errores."""
         try:
-            exec(code, globals())
-            logging.info("Código ejecutado con éxito.")
-            return False
+            # Capturar la salida
+            old_stdout = sys.stdout
+            redirected_output = io.StringIO()
+            sys.stdout = redirected_output
+            
+            # Ejecutar código
+            exec(code)
+            
+            # Restaurar stdout
+            sys.stdout = old_stdout
+            
+            return redirected_output.getvalue()
         except Exception as e:
-            logging.error(f"Error al ejecutar el código: {e}")
-            return True
+            return f"Error al ejecutar el código: {str(e)}"
 
+# Flujo de trabajo para el agente de Python
 class PythonAgentWorkflow:
     def __init__(self, planning_agent, python_agent, summarization_agent):
         self.planning_agent = planning_agent
         self.python_agent = python_agent
         self.summarization_agent = summarization_agent
         self.state = {}
-
+    
     def run(self, query):
+        """Ejecutar el flujo de trabajo completo"""
         try:
-            # Paso 1: Generar un plan usando el agente de planificación
-            logging.info("Generando plan con el agente de planificación...")
-            plan = self.planning_agent.run(query)
-            if not plan:
-                return "No se pudo generar un plan para la consulta."
-
-            # Paso 2: Extraer el código Python del plan
-            logging.info("Extrayendo código Python del plan...")
-            code = self.python_agent.extract_code(plan)
-            if not code:
-                return plan  # Si no hay código, devolver el plan como respuesta
-
-            # Paso 3: Ejecutar el código Python
-            logging.info("Ejecutando código Python...")
-            has_error = self.python_agent.run_code(code)
+            # Paso 1: Planificación
+            planning_prompt = f"""Analiza la siguiente consulta y genera código Python para resolverla:
             
-            # Paso 4: Resumir los resultados
-            logging.info("Resumiendo resultados...")
-            if has_error:
-                summary_query = f"El siguiente código Python tiene errores. Por favor, identifica y explica los errores:\n\n```python\n{code}\n```"
-            else:
-                summary_query = f"El siguiente código Python se ejecutó correctamente. Por favor, explica qué hace el código:\n\n```python\n{code}\n```"
+            {query}
             
-            summary = self.summarization_agent.run(summary_query)
+            Proporciona solo el código Python necesario, sin explicaciones adicionales.
+            """
             
-            # Combinar los resultados
-            result = f"Plan:\n{plan}\n\nResumen:\n{summary}"
+            code_plan = self.planning_agent.run(planning_prompt)
+            
+            # Paso 2: Extraer y ejecutar código
+            code = self.python_agent.extract_code(code_plan)
+            code_output = self.python_agent.run_code(code)
+            
+            # Paso 3: Resumir resultados
+            summary_prompt = f"""Consulta original: {query}
+            
+            Resultado de la ejecución del código:
+            {code_output}
+            
+            Resume los resultados de manera clara y concisa.
+            """
+            
+            summary = self.summarization_agent.run(summary_prompt)
+            
+            # Combinar resultados
+            result = f"""Respuesta a tu consulta:
+            
+            {summary}
+            
+            Detalles técnicos:
+            {code_output}
+            """
+            
             return result
             
         except Exception as e:
-            logging.error(f"Error en el flujo de trabajo: {e}")
-            return f"Error en el flujo de trabajo: {e}"
+            logging.error(f"Error en PythonAgentWorkflow.run: {e}")
+            return f"Error en el flujo de trabajo: {str(e)}"
 
 # Captura de la salida de print
 class Tee(io.StringIO):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.original_stdout = sys.stdout
-        
+    
     def write(self, data):
         self.original_stdout.write(data)
         return super().write(data)
-        
+    
     def flush(self):
         self.original_stdout.flush()
         return super().flush()
@@ -276,35 +508,31 @@ planning_agent = PlanningAgent("ag:977f4f16:20250311:planningagent:ede524f0")
 python_agent = PythonAgent("ag:977f4f16:20250311:pythonagent:19b69527")
 summarization_agent = SummarizationAgent("ag:977f4f16:20250311:summarizationagent:6aaba406")
 
-# Crear el flujo de trabajo
-workflow = PythonAgentWorkflow(planning_agent, python_agent, summarization_agent)
+# Crear instancia del flujo de trabajo
+workflow_instance = PythonAgentWorkflow(planning_agent, python_agent, summarization_agent)
 
 def run_workflow(query):
     """Ejecuta el flujo de trabajo completo con la consulta dada."""
-    return workflow.run(query)
+    return workflow_instance.run(query)
 
 def procesar_consulta(query):
     """Procesa una consulta y devuelve los resultados."""
     try:
-        # Capturar la salida de print
-        old_stdout = sys.stdout
-        tee = Tee()
-        sys.stdout = tee
-        
-        # Ejecutar el flujo de trabajo
-        result = run_workflow(query)
-        
-        # Restaurar la salida estándar
-        sys.stdout = old_stdout
-        
-        # Devolver el resultado y la salida capturada
-        return {
-            "result": result,
-            "output": tee.getvalue()
-        }
+        # Determinar el tipo de consulta
+        if query.lower().startswith(("buscar", "encuentra", "localiza")):
+            # Búsqueda de documentos
+            qdrant_search = QdrantSearch()
+            return qdrant_search.search(query)
+        elif query.lower().startswith(("analiza", "resume", "explica")):
+            # Análisis o resumen
+            return summarization_agent.run(query)
+        elif query.lower().startswith(("calcula", "programa", "código")):
+            # Ejecución de código
+            return run_workflow(query)
+        else:
+            # Consulta general
+            qdrant_search = QdrantSearch()
+            return qdrant_search.process_query(query)
     except Exception as e:
-        logging.error(f"Error al procesar la consulta: {e}")
-        return {
-            "result": f"Error al procesar la consulta: {e}",
-            "output": ""
-        }
+        logging.error(f"Error en procesar_consulta: {e}")
+        return f"Error al procesar la consulta: {str(e)}"

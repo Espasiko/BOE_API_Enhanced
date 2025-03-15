@@ -3,12 +3,87 @@
 {% block title %}Comparador de Versiones | BOE Alertas{% endblock %}
 
 {% block extra_css %}
+<style>
+    .comparador-title {
+        color: #0056b3;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 0.5rem;
+    }
+    
+    .comparador-container {
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+    
+    .comparador-form {
+        background-color: #f8f9fa;
+    }
+    
+    .comparador-resultado {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .comparador-select {
+        background-color: #fff;
+    }
+    
+    .btn-comparar {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+    
+    .btn-comparar:hover {
+        background-color: #004494;
+        border-color: #004494;
+    }
+    
+    .diff-added {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 0.2rem;
+        border-radius: 0.25rem;
+    }
+    
+    .diff-removed {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 0.2rem;
+        border-radius: 0.25rem;
+        text-decoration: line-through;
+    }
+    
+    .diff-highlight {
+        background-color: #fff3cd;
+        color: #856404;
+        padding: 0.2rem;
+        border-radius: 0.25rem;
+    }
+    
+    #loadingIndicator {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.8);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    
+    .card-header {
+        background-color: #f1f8ff;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2 comparador-title"><i class="fas fa-code-compare me-2"></i>Comparador de Versiones</h1>
+        <h1 class="h2 comparador-title"><i class="fas fa-code-compare me-2"></i>Comparador de Versiones del BOE</h1>
     </div>
     
     <div class="row">
@@ -21,39 +96,30 @@
                     <p class="card-text">Busca un documento del BOE por su referencia (ej. BOE-A-2023-12345) o por texto descriptivo. El sistema encontrará las diferentes versiones disponibles para comparar.</p>
                     
                     <form id="searchForm" class="mb-4">
+                        {% csrf_token %}
                         <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="referenciaInput" class="form-label">Referencia BOE</label>
-                                <input type="text" class="form-control" id="referenciaInput" placeholder="BOE-A-XXXX-XXXXX">
+                            <div class="col-md-12">
+                                <label for="searchInput" class="form-label">Búsqueda</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="searchInput" placeholder="Introduce referencia BOE o texto descriptivo">
+                                    <button type="submit" class="btn btn-primary btn-comparar">
+                                        <i class="fas fa-search me-2"></i>Buscar
+                                    </button>
+                                </div>
+                                <small class="form-text text-muted">Ejemplos: "BOE-A-2023-12345", "Ley de Protección de Datos", "Real Decreto Legislativo"</small>
                             </div>
-                            <div class="col-md-6">
-                                <label for="textoInput" class="form-label">
-                                    <div class="form-check form-check-inline p-0 m-0">
-                                        <input class="form-check-input" type="radio" name="searchType" id="searchByText" value="text" checked>
-                                        <label class="form-check-label" for="searchByText">O buscar por texto</label>
-                                    </div>
-                                </label>
-                                <input type="text" class="form-control" id="textoInput" placeholder="Ej: Ley de Protección de Datos">
-                            </div>
-                        </div>
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-                            <button type="submit" class="btn btn-primary btn-comparar">
-                                <i class="fas fa-search me-2"></i>Buscar
-                            </button>
                         </div>
                     </form>
                     
-                    <div id="loadingIndicator" class="text-center" style="display: none;">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Cargando...</span>
-                        </div>
-                        <p class="mt-2">Buscando documentos...</p>
-                    </div>
-                    
-                    <div id="errorMessage" class="alert alert-danger" role="alert" style="display: none;"></div>
+                    <div id="alertaError" class="alert alert-danger" role="alert" style="display: none;"></div>
                     
                     <div id="resultadosBusqueda" style="display: none;">
-                        <h5 class="mb-3">Resultados de la búsqueda:</h5>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Resultados de la búsqueda:</h5>
+                            <button id="btnNuevaBusqueda" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-search me-1"></i>Nueva búsqueda
+                            </button>
+                        </div>
                         <div id="documentosList" class="list-group comparador-resultado"></div>
                     </div>
                 </div>
@@ -66,7 +132,7 @@
                 <div class="card-body comparador-form">
                     <div id="documentoSeleccionado" class="mb-4">
                         <h5 id="documentoTitulo" class="mb-2"></h5>
-                        <p id="documentoReferencia" class="text-muted"></p>
+                        <p class="mb-1"><strong>Referencia:</strong> <span id="documentoReferencia" class="text-muted"></span></p>
                     </div>
                     
                     <div class="row g-3">
@@ -81,132 +147,142 @@
                     </div>
                     
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                        <button id="btnNuevaBusquedaDesdeSelector" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-arrow-left me-2"></i>Volver a búsqueda
+                        </button>
                         <button id="btnComparar" class="btn btn-primary btn-comparar">
-                            <i class="fas fa-code-compare me-2"></i>Comparar
+                            <i class="fas fa-code-compare me-2"></i>Comparar versiones
                         </button>
                     </div>
                 </div>
             </div>
             
-            <div id="resultadoComparacion" class="card shadow-sm comparador-container" style="display: none;">
+            <div id="resultadosComparacion" class="card shadow-sm mb-4 comparador-container" style="display: none;">
                 <div class="card-header">
-                    <h5 class="card-title mb-0"><i class="fas fa-list-check me-2"></i>Resultado de la comparación</h5>
+                    <h5 class="card-title mb-0"><i class="fas fa-file-contract me-2"></i>Resultado de la comparación</h5>
                 </div>
                 <div class="card-body">
-                    <div id="comparacionInfo" class="mb-4">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="version-info">
-                                    <h6 class="mb-1">Versión original:</h6>
-                                    <p id="infoVersionOriginal" class="mb-1"></p>
-                                    <small id="fechaVersionOriginal" class="version-date"></small>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="version-info">
-                                    <h6 class="mb-1">Versión comparada:</h6>
-                                    <p id="infoVersionComparar" class="mb-1"></p>
-                                    <small id="fechaVersionComparar" class="version-date"></small>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2">Resumen de cambios</h5>
+                        <div id="resumenComparacion" class="p-3 bg-light rounded"></div>
                     </div>
                     
-                    <div id="resumenCambios" class="mb-4 diff-container">
-                        <h5 class="mb-3">Resumen de cambios:</h5>
-                        <div id="resumenContenido"></div>
+                    <div id="impactoLegal" class="mb-4"></div>
+                    
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2">Cambios detallados</h5>
+                        <div id="cambiosDetallados"></div>
                     </div>
                     
-                    <div id="cambiosDetallados" class="mb-4 diff-container">
-                        <h5 class="mb-3">Cambios detallados:</h5>
-                        <div id="cambiosContenido"></div>
-                    </div>
-                    
-                    <div id="impactoLegal" class="mb-4 diff-container">
-                        <h5 class="mb-3">Impacto legal:</h5>
-                        <div id="impactoContenido"></div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                        <button id="btnNuevaBusquedaDesdeResultados" class="btn btn-outline-secondary me-2">
+                            <i class="fas fa-search me-2"></i>Nueva búsqueda
+                        </button>
+                        <button id="btnVolverASelector" class="btn btn-primary">
+                            <i class="fas fa-code-branch me-2"></i>Comparar otras versiones
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div id="loadingIndicator" style="display: none;">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-3 h5">Procesando solicitud...</p>
+    <p class="text-muted">Esto puede tardar unos segundos</p>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // Funciones auxiliares
+    // Variables globales
+    let documentoSeleccionado = null;
+    let versionesDisponibles = [];
+    
+    // Función para mostrar mensaje de carga
     function mostrarCargando() {
-        document.getElementById('loadingIndicator').style.display = 'block';
-        document.getElementById('errorMessage').style.display = 'none';
+        document.getElementById('loadingIndicator').style.display = 'flex';
     }
     
+    // Función para ocultar mensaje de carga
     function ocultarCargando() {
         document.getElementById('loadingIndicator').style.display = 'none';
     }
     
+    // Función para mostrar mensaje de error
     function mostrarError(mensaje) {
-        document.getElementById('errorMessage').textContent = mensaje;
-        document.getElementById('errorMessage').style.display = 'block';
-        ocultarCargando();
+        const alertaError = document.getElementById('alertaError');
+        alertaError.textContent = mensaje;
+        alertaError.style.display = 'block';
+        
+        // Ocultar automáticamente después de 5 segundos
+        setTimeout(() => {
+            alertaError.style.display = 'none';
+        }, 5000);
     }
     
     // Función para buscar documentos
-    function buscarDocumento(referencia, texto) {
-        mostrarCargando();
+    function buscarDocumentos() {
+        const query = document.getElementById('searchInput').value.trim();
         
-        // Ocultar resultados anteriores
-        document.getElementById('resultadosBusqueda').style.display = 'none';
-        document.getElementById('selectorVersiones').style.display = 'none';
-        document.getElementById('resultadoComparacion').style.display = 'none';
-        
-        // Preparar datos para la petición
-        const formData = new FormData();
-        if (referencia) {
-            formData.append('referencia', referencia);
-        } else if (texto) {
-            formData.append('texto', texto);
+        if (!query) {
+            mostrarError('Por favor, introduce un término de búsqueda.');
+            return;
         }
         
+        mostrarCargando();
+        
         // Realizar petición al servidor
-        fetch('/comparador/buscar/', {
+        fetch("{% url 'buscar_documento' %}", {
             method: 'POST',
-            body: formData,
             headers: {
+                'Content-Type': 'application/json',
                 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            }
+            },
+            body: JSON.stringify({
+                query: query
+            })
         })
         .then(response => response.json())
         .then(data => {
             ocultarCargando();
+            
             if (data.error) {
                 mostrarError(data.error);
-            } else {
-                mostrarResultadosBusqueda(data.resultados);
+                return;
             }
+            
+            // Mostrar resultados
+            mostrarResultados(data.documentos || []);
         })
         .catch(error => {
             ocultarCargando();
             mostrarError('Error al buscar documentos: ' + error.message);
+            console.error('Error completo:', error);
         });
     }
     
-    // Función para mostrar los resultados de búsqueda
-    function mostrarResultadosBusqueda(resultados) {
+    // Función para mostrar resultados de búsqueda
+    function mostrarResultados(documentos) {
         const contenedor = document.getElementById('documentosList');
         contenedor.innerHTML = '';
         
-        if (resultados && resultados.length > 0) {
-            resultados.forEach(doc => {
+        if (documentos && documentos.length > 0) {
+            documentos.forEach(doc => {
                 const item = document.createElement('a');
                 item.href = '#';
                 item.className = 'list-group-item list-group-item-action';
                 item.innerHTML = `
                     <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">${doc.referencia}</h5>
+                        <h5 class="mb-1">${doc.referencia || 'Sin referencia'}</h5>
                         <small>${doc.fecha || 'Fecha no disponible'}</small>
                     </div>
                     <p class="mb-1">${doc.titulo || 'Título no disponible'}</p>
+                    ${doc.descripcion ? `<small class="text-muted">${doc.descripcion}</small>` : ''}
                 `;
                 item.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -224,6 +300,7 @@
     // Función para seleccionar un documento
     function seleccionarDocumento(documento) {
         // Guardar referencia del documento seleccionado
+        documentoSeleccionado = documento;
         document.getElementById('documentoTitulo').textContent = documento.titulo || 'Documento sin título';
         document.getElementById('documentoReferencia').textContent = documento.referencia;
         
@@ -241,17 +318,16 @@
     function cargarVersiones(referencia) {
         mostrarCargando();
         
-        // Preparar datos para la petición
-        const formData = new FormData();
-        formData.append('referencia', referencia);
-        
         // Realizar petición al servidor
-        fetch('/comparador/versiones/', {
+        fetch("{% url 'obtener_versiones' %}", {
             method: 'POST',
-            body: formData,
             headers: {
+                'Content-Type': 'application/json',
                 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            }
+            },
+            body: JSON.stringify({
+                referencia: referencia
+            })
         })
         .then(response => response.json())
         .then(data => {
@@ -260,7 +336,15 @@
                 mostrarError(data.error);
             } else {
                 // Guardar versiones en variable global
-                window.versionesDisponibles = data.versiones;
+                versionesDisponibles = data.versiones || [];
+                
+                // Si no hay versiones, crear al menos dos (original y vigente)
+                if (versionesDisponibles.length < 2) {
+                    versionesDisponibles = [
+                        { id: 'v1', nombre: 'Versión original', fecha: documentoSeleccionado.fecha || '01/01/2023' },
+                        { id: 'v2', nombre: 'Versión actual', fecha: 'Actual' }
+                    ];
+                }
                 
                 // Actualizar selectores
                 actualizarSelectorVersiones();
@@ -281,64 +365,83 @@
         selectorOriginal.innerHTML = '';
         selectorComparar.innerHTML = '';
         
-        if (window.versionesDisponibles && window.versionesDisponibles.length > 0) {
+        if (versionesDisponibles && versionesDisponibles.length > 0) {
             // Ordenar versiones por fecha (más antigua primero)
-            const versiones = [...window.versionesDisponibles].sort((a, b) => {
+            const versiones = [...versionesDisponibles].sort((a, b) => {
+                if (a.id === 'v1') return -1;
+                if (b.id === 'v1') return 1;
+                if (a.id === 'v3') return 1;
+                if (b.id === 'v3') return -1;
                 return new Date(a.fecha) - new Date(b.fecha);
             });
             
-            // Añadir opciones al selector original (versión más antigua por defecto)
+            // Añadir opciones a los selectores
             versiones.forEach((version, index) => {
-                const option = document.createElement('option');
-                option.value = version.id;
-                option.textContent = `${version.nombre} (${version.fecha})`;
-                selectorOriginal.appendChild(option);
+                // Selector original (versión más antigua por defecto)
+                const option1 = document.createElement('option');
+                option1.value = version.id;
+                option1.textContent = `${version.nombre} (${version.fecha})`;
+                if (index === 0) option1.selected = true;
+                selectorOriginal.appendChild(option1);
+                
+                // Selector comparar (versión más reciente por defecto)
+                const option2 = document.createElement('option');
+                option2.value = version.id;
+                option2.textContent = `${version.nombre} (${version.fecha})`;
+                if (index === versiones.length - 1) option2.selected = true;
+                selectorComparar.appendChild(option2);
             });
             
-            // Añadir opciones al selector de comparación (versión más reciente por defecto)
-            [...versiones].reverse().forEach((version, index) => {
-                const option = document.createElement('option');
-                option.value = version.id;
-                option.textContent = `${version.nombre} (${version.fecha})`;
-                selectorComparar.appendChild(option);
-            });
-            
-            // Seleccionar primera opción en selector original y última en selector de comparación
-            if (versiones.length > 1) {
-                selectorOriginal.selectedIndex = 0;
-                selectorComparar.selectedIndex = 0;
-            }
+            // Habilitar botón de comparar
+            document.getElementById('btnComparar').disabled = false;
         } else {
-            mostrarError('No se encontraron versiones disponibles para este documento.');
+            // Si no hay versiones, deshabilitar botón de comparar
+            document.getElementById('btnComparar').disabled = true;
+            mostrarError('No se encontraron versiones para este documento.');
         }
     }
     
     // Función para comparar versiones
-    function compararVersiones(referencia, versionOriginal, versionComparar) {
+    function compararVersiones() {
+        if (!documentoSeleccionado) {
+            mostrarError('No hay documento seleccionado.');
+            return;
+        }
+        
+        const versionOriginal = document.getElementById('versionOriginal').value;
+        const versionComparar = document.getElementById('versionComparar').value;
+        
+        if (versionOriginal === versionComparar) {
+            mostrarError('Por favor, selecciona dos versiones diferentes para comparar.');
+            return;
+        }
+        
         mostrarCargando();
         
-        // Preparar datos para la petición
-        const formData = new FormData();
-        formData.append('referencia', referencia);
-        formData.append('version_original', versionOriginal);
-        formData.append('version_comparar', versionComparar);
-        
         // Realizar petición al servidor
-        fetch('/comparador/comparar/', {
+        fetch("{% url 'comparar_versiones' %}", {
             method: 'POST',
-            body: formData,
             headers: {
+                'Content-Type': 'application/json',
                 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            }
+            },
+            body: JSON.stringify({
+                referencia: documentoSeleccionado.referencia,
+                version_original: versionOriginal,
+                version_comparar: versionComparar
+            })
         })
         .then(response => response.json())
         .then(data => {
             ocultarCargando();
+            
             if (data.error) {
                 mostrarError(data.error);
-            } else {
-                mostrarResultadoComparacion(data);
+                return;
             }
+            
+            // Mostrar resultados de la comparación
+            mostrarComparacion(data);
         })
         .catch(error => {
             ocultarCargando();
@@ -346,150 +449,316 @@
         });
     }
     
-    // Función para mostrar el resultado de la comparación
-    function mostrarResultadoComparacion(data) {
-        // Mostrar contenedor de resultados
-        document.getElementById('resultadoComparacion').style.display = 'block';
+    // Función para mostrar la comparación
+    function mostrarComparacion(data) {
+        console.log("Datos recibidos:", data); // Para depuración
         
-        // Actualizar información de versiones
-        const versionOriginal = window.versionesDisponibles.find(v => v.id === data.version_original);
-        const versionComparar = window.versionesDisponibles.find(v => v.id === data.version_comparar);
+        const contenedor = document.getElementById('resultadosComparacion');
         
-        document.getElementById('infoVersionOriginal').textContent = versionOriginal ? versionOriginal.nombre : 'Versión desconocida';
-        document.getElementById('fechaVersionOriginal').textContent = versionOriginal ? versionOriginal.fecha : '';
+        // Mostrar resumen
+        const resumenText = data.comparacion || data.resumen || 'No se pudo generar un resumen de los cambios.';
+        document.getElementById('resumenComparacion').innerHTML = resumenText;
         
-        document.getElementById('infoVersionComparar').textContent = versionComparar ? versionComparar.nombre : 'Versión desconocida';
-        document.getElementById('fechaVersionComparar').textContent = versionComparar ? versionComparar.fecha : '';
-        
-        // Procesar y mostrar el contenido de la comparación
-        if (data.comparacion && typeof data.comparacion === 'object') {
-            // Resumen de cambios
-            if (data.comparacion.resumen) {
-                const resumenContainer = document.getElementById('resumenContenido');
-                resumenContainer.innerHTML = '';
-                
-                const resumenParrafo = document.createElement('p');
-                resumenParrafo.innerHTML = procesarTextoComparacion(data.comparacion.resumen);
-                resumenContainer.appendChild(resumenParrafo);
-                
-                document.getElementById('resumenCambios').style.display = 'block';
-            } else {
-                document.getElementById('resumenCambios').style.display = 'none';
-            }
+        // Mostrar estadísticas
+        if (data.estadisticas) {
+            console.log("Estadísticas:", data.estadisticas); // Para depuración
             
-            // Cambios detallados
-            if (data.comparacion.cambios_detallados) {
-                const cambiosContainer = document.getElementById('cambiosContenido');
-                cambiosContainer.innerHTML = '';
+            // Convertir valores no numéricos a 0
+            const adiciones = parseInt(data.estadisticas.adiciones) || 0;
+            const eliminaciones = parseInt(data.estadisticas.eliminaciones) || 0;
+            const modificaciones = parseInt(data.estadisticas.modificaciones) || 0;
+            const totalCambios = adiciones + eliminaciones + modificaciones;
+            
+            document.getElementById('impactoLegal').innerHTML = `
+                <h5 class="border-bottom pb-2">Estadísticas de cambios</h5>
+                <div class="alert alert-info">
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <h6>Modificaciones</h6>
+                            <span class="badge bg-warning text-dark fs-5 estadistica-badge" 
+                                  data-tipo="modificaciones" 
+                                  style="cursor: pointer;" 
+                                  title="Haz clic para ver las modificaciones">${modificaciones}</span>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h6>Adiciones</h6>
+                            <span class="badge bg-success fs-5 estadistica-badge" 
+                                  data-tipo="adiciones" 
+                                  style="cursor: pointer;" 
+                                  title="Haz clic para ver las adiciones">${adiciones}</span>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h6>Eliminaciones</h6>
+                            <span class="badge bg-danger fs-5 estadistica-badge" 
+                                  data-tipo="eliminaciones" 
+                                  style="cursor: pointer;" 
+                                  title="Haz clic para ver las eliminaciones">${eliminaciones}</span>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <h6>Total de cambios</h6>
+                            <span class="badge bg-primary fs-5 estadistica-badge" 
+                                  data-tipo="todos" 
+                                  style="cursor: pointer;" 
+                                  title="Haz clic para ver todos los cambios">${totalCambios}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            document.getElementById('impactoLegal').innerHTML = '';
+        }
+        
+        // Almacenar los cambios en una variable global para filtrado
+        window.todosCambios = data.cambios_detallados || data.cambios || [];
+        console.log("Cambios almacenados:", window.todosCambios); // Para depuración
+        
+        // Mostrar todos los cambios inicialmente
+        mostrarCambiosFiltrados(window.todosCambios);
+        
+        // Añadir eventos de clic a las estadísticas después de renderizar
+        document.querySelectorAll('.estadistica-badge').forEach(badge => {
+            badge.addEventListener('click', function() {
+                const tipo = this.getAttribute('data-tipo');
+                console.log("Clic en estadística:", tipo); // Para depuración
+                filtrarCambiosPorTipo(tipo);
+            });
+        });
+        
+        // Mostrar sección de resultados
+        contenedor.style.display = 'block';
+        
+        // Ocultar selector de versiones
+        document.getElementById('selectorVersiones').style.display = 'none';
+        
+        // Scroll a los resultados
+        contenedor.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Función para filtrar cambios por tipo
+    function filtrarCambiosPorTipo(tipo) {
+        console.log("Filtrando por tipo:", tipo); // Para depuración
+        console.log("Cambios disponibles:", window.todosCambios); // Para depuración
+        
+        if (!window.todosCambios || window.todosCambios.length === 0) {
+            console.log("No hay cambios para filtrar");
+            return;
+        }
+        
+        let cambiosFiltrados = [];
+        
+        if (tipo === 'todos') {
+            cambiosFiltrados = window.todosCambios;
+        } else {
+            cambiosFiltrados = window.todosCambios.filter(cambio => {
+                const tipoCambio = (cambio.tipo_cambio || '').toLowerCase();
                 
-                // Si es un array, procesamos cada elemento
-                if (Array.isArray(data.comparacion.cambios_detallados)) {
-                    data.comparacion.cambios_detallados.forEach(cambio => {
-                        const cambioElement = document.createElement('div');
-                        cambioElement.className = 'mb-3';
-                        
-                        if (typeof cambio === 'string') {
-                            cambioElement.innerHTML = procesarTextoComparacion(cambio);
-                        } else if (cambio.titulo && cambio.contenido) {
-                            cambioElement.innerHTML = `
-                                <h6>${cambio.titulo}</h6>
-                                <p>${procesarTextoComparacion(cambio.contenido)}</p>
-                            `;
-                        }
-                        
-                        cambiosContainer.appendChild(cambioElement);
-                    });
-                } else if (typeof data.comparacion.cambios_detallados === 'string') {
-                    // Si es un string, lo procesamos directamente
-                    const cambioElement = document.createElement('div');
-                    cambioElement.innerHTML = procesarTextoComparacion(data.comparacion.cambios_detallados);
-                    cambiosContainer.appendChild(cambioElement);
+                if (tipo === 'adiciones') {
+                    return tipoCambio.includes('añadido') || tipoCambio.includes('adición') || tipoCambio === 'adición';
+                } else if (tipo === 'eliminaciones') {
+                    return tipoCambio.includes('eliminado') || tipoCambio.includes('eliminación') || tipoCambio === 'eliminación';
+                } else if (tipo === 'modificaciones') {
+                    return tipoCambio.includes('modificado') || tipoCambio.includes('modificación') || tipoCambio === 'modificación' || 
+                           (!tipoCambio.includes('añadido') && !tipoCambio.includes('adición') && 
+                            !tipoCambio.includes('eliminado') && !tipoCambio.includes('eliminación'));
                 }
                 
-                document.getElementById('cambiosDetallados').style.display = 'block';
-            } else {
-                document.getElementById('cambiosDetallados').style.display = 'none';
-            }
-            
-            // Impacto legal
-            if (data.comparacion.impacto_legal) {
-                const impactoContainer = document.getElementById('impactoContenido');
-                impactoContainer.innerHTML = '';
-                
-                const impactoParrafo = document.createElement('p');
-                impactoParrafo.innerHTML = procesarTextoComparacion(data.comparacion.impacto_legal);
-                impactoContainer.appendChild(impactoParrafo);
-                
-                document.getElementById('impactoLegal').style.display = 'block';
-            } else {
-                document.getElementById('impactoLegal').style.display = 'none';
-            }
-        } else if (typeof data.comparacion === 'string') {
-            // Si la comparación es un string, mostramos todo en cambios detallados
-            const cambiosContainer = document.getElementById('cambiosContenido');
-            cambiosContainer.innerHTML = procesarTextoComparacion(data.comparacion);
-            
-            document.getElementById('cambiosDetallados').style.display = 'block';
-            document.getElementById('resumenCambios').style.display = 'none';
-            document.getElementById('impactoLegal').style.display = 'none';
-        } else {
-            // Si no hay datos de comparación
-            mostrarError('No se pudo generar la comparación entre las versiones seleccionadas.');
-            document.getElementById('resultadoComparacion').style.display = 'none';
+                return false;
+            });
         }
+        
+        console.log("Cambios filtrados:", cambiosFiltrados); // Para depuración
+        mostrarCambiosFiltrados(cambiosFiltrados);
     }
     
-    // Función para procesar el texto de la comparación y destacar los cambios
-    function procesarTextoComparacion(texto) {
-        if (!texto) return '';
+    // Función para mostrar los cambios filtrados
+    function mostrarCambiosFiltrados(cambios) {
+        const cambiosContainer = document.getElementById('cambiosDetallados');
+        cambiosContainer.innerHTML = '';
         
-        // Reemplazar marcadores de texto añadido
-        texto = texto.replace(/\[\+([^\]]+)\+\]/g, '<span class="diff-added">$1</span>');
+        if (!cambios || cambios.length === 0) {
+            cambiosContainer.innerHTML = '<div class="alert alert-warning">No se encontraron cambios detallados entre estas versiones.</div>';
+            return;
+        }
         
-        // Reemplazar marcadores de texto eliminado
-        texto = texto.replace(/\[-([^\]]+)-\]/g, '<span class="diff-removed">$1</span>');
+        // Separar los cambios por tipo
+        const cambiosAgrupados = {
+            adiciones: [],
+            modificaciones: [],
+            eliminaciones: []
+        };
         
-        // Reemplazar marcadores de texto destacado
-        texto = texto.replace(/\[\*([^\]]+)\*\]/g, '<span class="diff-highlight">$1</span>');
-        
-        // Convertir saltos de línea en <br>
-        texto = texto.replace(/\n/g, '<br>');
-        
-        return texto;
-    }
-    
-    // Event Listeners
-    document.addEventListener('DOMContentLoaded', function() {
-        // Formulario de búsqueda
-        const searchForm = document.getElementById('searchForm');
-        searchForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Agrupar cambios por tipo
+        cambios.forEach(cambio => {
+            const tipoCambio = (cambio.tipo_cambio || '').toLowerCase();
             
-            const referencia = document.getElementById('referenciaInput').value.trim();
-            const texto = document.getElementById('textoInput').value.trim();
-            
-            if (referencia) {
-                buscarDocumento(referencia, null);
-            } else if (texto) {
-                buscarDocumento(null, texto);
+            if (tipoCambio.includes('añadido') || tipoCambio.includes('adición') || tipoCambio === 'adición') {
+                cambiosAgrupados.adiciones.push(cambio);
+            } else if (tipoCambio.includes('eliminado') || tipoCambio.includes('eliminación') || tipoCambio === 'eliminación') {
+                cambiosAgrupados.eliminaciones.push(cambio);
             } else {
-                mostrarError('Por favor, introduce una referencia BOE o un texto para buscar.');
+                cambiosAgrupados.modificaciones.push(cambio);
             }
         });
         
-        // Botón de comparar versiones
-        const btnComparar = document.getElementById('btnComparar');
-        btnComparar.addEventListener('click', function() {
-            const referencia = document.getElementById('documentoReferencia').textContent;
-            const versionOriginal = document.getElementById('versionOriginal').value;
-            const versionComparar = document.getElementById('versionComparar').value;
+        // Crear secciones para cada tipo de cambio
+        const tiposSecciones = [
+            { tipo: 'adiciones', titulo: 'Adiciones', clase: 'success', icono: 'plus-circle' },
+            { tipo: 'modificaciones', titulo: 'Modificaciones', clase: 'warning', icono: 'edit' },
+            { tipo: 'eliminaciones', titulo: 'Eliminaciones', clase: 'danger', icono: 'trash' }
+        ];
+        
+        tiposSecciones.forEach(seccion => {
+            const cambiosTipo = cambiosAgrupados[seccion.tipo];
             
-            if (versionOriginal === versionComparar) {
-                mostrarError('Por favor, selecciona dos versiones diferentes para comparar.');
-                return;
+            if (cambiosTipo.length > 0) {
+                // Crear encabezado de sección
+                const seccionHeader = document.createElement('div');
+                seccionHeader.className = `alert alert-${seccion.clase} mb-3`;
+                seccionHeader.innerHTML = `
+                    <h5 class="mb-0">
+                        <i class="fas fa-${seccion.icono} me-2"></i>
+                        ${seccion.titulo} (${cambiosTipo.length})
+                    </h5>
+                `;
+                cambiosContainer.appendChild(seccionHeader);
+                
+                // Crear tarjetas para cada cambio
+                cambiosTipo.forEach(cambio => {
+                    const cambioElement = document.createElement('div');
+                    cambioElement.className = `card mb-3 border-${seccion.clase}`;
+                    
+                    // Adaptar a ambos formatos de respuesta
+                    const articulo = cambio.articulo || cambio.seccion || 'Sección sin especificar';
+                    const descripcion = cambio.descripcion || 'Sin descripción';
+                    const textoOriginal = cambio.texto_original || '';
+                    const textoNuevo = cambio.texto_nuevo || '';
+                    
+                    // Contenido diferente según el tipo de cambio
+                    let contenidoCambio = '';
+                    
+                    if (seccion.tipo === 'adiciones') {
+                        contenidoCambio = `
+                            <div class="col-12">
+                                <h6 class="text-success"><i class="fas fa-plus-circle me-2"></i>Texto añadido:</h6>
+                                <div class="p-2 bg-light rounded border-start border-4 border-success">
+                                    ${textoNuevo || 'No disponible'}
+                                </div>
+                            </div>
+                        `;
+                    } else if (seccion.tipo === 'eliminaciones') {
+                        contenidoCambio = `
+                            <div class="col-12">
+                                <h6 class="text-danger"><i class="fas fa-trash me-2"></i>Texto eliminado:</h6>
+                                <div class="p-2 bg-light rounded border-start border-4 border-danger">
+                                    ${textoOriginal || 'No disponible'}
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        contenidoCambio = `
+                            <div class="col-md-6 mb-2">
+                                <h6 class="text-muted">Texto original:</h6>
+                                <div class="p-2 bg-light rounded border-start border-4 border-danger">
+                                    ${textoOriginal || 'No disponible'}
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <h6 class="text-muted">Texto nuevo:</h6>
+                                <div class="p-2 bg-light rounded border-start border-4 border-success">
+                                    ${textoNuevo || 'No disponible'}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    cambioElement.innerHTML = `
+                        <div class="card-header d-flex justify-content-between align-items-center bg-light">
+                            <h5 class="mb-0">${articulo}</h5>
+                            <span class="badge bg-${seccion.clase}">${cambio.tipo_cambio || seccion.titulo.slice(0, -2)}</span>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">${descripcion}</p>
+                            
+                            <div class="row">
+                                ${contenidoCambio}
+                            </div>
+                        </div>
+                    `;
+                    
+                    cambiosContainer.appendChild(cambioElement);
+                });
             }
+        });
+        
+        // Si no hay cambios después de filtrar
+        if (cambiosContainer.children.length === 0) {
+            cambiosContainer.innerHTML = '<div class="alert alert-warning">No se encontraron cambios del tipo seleccionado.</div>';
+        }
+    }
+    
+    // Inicializar eventos al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        // Evento para el formulario de búsqueda
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            buscarDocumentos();
+        });
+        
+        // Evento para el botón de comparar
+        document.getElementById('btnComparar').addEventListener('click', function(e) {
+            e.preventDefault();
+            compararVersiones();
+        });
+        
+        // Evento para el botón de nueva búsqueda desde resultados
+        document.getElementById('btnNuevaBusqueda').addEventListener('click', function(e) {
+            e.preventDefault();
             
-            compararVersiones(referencia, versionOriginal, versionComparar);
+            // Ocultar secciones
+            document.getElementById('resultadosBusqueda').style.display = 'none';
+            
+            // Mostrar búsqueda
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchInput').focus();
+        });
+        
+        // Evento para el botón de nueva búsqueda desde selector
+        document.getElementById('btnNuevaBusquedaDesdeSelector').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Ocultar secciones
+            document.getElementById('selectorVersiones').style.display = 'none';
+            
+            // Mostrar búsqueda
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchInput').focus();
+        });
+        
+        // Evento para el botón de nueva búsqueda desde resultados
+        document.getElementById('btnNuevaBusquedaDesdeResultados').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Ocultar secciones
+            document.getElementById('resultadosComparacion').style.display = 'none';
+            document.getElementById('selectorVersiones').style.display = 'none';
+            
+            // Mostrar búsqueda
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchInput').focus();
+        });
+        
+        // Evento para el botón de volver al selector desde resultados
+        document.getElementById('btnVolverASelector').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Ocultar sección de resultados
+            document.getElementById('resultadosComparacion').style.display = 'none';
+            
+            // Mostrar selector de versiones
+            document.getElementById('selectorVersiones').style.display = 'block';
+            
+            // Scroll al selector
+            document.getElementById('selectorVersiones').scrollIntoView({ behavior: 'smooth' });
         });
     });
 </script>

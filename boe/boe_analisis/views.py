@@ -9,6 +9,8 @@ from django.core.cache import cache
 from .import_os import planning_agent, summarization_agent, workflow
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 def index(request):
     """Vista principal que redirecciona al sistema de alertas"""
@@ -251,7 +253,7 @@ def procesar_consulta_ia(request):
                         'titulo': doc_text,
                         'descripcion': contexto,
                         'fecha': fecha,
-                        'url': f'https://www.boe.es/buscar/doc.php?id={doc_id}',
+                        'url': f'https://www.boe.es/buscar/doc.php?id={doc_text}' if 'BOE-' in doc_text else 'https://www.boe.es/buscar/index.php',
                         'exact_score': 0.9 - (0.05 * (doc_id_counter - 1)),
                         'semantic_score': 0.85 - (0.05 * (doc_id_counter - 1))
                     }
@@ -330,6 +332,21 @@ def procesar_consulta_ia(request):
             'error': str(e),
             'status': 'error'
         }, status=500)
+
+@login_required
+def actualizar_base_datos(request):
+    """Vista para actualizar la base de datos con las últimas publicaciones del BOE"""
+    from .actualizar_boe import actualizar_boe
+    
+    if request.method == 'POST':
+        try:
+            dias = int(request.POST.get('dias', 30))
+            nuevos, actualizados = actualizar_boe(dias)
+            messages.success(request, f'Actualización completada: {nuevos} documentos nuevos, {actualizados} documentos actualizados.')
+        except Exception as e:
+            messages.error(request, f'Error durante la actualización: {str(e)}')
+    
+    return render(request, 'boe_analisis/actualizar_base_datos.html')
 
 def asistente_ia(request):
     """Vista que muestra el asistente IA para consultas sobre el BOE"""

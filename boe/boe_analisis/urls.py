@@ -38,10 +38,12 @@ urlpatterns = [
     path('api/semantica/directa/', views_api.api_busqueda_semantica_directa, name='api_semantica_directa'),
     path('api/docs/', views.api_docs, name='api_docs'),  
     path('api/diagnostico/', views_api.api_diagnostico_qdrant, name='api_diagnostico'),
-    path('api/tavily/', views_api.api_tavily_search, name='api_tavily'),
+    path('api/cohere/', views_api.api_cohere_search, name='api_cohere'),
     path('api/asistente/', views_api.api_asistente_mistral, name='api_asistente'),
     path('asistente-ia/', views.asistente_ia, name='asistente_ia'),
     path('asistente/', views.asistente_ia, name='asistente'),  
+    # Ruta para actualizar la base de datos
+    path('actualizar-base-datos/', views.actualizar_base_datos, name='actualizar_base_datos'),
     # Rutas para el comparador de versiones
     path('comparador/', views_comparador.comparador_versiones, name='comparador_versiones'),
     path('api/comparador/buscar/', views_comparador.buscar_documento, name='buscar_documento'),
